@@ -1,0 +1,8 @@
+<Project>
+
+  <PropertyGroup>
+    <PackageOutputPath>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'packages' ))</PackageOutputPath>
+    <ModuleOutputPath>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'modules' ))</ModuleOutputPath>
+  </PropertyGroup>
+  
+</Project>

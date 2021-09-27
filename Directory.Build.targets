@@ -1,0 +1,11 @@
+<Project>
+
+  <Target Name="CreatePackageOutputPath" BeforeTargets="BeforeResolveReferences">
+    <MakeDir Directories="$(PackageOutputPath)" />
+  </Target>
+  
+  <Target Name="CreateModuleOutputPath" BeforeTargets="BeforeResolveReferences">
+    <MakeDir Directories="$(ModuleOutputPath)" />
+  </Target>
+  
+</Project>
