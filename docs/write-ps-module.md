@@ -116,7 +116,7 @@ To invoke ```Publish-Module``` with a ```Path``` parameter, the name of director
 
 Make a copy of the output directory ```bin\Debug\net5.0```. Name it ```bin\Debug\TLDAG.PS```.
 
-Create a ```modules``` directory within the solution directory. This is ```C:\source\tldag-dotnet\modules``` in the example we^re looking at.
+Create a ```modules``` directory within the solution directory. This is ```C:\source\tldag-dotnet\modules``` in the example we're looking at.
 
 Designate the ```modules``` directory as valid target for publishing:
 
