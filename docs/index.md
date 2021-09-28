@@ -8,3 +8,5 @@
 ## Investigations
 
 - [PowerShell Publish-Module](publish-module.html)
+- [PowerShell Get-PSRepository](get-psrepository.html)
+
