@@ -1,4 +1,10 @@
 # tldag-dotnet
 
-- [How-To: Write a binary PowerShell module](write-ps-module.html)
+## HOW-TOs
+
+- [Write a binary PowerShell module](write-ps-module.html)
+
+## Investigations
+
+- [PowerShell Publish-Module](publish-module.html)
 
