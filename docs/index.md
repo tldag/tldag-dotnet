@@ -9,4 +9,4 @@
 
 - [PowerShell Publish-Module](publish-module.html)
 - [PowerShell Get-PSRepository](get-psrepository.html)
-
+- [System.Management.Automation](system-management-automation.html)
