@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net5.0;netstandard2.0;net472</TargetFrameworks>
-    <DefaultNamespace>TLDAG.Libraries.Core</DefaultNamespace>
+    <DefaultNamespace>TLDAG.Libraries.NuGet</DefaultNamespace>
   </PropertyGroup>
 
   <ItemGroup>

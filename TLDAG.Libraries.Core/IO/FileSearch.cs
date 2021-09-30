@@ -115,6 +115,9 @@ namespace TLDAG.Libraries.Core.IO
         private void StartDirectory()
         {
             directory = directories.Dequeue();
+
+            if (!directory.Exists) return;
+
             startCallback(directory, Progress);
 
             if (Recurse)
@@ -156,7 +159,7 @@ namespace TLDAG.Libraries.Core.IO
 
         private void UpdateProgress()
         {
-            double divisor = Math.Max(10, directories.Count);
+            double divisor = Math.Max(100, directories.Count);
             double delta = (1.0 - Progress) / divisor;
 
             Progress += delta;
