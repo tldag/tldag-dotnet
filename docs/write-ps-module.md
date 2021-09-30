@@ -142,7 +142,7 @@ PSGallery                 Trusted              https://www.powershellgallery.com
 ### 7. Publish the module to the local repository
 
 ```powershell
-Publish-Module -Path 'C:\source\tldag-dotnet\TLDAG.PS\Debug\TLDAG.PS' -Repository 'Modules' -NuGetApiKey '12345' -Force
+Publish-Module -Path 'C:\source\tldag-dotnet\TLDAG.PS\bin\Debug\TLDAG.PS' -Repository 'Modules' -NuGetApiKey '12345' -Force
 ```
 
 The ```-NuGetApiKey``` must be given, but may contain any non-empty string.
@@ -152,7 +152,15 @@ The ```-Force``` switch is used to overwrite a previously published module of th
 The command performs some tests and finally creates the ```TLDAG.PS.0.0.1-alpha.nupkg``` package file in the ```modules``` directory.
 A simple ```dotnet publish``` would probably suffice.
 
-### 8. Install the module locally
+### 8. Uninstall existing module
+
+If you have an older version of your module installed, the following sample uninstalls it. Without uninstalling step 9 will fail.
+
+```powershell
+Uninstall-Module 'TLDAG.PS'
+```
+
+### 9. Install the module locally
 
 ```powershell
 Install-Module -Name 'TLDAG.PS' -Repository 'Modules' -Scope CurrentUser
@@ -160,7 +168,7 @@ Install-Module -Name 'TLDAG.PS' -Repository 'Modules' -Scope CurrentUser
 
 Installs your new module for the current user.
 
-### 9. Publish to PSGallery
+### 10. Publish to PSGallery
 
 ```powershell
 Publish-Module -Name 'TLDAG.PS' -Repository PSGallery -NuGetApiKey $env:TLDAG_PSGALLERY_KEY
