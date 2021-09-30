@@ -1,1 +1,11 @@
 **/.vs/
+
+modules/
+packages/
+TestResults/
+
+TLDAG.Libraries.Core/
+TLDAG.Libraries.Core.Tests/
+TLDAG.Libs.PS.Tests/
+TLDAG.PS/
+
