@@ -4,6 +4,11 @@
     <PackageOutputPath>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'packages' ))</PackageOutputPath>
     <ModuleOutputPath>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'modules' ))</ModuleOutputPath>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
   <PropertyGroup>
     <TldagLibrariesCore>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Libraries.Core', 'TLDAG.Libraries.Core.csproj' ))</TldagLibrariesCore>
