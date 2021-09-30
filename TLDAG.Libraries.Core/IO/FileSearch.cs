@@ -10,10 +10,12 @@ namespace TLDAG.Libraries.Core.IO
     public class FileSearchEventArgs : EventArgs
     {
         public DirectoryInfo Directory { get; }
+        public double Progress { get; }
 
-        public FileSearchEventArgs(DirectoryInfo directory)
+        public FileSearchEventArgs(DirectoryInfo directory, double progress)
         {
             Directory = directory;
+            Progress = progress;
         }
     }
 
@@ -25,16 +27,17 @@ namespace TLDAG.Libraries.Core.IO
         public DirectoryInfo Start { get; }
         public string Pattern { get; }
         public bool Recurse { get; }
+        public double Progress { get; private set; }
 
-        private readonly Action<DirectoryInfo> startCallback;
-        private readonly Action<DirectoryInfo> endCallback;
+        private readonly Action<DirectoryInfo, double> startCallback;
+        private readonly Action<DirectoryInfo, double> endCallback;
 
         private readonly Queue<DirectoryInfo> directories = new();
         private DirectoryInfo? directory = null;
         private IEnumerator<FileInfo>? enumerator = null;
 
         public FileSearchEnumerator(DirectoryInfo start, string pattern, bool recurse,
-            Action<DirectoryInfo> startCallback, Action<DirectoryInfo> endCallback)
+            Action<DirectoryInfo, double> startCallback, Action<DirectoryInfo, double> endCallback)
         {
             Start = start;
             Pattern = pattern;
@@ -57,6 +60,8 @@ namespace TLDAG.Libraries.Core.IO
 
             directories.Clear();
             directories.Enqueue(Start);
+
+            Progress = 0;
         }
 
         private FileInfo GetCurrent()
@@ -92,6 +97,8 @@ namespace TLDAG.Libraries.Core.IO
 
         private void EndDirectory()
         {
+            UpdateProgress();
+
             if (enumerator != null)
             {
                 enumerator.Dispose();
@@ -100,7 +107,7 @@ namespace TLDAG.Libraries.Core.IO
 
             if (directory != null)
             {
-                endCallback(directory);
+                endCallback(directory, Progress);
                 directory = null;
             }
         }
@@ -108,16 +115,28 @@ namespace TLDAG.Libraries.Core.IO
         private void StartDirectory()
         {
             directory = directories.Dequeue();
-            startCallback(directory);
+            startCallback(directory, Progress);
 
             if (Recurse)
             {
                 EnqueueSubDirectories(directory);
             }
 
-            enumerator = directory
+            enumerator = GetEnumerator(directory);
+        }
+
+        private IEnumerator<FileInfo>? GetEnumerator(DirectoryInfo directory)
+        {
+            try
+            {
+                return directory
                 .EnumerateFiles(Pattern, TopDirectoryOnly)
                 .GetEnumerator();
+            }
+            catch (UnauthorizedAccessException) { /* ignored */ }
+            catch (SecurityException) { /* ignored */ }
+
+            return null;
         }
 
         private void EnqueueSubDirectories(DirectoryInfo directory)
@@ -133,6 +152,14 @@ namespace TLDAG.Libraries.Core.IO
             }
             catch (UnauthorizedAccessException) { /* ignored */ }
             catch (SecurityException) { /* ignored */ }
+        }
+
+        private void UpdateProgress()
+        {
+            double divisor = Math.Max(10, directories.Count);
+            double delta = (1.0 - Progress) / divisor;
+
+            Progress += delta;
         }
     }
 
@@ -165,21 +192,21 @@ namespace TLDAG.Libraries.Core.IO
             return new(Start, Pattern, Recurse, OnStartDirectory, OnEndDirectory);
         }
 
-        private void OnStartDirectory(DirectoryInfo directory)
+        private void OnStartDirectory(DirectoryInfo directory, double progress)
         {
             if (DirectoryStarted != null)
             {
-                FileSearchEventArgs eventArgs = new(directory);
+                FileSearchEventArgs eventArgs = new(directory, progress);
 
                 DirectoryStarted.Invoke(this, eventArgs);
             }
         }
 
-        private void OnEndDirectory(DirectoryInfo directory)
+        private void OnEndDirectory(DirectoryInfo directory, double progress)
         {
             if (DirectoryEnded != null)
             {
-                FileSearchEventArgs eventArgs = new(directory);
+                FileSearchEventArgs eventArgs = new(directory, progress);
 
                 DirectoryEnded.Invoke(this, eventArgs);
             }
