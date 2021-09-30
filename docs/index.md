@@ -11,5 +11,6 @@
 - [PowerShell Get-PSRepository](get-psrepository.html)
 - [System.Management.Automation](system-management-automation.html)
 - [PowerShellGet](powershellget.html)
-- [PackageManagement](packagemanagement.html)
+- [PackageManagement](package-management.html)
+- [Microsoft.PackageManagement](microsoft-package-management.md)
 
