@@ -7,12 +7,12 @@ using TLDAG.Libraries.Core.IO;
 
 namespace TLDAG.Libraries.NuGet
 {
-    [TestClass]
+    // [TestClass]
     public class FindAllNugetConfigs
     {
         private long progressMillis = 0;
 
-        [TestMethod]
+        // [TestMethod]
         public void TestMethod1()
         {
             DirectoryInfo directory = new(@"C:\");
