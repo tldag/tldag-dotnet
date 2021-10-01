@@ -2,16 +2,16 @@
 
 ## HOW-TOs
 
-- [Write a binary PowerShell module](write-ps-module.md)
-- [Configure NuGet](configure-nuget.md)
+- [Write a binary PowerShell module](howto/write-ps-module.md)
+- [Configure NuGet](howto/configure-nuget.md)
 
 ## Investigations
 
-- [PowerShell Publish-Module](publish-module.md)
-- [PowerShell Get-PSRepository](get-psrepository.md)
-- [System.Management.Automation](system-management-automation.md)
-- [PowerShellGet](powershellget.md)
-- [PackageManagement](package-management.md)
-- [Where are NuGet.Config](where-are-nuget-configs.md)
-- [Microsoft.PackageManagement](microsoft-package-management.md)
+- [PowerShell Publish-Module](investigation/publish-module.md)
+- [PowerShell Get-PSRepository](investigation/get-psrepository.md)
+- [System.Management.Automation](investigation/system-management-automation.md)
+- [PowerShellGet](investigation/powershellget.md)
+- [PackageManagement](investigation/package-management.md)
+- [Where are NuGet.Config](investigation/where-are-nuget-configs.md)
+- [Microsoft.PackageManagement](investigation/microsoft-package-management.md)
 
