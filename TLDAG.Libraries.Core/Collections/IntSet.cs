@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace TLDAG.Libraries.Core.Collections
 {
-    public sealed class IntSet : IReadOnlyList<int>, IEquatable<IntSet>
+    public sealed class IntSet : IReadOnlyList<int>, IEquatable<IntSet>, IComparable<IntSet>
     {
         private readonly int[] values;
         private int? hashCode = null;
@@ -24,6 +24,13 @@ namespace TLDAG.Libraries.Core.Collections
             this.values = Unique(Copy(values));
         }
 
+        private IntSet(int[] values, bool prepared)
+        {
+            if (!prepared) throw new InvalidOperationException();
+
+            this.values = values;
+        }
+
         public IEnumerator<int> GetEnumerator()
             => GetValuesEnumerator();
 
@@ -34,20 +41,259 @@ namespace TLDAG.Libraries.Core.Collections
             => hashCode ??= CalculateHashCode();
 
         public override bool Equals(object? obj)
-        {
-            IntSet? other = obj as IntSet;
-
-            return EqualsIntSet(other);
-        }
+            => EqualsIntSet(obj as IntSet);
 
         public bool Equals(IntSet? other)
             => EqualsIntSet(other);
+
+        public override string ToString()
+        {
+            int count = Math.Min(10, values.Length);
+            string content = string.Join(", ", values.Take(count).Select(i => i.ToString()));
+
+            if (count < values.Length) content += ", ...";
+
+            return content;
+        }
+
+        public int CompareTo(IntSet? other)
+        {
+            if (other == null) return values.Length;
+
+            int[] v1 = values, v2 = other.values;
+            int n1 = v1.Length, n2 = v2.Length;
+            int i1 = 0, i2 = 0;
+
+            while (i1 < n1 && i2 < n2)
+            {
+                int c1 = v1[i1], c2 = v2[i2];
+
+                if (c1 == c2) { ++i1; ++i2; }
+                else if (c1 < c2) { return -1; }
+                else { return 1; }
+            }
+
+            return n1 - n2;
+        }
 
         public bool Contains(int value)
         {
             int pos = GetInsertPosition(values, value);
 
             return pos < values.Length && values[pos] == value;
+        }
+
+        public bool ContainsAny(params int[] values)
+            => ContainsAny(values.AsEnumerable());
+
+        public bool ContainsAny(IEnumerable<int> values)
+        {
+            foreach (int value in values)
+            {
+                if (Contains(value)) return true;
+            }
+
+            return false;
+        }
+
+        public bool ContainsAny(IntSet other)
+        {
+            int[] v1 = values, v2 = other.values;
+            int i1 = 0, n1 = v1.Length;
+            int i2 = 0, n2 = v2.Length;
+
+            while (i1 < n1 && i2 < n2)
+            {
+                int c1 = v1[i1], c2 = v2[i2];
+
+                if (c1 == c2) return true;
+
+                if (c1 < c2) { ++i1; }
+                else { ++i2; }
+            }
+
+            return i2 < n2;
+        }
+
+        public bool ContainsAll(params int[] values)
+            => ContainsAll(values.AsEnumerable());
+
+        public bool ContainsAll(IEnumerable<int> values)
+        {
+            foreach (int value in values)
+            {
+                if (!Contains(value)) return false;
+            }
+
+            return true;
+        }
+
+        public bool ContainsAll(IntSet other)
+        {
+            int[] v1 = values, v2 = other.values;
+            int i1 = 0, n1 = v1.Length;
+            int i2 = 0, n2 = v2.Length;
+
+            while (i1 < n1 && i2 < n2)
+            {
+                int c1 = v1[i1], c2 = v2[i2];
+
+                if (c1 == c2) { ++i1; ++i2; }
+                else if (c1 < c2) { ++i1; }
+                else { return false; }
+            }
+
+            return i2 == n2;
+        }
+
+        public static bool operator ==(IntSet? set1, IntSet? set2)
+            => set1 is null ? set2 is null : set1.EqualsIntSet(set2);
+
+        public static bool operator !=(IntSet? set1, IntSet? set2)
+            => !(set1 == set2);
+
+        public static IntSet operator +(IntSet summand1, int summand2)
+        {
+            int[] oldValues = summand1.values;
+            int oldCount = oldValues.Length;
+
+            if (oldCount == 0) return new(summand2);
+
+            int insertPos = GetInsertPosition(oldValues, summand2);
+
+            if (insertPos < oldCount && oldValues[insertPos] == summand2) return summand1;
+
+            int newCount = oldCount + 1;
+            int[] newValues = new int[newCount];
+
+            Array.Copy(oldValues, 0, newValues, 0, insertPos);
+            newValues[insertPos] = summand2;
+            Array.Copy(oldValues, insertPos, newValues, insertPos + 1, oldCount - insertPos);
+
+            return new(newValues, true);
+        }
+
+        public static IntSet operator +(int summand1, IntSet summand2)
+            => summand2 + summand1;
+
+        public static IntSet operator +(IntSet summand1, IntSet summand2)
+        {
+            int[] v1 = summand1.values, v2 = summand2.values;
+            int n1 = v1.Length, n2 = v2.Length;
+
+            if (n1 == 0) return summand2;
+            if (n2 == 0) return summand1;
+
+            int count = UniqueCount(v1, v2);
+            int[] result = new int[count];
+            int i1 = 0, i2 = 0, j = 0;
+
+            while (i1 < n1 && i2 < n2)
+            {
+                int c1 = v1[i1], c2 = v2[i2], v;
+
+                if (c1 == c2) { v = c1; ++i1; ++i2; }
+                else if (c1 < c2) { v = c1; ++i1; }
+                else { v = c2; ++i2; }
+
+                result[j] = v; ++j;
+            }
+
+            Array.Copy(v1, i1, result, j, n1 - i1);
+            j += n1 - i1;
+            Array.Copy(v2, i2, result, j, n2 - i2);
+
+            return new(result, true);
+        }
+
+        public static IntSet operator -(IntSet minuend, int sutrahend)
+        {
+            int[] values = minuend.values;
+            int deletePos = GetInsertPosition(values, sutrahend);
+            int oldCount = values.Length;
+
+            if (deletePos < oldCount && values[deletePos] != sutrahend) return minuend;
+            if (deletePos == oldCount) return minuend;
+
+            int[] result = new int[oldCount - 1];
+
+            Array.Copy(values, 0, result, 0, deletePos);
+            Array.Copy(values, deletePos + 1, result, deletePos, oldCount - deletePos - 1);
+
+            return new(result, true);
+        }
+
+        public static IntSet operator -(IntSet minuend, IntSet sutrahend)
+        {
+            int[] v1 = minuend.values, v2 = sutrahend.values;
+            int n1 = v1.Length, n2 = v2.Length;
+
+            if (n1 == 0 || n2 == 0) return minuend;
+
+            int i1 = 0, i2 = 0, count = 0;
+
+            while (i1 < n1 && i2 < n2)
+            {
+                int c1 = v1[i1], c2 = v2[i2];
+
+                if (c1 == c2) { ++i1; ++i2; }
+                else if (c1 < c2) { ++count; ++i1; }
+                else { ++i2; }
+            }
+
+            count += n1 - i1; i1 = 0; i2 = 0;
+
+            int[] result = new int[count];
+            int j = 0;
+
+            while (i1 < n1 && i2 < n2)
+            {
+                int c1 = v1[i1], c2 = v2[i2];
+
+                if (c1 == c2) { ++i1; ++i2; }
+                else if (c1 < c2) { result[j] = c1; ++j; ++i1; }
+                else { ++i2; }
+            }
+
+            Array.Copy(v1, i1, result, j, n1 - i1);
+
+            return new(result, true);
+        }
+
+        public static IntSet operator *(IntSet set1, IntSet set2)
+        {
+            int[] v1 = set1.values, v2 = set2.values;
+            int n1 = v1.Length, n2 = v2.Length;
+
+            if (n1 == 0) return set1;
+            if (n2 == 0) return set2;
+
+            int i1 = 0, i2 = 0, count = 0;
+
+            while (i1 < n1 && i2 < n2)
+            {
+                int c1 = v1[i1], c2 = v2[i2];
+
+                if (c1 == c2) { ++i1; ++i2; ++count; }
+                else if (c1 < c2) { ++i1; }
+                else { ++i2; }
+            }
+
+            int[] result = new int[count];
+            int j = 0;
+
+            i1 = 0; i2 = 0;
+
+            while (i1 < n1 && i2 < n2 && j < count)
+            {
+                int c1 = v1[i1], c2 = v2[i2];
+
+                if (c1 == c2) { ++i1; ++i2; result[j] = c1; ++j; }
+                else if (c1 < c2) { ++i1; }
+                else { ++i2; }
+            }
+
+            return new(result, true);
         }
 
         private static int[] Unique(int[] values)
@@ -100,6 +346,26 @@ namespace TLDAG.Libraries.Core.Collections
             return count;
         }
 
+        private static int UniqueCount(int[] v1, int[] v2)
+        {
+            int count = 0;
+            int i1 = 0, n1 = v1.Length;
+            int i2 = 0, n2 = v2.Length;
+
+            while (i1 < n1 && i2 < n2)
+            {
+                ++count;
+
+                int c1 = v1[i1], c2 = v2[i2];
+
+                if (c1 == c2) { ++i1; ++i2; }
+                else if (c1 < c2) { ++i1; }
+                else { ++i2; }
+            }
+
+            return count + (n1 - i1) + (n2 - i2);
+        }
+
         private static void Sort(int[] values, int offset, int count)
         {
             if (count < 2) return;
@@ -133,9 +399,7 @@ namespace TLDAG.Libraries.Core.Collections
         {
             int offset1 = offset + 1;
             int offset2 = offset + 2;
-            int v0 = values[offset];
-            int v1 = values[offset1];
-            int v2 = values[offset2];
+            int v0 = values[offset], v1 = values[offset1], v2 = values[offset2];
 
             if (v0 <= v1)
             {
@@ -185,24 +449,12 @@ namespace TLDAG.Libraries.Core.Collections
 
             while (i1 < e1 && i2 < e2)
             {
-                int v1 = values[i1];
-                int v2 = values[i2];
+                int v1 = values[i1], v2 = values[i2];
 
-                if (v1 == v2)
-                {
-                    ++i2;
-                    continue;
-                }
+                if (v1 == v2) { ++i2; continue; }
 
-                if (v1 <= v2)
-                {
-                    ++i1;
-                }
-                else
-                {
-                    values[i1] = v2;
-                    values[i2] = v1;
-                }
+                if (v1 <= v2) { ++i1; }
+                else { values[i1] = v2; values[i2] = v1; }
             }
         }
 
@@ -240,8 +492,7 @@ namespace TLDAG.Libraries.Core.Collections
 
             if (count == 0) return 0;
 
-            int left = 0;
-            int right = count;
+            int left = 0, right = count;
 
             while (left < right)
             {
@@ -250,14 +501,8 @@ namespace TLDAG.Libraries.Core.Collections
 
                 if (value == candidate) return middle;
 
-                if (value < candidate)
-                {
-                    right = middle;
-                }
-                else
-                {
-                    left = middle + 1;
-                }
+                if (value < candidate) { right = middle; }
+                else { left = middle + 1; }
             }
 
             return left;
@@ -268,7 +513,7 @@ namespace TLDAG.Libraries.Core.Collections
 
         private bool EqualsIntSet(IntSet? other)
         {
-            if (other == null) return false;
+            if (other is null) return false;
             if (values.Length != other.values.Length) return false;
 
             int[] otherValues = other.values;
