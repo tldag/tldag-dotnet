@@ -6,6 +6,7 @@ TestResults/
 
 TLDAG.Libraries.Core/
 TLDAG.Libraries.Core.Tests/
+TLDAG.Libraries.NuGet.Tests/
 TLDAG.Libs.PS.Tests/
 TLDAG.PS/
 
