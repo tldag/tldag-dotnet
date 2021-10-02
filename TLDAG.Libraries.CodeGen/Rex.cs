@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using TLDAG.Libraries.CodeGen.Resources;
+using TLDAG.Libraries.Core.CodeGen;
 using TLDAG.Libraries.Core.Collections;
 
-namespace TLDAG.Libraries.CodeGen.Scanner
+namespace TLDAG.Libraries.CodeGen
 {
     public abstract class RexNode
     {
@@ -20,14 +22,13 @@ namespace TLDAG.Libraries.CodeGen.Scanner
         private IntSet? lastpos = null;
         public IntSet Lastpos { get => lastpos ??= GetLastpos(); }
 
-        internal virtual int SetIds(int nextId)
-            => nextId;
-
         internal abstract void CollectLeafs(Dictionary<int, RexNode.LeafNode> leafs);
         internal abstract void CollectNodes(List<RexNode> nodes);
         internal abstract void CollectSymbols(SortedSet<char> symbols);
 
+        internal abstract int SetIds(int nextId);
         internal abstract void SetFollowpos(IReadOnlyDictionary<int, LeafNode> leafs);
+        internal abstract void SetSymbolClasses(Alphabet alphabet);
 
         protected abstract bool GetNullable();
         protected abstract IntSet GetFirstpos();
@@ -61,12 +62,18 @@ namespace TLDAG.Libraries.CodeGen.Scanner
 
         public class Accept : LeafNode
         {
-            internal Accept () { }
+            public string Name { get; }
+
+            internal Accept(string name)
+            {
+                Name = name;
+            }
 
             protected override bool GetNullable()
                 => false;
 
             internal override void CollectSymbols(SortedSet<char> symbols) { }
+            internal override void SetSymbolClasses(Alphabet alphabet) { }
         }
 
         public class Empty : LeafNode
@@ -77,22 +84,27 @@ namespace TLDAG.Libraries.CodeGen.Scanner
                 => true;
 
             internal override void CollectSymbols(SortedSet<char> symbols) { }
+            internal override void SetSymbolClasses(Alphabet alphabet) { }
         }
 
         public class Symbol : LeafNode
         {
-            public char Value { get; }
+            public char Char { get; }
+            public int Class { get; private set; } = 0;
 
-            internal Symbol(char value)
+            internal Symbol(char c)
             {
-                Value = value;
+                Char = c;
             }
 
             protected override bool GetNullable()
                 => false;
 
             internal override void CollectSymbols(SortedSet<char> symbols)
-                { symbols.Add(Value); }
+                { symbols.Add(Char); }
+
+            internal override void SetSymbolClasses(Alphabet alphabet)
+                { Class = alphabet[Char]; }
         }
 
         public abstract class BinaryNode : RexNode
@@ -104,14 +116,6 @@ namespace TLDAG.Libraries.CodeGen.Scanner
             {
                 Left = left;
                 Right = right;
-            }
-
-            internal override int SetIds(int nextId)
-            {
-                nextId = Left.SetIds(nextId);
-                nextId = Right.SetIds(nextId);
-
-                return nextId;
             }
 
             internal override void CollectLeafs(Dictionary<int, LeafNode> leafs)
@@ -134,10 +138,24 @@ namespace TLDAG.Libraries.CodeGen.Scanner
                 Right.CollectSymbols(symbols);
             }
 
+            internal override int SetIds(int nextId)
+            {
+                nextId = Left.SetIds(nextId);
+                nextId = Right.SetIds(nextId);
+
+                return nextId;
+            }
+
             internal override void SetFollowpos(IReadOnlyDictionary<int, LeafNode> leafs)
             {
                 Left.SetFollowpos(leafs);
                 Right.SetFollowpos(leafs);
+            }
+
+            internal override void SetSymbolClasses(Alphabet alphabet)
+            {
+                Left.SetSymbolClasses(alphabet);
+                Right.SetSymbolClasses(alphabet);
             }
         }
 
@@ -194,16 +212,10 @@ namespace TLDAG.Libraries.CodeGen.Scanner
                 => Child.SetIds(nextId);
 
             internal override void CollectLeafs(Dictionary<int, LeafNode> leafs)
-            {
-                Child.CollectLeafs(leafs);
-            }
+                { Child.CollectLeafs(leafs); }
 
             internal override void CollectNodes(List<RexNode> nodes)
-            {
-                Child.CollectNodes(nodes);
-
-                nodes.Add(this);
-            }
+                { Child.CollectNodes(nodes); nodes.Add(this); }
 
             internal override void CollectSymbols(SortedSet<char> symbols)
                 { Child.CollectSymbols(symbols); }
@@ -217,6 +229,9 @@ namespace TLDAG.Libraries.CodeGen.Scanner
                     leafs[id].Followpos += Firstpos;
                 }
             }
+
+            internal override void SetSymbolClasses(Alphabet alphabet)
+                { Child.SetSymbolClasses(alphabet); }
 
             protected override bool GetNullable()
                 => true;
@@ -232,7 +247,7 @@ namespace TLDAG.Libraries.CodeGen.Scanner
     public class RexTree
     {
         public string Name { get; }
-        public RexNode.Concat Root { get; }
+        public RexNode Root { get; }
 
         private Dictionary<int, RexNode.LeafNode>? leafs = null;
         public IReadOnlyDictionary<int, RexNode.LeafNode> Leafs { get => leafs ??= GetLeafs(); }
@@ -240,11 +255,13 @@ namespace TLDAG.Libraries.CodeGen.Scanner
         private List<RexNode>? nodes = null;
         public IReadOnlyList<RexNode> Nodes { get => nodes ??= GetNodes(); }
 
-        internal RexTree(string name, RexNode.Concat root)
+        internal RexTree(string name, RexNode root)
         {
             Name = name;
             Root = root;
         }
+
+        protected RexTree(RexNode root) : this("", root) { }
 
         internal int SetIds(int nextId)
             => Root.SetIds(nextId);
@@ -298,11 +315,11 @@ namespace TLDAG.Libraries.CodeGen.Scanner
         public RexTree Build()
         {
             if (stack.Count != 1)
-                throw new InvalidOperationException();
+                throw new CompilerException(CGR.SC100_RexTreeStackNotOne);
 
             RexNode left = stack.Pop();
-            RexNode right = new RexNode.Accept();
-            RexNode.Concat root = new(left, right);
+            RexNode right = new RexNode.Accept(Name);
+            RexNode root = new RexNode.Concat(left, right);
 
             return new(Name, root);
         }
@@ -324,7 +341,7 @@ namespace TLDAG.Libraries.CodeGen.Scanner
         public RexTreeBuilder AddChoose()
         {
             if (stack.Count < 2)
-                throw new InvalidOperationException();
+                throw new CompilerException(CGR.SC101_RexTreeNotEnoughEntries, 2);
 
             RexNode right = stack.Pop();
             RexNode left = stack.Pop();
@@ -337,7 +354,7 @@ namespace TLDAG.Libraries.CodeGen.Scanner
         public RexTreeBuilder AddConcat()
         {
             if (stack.Count < 2)
-                throw new InvalidOperationException();
+                throw new CompilerException(CGR.SC101_RexTreeNotEnoughEntries, 2);
 
             RexNode right = stack.Pop();
             RexNode left = stack.Pop();
@@ -350,7 +367,7 @@ namespace TLDAG.Libraries.CodeGen.Scanner
         public RexTreeBuilder AddKleene()
         {
             if (stack.Count < 1)
-                throw new InvalidOperationException();
+                throw new CompilerException(CGR.SC101_RexTreeNotEnoughEntries, 1);
 
             RexNode child = stack.Pop();
 
@@ -360,35 +377,26 @@ namespace TLDAG.Libraries.CodeGen.Scanner
         }
     }
 
-    public class RexForest : IEnumerable<RexTree>
+    public class RexForest : RexTree
     {
-        private readonly List<RexTree> trees;
-
         private SortedSet<char>? symbols = null;
         public SortedSet<char> Symbols { get => new(symbols ??= GetSymbols()); }
 
-        internal RexForest(List<RexTree> trees)
+        private Alphabet? alphabet = null;
+        public Alphabet Alphabet { get => alphabet ??= new(Symbols); }
+
+        internal RexForest(RexNode root) : base(root)
         {
-            this.trees = trees;
+            Root.SetSymbolClasses(Alphabet);
+            Root.SetIds(1);
+            Root.SetFollowpos(Leafs);
         }
-
-        public IEnumerator<RexTree> GetEnumerator()
-            => GetTreeEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator()
-            => GetTreeEnumerator();
-
-        private IEnumerator<RexTree> GetTreeEnumerator()
-            => trees.GetEnumerator();
 
         private SortedSet<char> GetSymbols()
         {
             SortedSet<char> symbols = new();
 
-            foreach (RexTree tree in trees)
-            {
-                tree.CollectSymbols(symbols);
-            }
+            Root.CollectSymbols(symbols);
 
             return symbols;
         }
@@ -406,21 +414,27 @@ namespace TLDAG.Libraries.CodeGen.Scanner
 
         public RexForest Build()
         {
-            int nextId = 1;
+            if (trees.Count < 1)
+                throw new CompilerException(CGR.SC102_RexForestEmpty);
 
-            foreach (RexTree tree in trees)
+            RexNode[] roots = trees.Select(tree => tree.Root).ToArray();
+            RexNode root = roots[0];
+
+            for (int i = 1, n = roots.Length; i < n; ++i)
             {
-                nextId = tree.SetIds(nextId);
-                tree.SetFollowpos();
+                RexNode left = root;
+                RexNode right = roots[i];
+
+                root = new RexNode.Choose(left, right);
             }
 
-            return new(trees);
+            return new(root);
         }
 
         public RexForestBuilder AddTree(RexTree tree)
         {
             if (names.Contains(tree.Name))
-                throw new InvalidOperationException();
+                throw new CompilerException(CGR.SC103_RexForestDuplicateName, tree.Name);
 
             trees.Add(tree);
             names.Add(tree.Name);

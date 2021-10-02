@@ -1,7 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using TLDAG.Libraries.Core.IO;
 
-namespace TLDAG.Libraries.Core.IO
+namespace TLDAG.Libraries.Core.Tests.IO
 {
     [TestClass]
     public class FileSearchTests

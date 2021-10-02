@@ -1,13 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace TLDAG.Libraries.CodeGen.Scanner
+namespace TLDAG.Libraries.CodeGen.Tests
 {
     [TestClass]
     public class RexTests
@@ -23,17 +19,9 @@ namespace TLDAG.Libraries.CodeGen.Scanner
         [TestMethod]
         public void Figure_3_41()
         {
-            RexTree tree = RexTreeBuilder.Create("FIGURE_3_41")
-                .AddSymbol('a').AddSymbol('b').AddChoose()
-                .AddKleene()
-                .AddSymbol('a').AddConcat()
-                .AddSymbol('b').AddConcat()
-                .AddSymbol('b').AddConcat()
-                .Build();
+            RexForest forest = RexForestBuilder.Create().AddTree(RexTrees.Figure_3_41()).Build();
 
-            RexForest forest = RexForestBuilder.Create().AddTree(tree).Build();
-
-            foreach (RexNode node in tree.Nodes)
+            foreach (RexNode node in forest.Nodes)
             {
                 string content = "";
 

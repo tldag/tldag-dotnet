@@ -1,8 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections;
 using System.Collections.Generic;
+using TLDAG.Libraries.Core.Collections;
 
-namespace TLDAG.Libraries.Core.Collections
+namespace TLDAG.Libraries.Core.Tests.Collections
 {
     [TestClass]
     public class IntSetTests
