@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <VersionPrefix>0.0.2</VersionPrefix>
-    <VersionSuffix></VersionSuffix>
   </PropertyGroup>
 
   <ItemGroup>

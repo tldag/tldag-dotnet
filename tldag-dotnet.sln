@@ -19,7 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Libraries.Core", "TLD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Libraries.Core.Tests", "TLDAG.Libraries.Core.Tests\TLDAG.Libraries.Core.Tests.csproj", "{4B99A8BD-DFD6-4CB8-B3E5-18E1E7AC3138}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLDAG.Libraries.NuGet.Tests", "TLDAG.Libraries.NuGet.Tests\TLDAG.Libraries.NuGet.Tests.csproj", "{BFF4C204-C42A-4B1F-A829-A68143D6087D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Libraries.NuGet.Tests", "TLDAG.Libraries.NuGet.Tests\TLDAG.Libraries.NuGet.Tests.csproj", "{BFF4C204-C42A-4B1F-A829-A68143D6087D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLDAG.Libraries.CodeGen", "TLDAG.Libraries.CodeGen\TLDAG.Libraries.CodeGen.csproj", "{94545F2D-3093-45F5-B923-EA9D61EB1D70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLDAG.Libraries.CodeGen.Tests", "TLDAG.Libraries.CodeGen.Tests\TLDAG.Libraries.CodeGen.Tests.csproj", "{ADB660D8-6F10-4B27-B3C6-556986C12A3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +51,14 @@ Global
 		{BFF4C204-C42A-4B1F-A829-A68143D6087D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFF4C204-C42A-4B1F-A829-A68143D6087D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFF4C204-C42A-4B1F-A829-A68143D6087D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94545F2D-3093-45F5-B923-EA9D61EB1D70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94545F2D-3093-45F5-B923-EA9D61EB1D70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94545F2D-3093-45F5-B923-EA9D61EB1D70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94545F2D-3093-45F5-B923-EA9D61EB1D70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADB660D8-6F10-4B27-B3C6-556986C12A3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADB660D8-6F10-4B27-B3C6-556986C12A3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADB660D8-6F10-4B27-B3C6-556986C12A3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADB660D8-6F10-4B27-B3C6-556986C12A3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
