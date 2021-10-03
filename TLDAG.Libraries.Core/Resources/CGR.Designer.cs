@@ -95,5 +95,41 @@ namespace TLDAG.Libraries.Core.Resources {
                 return ResourceManager.GetString("SC004_InvalidTransitionsLength", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SC100 Invalid state: Tree stack has not exactly one entry..
+        /// </summary>
+        internal static string SC100_RexTreeStackNotOne {
+            get {
+                return ResourceManager.GetString("SC100_RexTreeStackNotOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SC101 Invalid state: Tree stack has not enough entries. Expected at least {0} entry/entries..
+        /// </summary>
+        internal static string SC101_RexTreeNotEnoughEntries {
+            get {
+                return ResourceManager.GetString("SC101_RexTreeNotEnoughEntries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SC102 Invalid state: Must have at least one tree to create a forest..
+        /// </summary>
+        internal static string SC102_RexForestEmpty {
+            get {
+                return ResourceManager.GetString("SC102_RexForestEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SC103 Invalid argument: The forest already contains a tree named &apos;{0}&apos;..
+        /// </summary>
+        internal static string SC103_RexForestDuplicateName {
+            get {
+                return ResourceManager.GetString("SC103_RexForestDuplicateName", resourceCulture);
+            }
+        }
     }
 }

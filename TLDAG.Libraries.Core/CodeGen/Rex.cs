@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
-using TLDAG.Libraries.CodeGen.Resources;
-using TLDAG.Libraries.Core.CodeGen;
+using System.Threading.Tasks;
 using TLDAG.Libraries.Core.Collections;
+using TLDAG.Libraries.Core.Resources;
 
-namespace TLDAG.Libraries.CodeGen
+namespace TLDAG.Libraries.Core.CodeGen
 {
     public abstract class RexNode
     {
@@ -40,7 +41,7 @@ namespace TLDAG.Libraries.CodeGen
             internal override int SetIds(int nextId)
             {
                 Id = nextId;
-                
+
                 return nextId + 1;
             }
 
@@ -51,10 +52,10 @@ namespace TLDAG.Libraries.CodeGen
                 => new(Id);
 
             internal override void CollectLeafs(Dictionary<int, LeafNode> leafs)
-                { leafs[Id] = this; }
+            { leafs[Id] = this; }
 
             internal override void CollectNodes(List<RexNode> nodes)
-                { nodes.Add(this); }
+            { nodes.Add(this); }
 
             internal override void SetFollowpos(IReadOnlyDictionary<int, LeafNode> leafs) { }
         }
@@ -100,10 +101,10 @@ namespace TLDAG.Libraries.CodeGen
                 => false;
 
             internal override void CollectSymbols(SortedSet<char> symbols)
-                { symbols.Add(Char); }
+            { symbols.Add(Char); }
 
             internal override void SetSymbolClasses(Alphabet alphabet)
-                { Class = alphabet[Char]; }
+            { Class = alphabet[Char]; }
         }
 
         public abstract class BinaryNode : RexNode
@@ -211,13 +212,13 @@ namespace TLDAG.Libraries.CodeGen
                 => Child.SetIds(nextId);
 
             internal override void CollectLeafs(Dictionary<int, LeafNode> leafs)
-                { Child.CollectLeafs(leafs); }
+            { Child.CollectLeafs(leafs); }
 
             internal override void CollectNodes(List<RexNode> nodes)
-                { Child.CollectNodes(nodes); nodes.Add(this); }
+            { Child.CollectNodes(nodes); nodes.Add(this); }
 
             internal override void CollectSymbols(SortedSet<char> symbols)
-                { Child.CollectSymbols(symbols); }
+            { Child.CollectSymbols(symbols); }
 
             internal override void SetFollowpos(IReadOnlyDictionary<int, LeafNode> leafs)
             {
@@ -230,7 +231,7 @@ namespace TLDAG.Libraries.CodeGen
             }
 
             internal override void SetSymbolClasses(Alphabet alphabet)
-                { Child.SetSymbolClasses(alphabet); }
+            { Child.SetSymbolClasses(alphabet); }
 
             protected override bool GetNullable()
                 => true;
@@ -266,10 +267,10 @@ namespace TLDAG.Libraries.CodeGen
             => Root.SetIds(nextId);
 
         internal void SetFollowpos()
-            { Root.SetFollowpos(Leafs); }
+        { Root.SetFollowpos(Leafs); }
 
         internal void CollectSymbols(SortedSet<char> symbols)
-            { Root.CollectSymbols(symbols); }
+        { Root.CollectSymbols(symbols); }
 
         private Dictionary<int, RexNode.LeafNode> GetLeafs()
         {
@@ -447,6 +448,163 @@ namespace TLDAG.Libraries.CodeGen
             names.Add(tree.Name);
 
             return this;
+        }
+    }
+
+    public class RexCompiler
+    {
+        public class State
+        {
+            public readonly int Id;
+            public readonly IntSet Positions;
+            public readonly int[] Transitions;
+            public readonly string? Accept;
+            public string RequiredAccept => Accept ?? throw new InvalidOperationException();
+
+            public State(int id, IntSet positions, int transitionCount, string? accept)
+            {
+                Id = id;
+                Positions = positions;
+                Transitions = new int[transitionCount];
+                Accept = accept;
+            }
+
+            public State(int transitionCount) : this(0, IntSet.Empty, transitionCount, "") { }
+        }
+
+        private readonly Alphabet Alphabet;
+        private readonly int transitionCount;
+        private readonly RexNode root;
+        private readonly IReadOnlyDictionary<int, RexNode.LeafNode> leafs;
+        private readonly IReadOnlyDictionary<int, string> accepts;
+
+        private readonly Dictionary<IntSet, State> states = new();
+        private readonly Queue<State> unmarked = new();
+
+        private Transitions? transitions = null;
+        public Transitions Transitions { get => transitions ?? throw new InvalidOperationException(); }
+
+        private Accepting? accepting = null;
+        public Accepting Accepting { get => accepting ?? throw new InvalidOperationException(); }
+
+        private RexCompiler(RexForest forest)
+        {
+            Alphabet = forest.Alphabet;
+            transitionCount = Alphabet.Count;
+            root = forest.Root;
+            leafs = forest.Leafs;
+            accepts = forest.Accepts;
+        }
+
+        public ScannerData Compile()
+        {
+            CreateStates();
+            CreateTransitions();
+            CreateAccepting();
+
+            return new(Alphabet, Transitions, Accepting);
+        }
+
+        private void CreateStates()
+        {
+            AddState(IntSet.Empty, false); // error state
+            AddState(root.Firstpos); // start state
+
+            while (unmarked.Count > 0)
+            {
+                ProcessState(unmarked.Dequeue());
+            }
+        }
+
+        private void ProcessState(State state)
+        {
+            foreach (int symbol in Alphabet)
+            {
+                ProcessStateSymbol(state, symbol);
+            }
+        }
+
+        private void ProcessStateSymbol(State state, int symbol)
+        {
+            if (symbol == 0) return;
+
+            IntSet NewPositions = IntSet.Empty;
+
+            foreach (int position in state.Positions)
+            {
+                if (leafs[position] is RexNode.Symbol symbolNode)
+                {
+                    if (symbolNode.Class == symbol)
+                    {
+                        NewPositions += symbolNode.Followpos;
+                    }
+                }
+            }
+
+            state.Transitions[symbol] = AddState(NewPositions).Id;
+        }
+
+        private State AddState(IntSet positions, bool asUnmarked = true)
+        {
+            if (states.ContainsKey(positions))
+            {
+                return states[positions];
+            }
+
+            string? accept = GetAccept(positions);
+            State state = new(states.Count, positions, transitionCount, accept);
+
+            states[positions] = state;
+
+            if (asUnmarked)
+            {
+                unmarked.Enqueue(state);
+            }
+
+            return state;
+        }
+
+        private string? GetAccept(IntSet positions)
+        {
+            if (positions.Count == 0) return "";
+
+            foreach (int position in positions)
+            {
+                if (accepts.ContainsKey(position))
+                {
+                    return accepts[position];
+                }
+            }
+
+            return null;
+        }
+
+        private void CreateAccepting()
+        {
+            accepting = new(states.Values
+                .Where(state => state.Accept != null)
+                .ToDictionary(state => state.Id, state => state.RequiredAccept));
+        }
+
+        private void CreateTransitions()
+        {
+            State[] ordered = states.Values.OrderBy(state => state.Id).ToArray();
+            int count = ordered.Length;
+            TransitionsBuilder builder = new(Alphabet.Count);
+
+            for (int i = 0; i < count; ++i)
+            {
+                builder.Add(ordered[i].Transitions);
+            }
+
+            transitions = builder.Build();
+        }
+
+        public static ScannerData Compile(RexForest forest)
+        {
+            RexCompiler compiler = new(forest);
+
+            return compiler.Compile();
         }
     }
 }

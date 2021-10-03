@@ -129,4 +129,16 @@
   <data name="SC004_InvalidTransitionsLength" xml:space="preserve">
     <value>SC004 Illegal argument: Wrong ransitions length (expected {0}, actual {1}).</value>
   </data>
+  <data name="SC100_RexTreeStackNotOne" xml:space="preserve">
+    <value>SC100 Invalid state: Tree stack has not exactly one entry.</value>
+  </data>
+  <data name="SC101_RexTreeNotEnoughEntries" xml:space="preserve">
+    <value>SC101 Invalid state: Tree stack has not enough entries. Expected at least {0} entry/entries.</value>
+  </data>
+  <data name="SC102_RexForestEmpty" xml:space="preserve">
+    <value>SC102 Invalid state: Must have at least one tree to create a forest.</value>
+  </data>
+  <data name="SC103_RexForestDuplicateName" xml:space="preserve">
+    <value>SC103 Invalid argument: The forest already contains a tree named '{0}'.</value>
+  </data>
 </root>

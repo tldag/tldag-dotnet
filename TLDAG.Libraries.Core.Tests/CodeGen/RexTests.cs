@@ -1,8 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using TLDAG.Libraries.Core.CodeGen;
 
-namespace TLDAG.Libraries.CodeGen.Tests
+namespace TLDAG.Libraries.Core.Tests.CodeGen
 {
     [TestClass]
     public class RexTests

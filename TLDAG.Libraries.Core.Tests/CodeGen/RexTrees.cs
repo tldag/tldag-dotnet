@@ -1,4 +1,6 @@
-﻿namespace TLDAG.Libraries.CodeGen.Tests
+﻿using TLDAG.Libraries.Core.CodeGen;
+
+namespace TLDAG.Libraries.Core.Tests.CodeGen
 {
     public static class RexTrees
     {
