@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TLDAG.Libraries.Core.CodeGen;
 using TLDAG.Libraries.Core.Collections;
 
@@ -26,7 +24,7 @@ namespace TLDAG.Libraries.CodeGen
             public State(int transitionCount) : this(0, new(), transitionCount) { }
         }
 
-        private readonly Alphabet alphabet;
+        private readonly Alphabet Alphabet;
         private readonly int transitionCount;
         private readonly RexNode root;
         private readonly IReadOnlyDictionary<int, RexNode.LeafNode> leafs;
@@ -34,10 +32,13 @@ namespace TLDAG.Libraries.CodeGen
         private readonly Dictionary<IntSet, State> states = new();
         private readonly Queue<State> unmarked = new();
 
+        private Transitions? transitions = null;
+        public Transitions Transitions { get => transitions ?? throw new InvalidOperationException(); }
+
         private ScannerCompiler(RexForest forest)
         {
-            alphabet = forest.Alphabet;
-            transitionCount = alphabet.Count;
+            Alphabet = forest.Alphabet;
+            transitionCount = Alphabet.Count;
             root = forest.Root;
             leafs = forest.Leafs;
         }
@@ -45,8 +46,9 @@ namespace TLDAG.Libraries.CodeGen
         public ScannerData Compile()
         {
             CreateStates();
+            CreateTransitions();
 
-            return new(alphabet, CreateTransitions());
+            return new(Alphabet, Transitions);
         }
 
         private void CreateStates()
@@ -62,7 +64,7 @@ namespace TLDAG.Libraries.CodeGen
 
         private void ProcessState(State state)
         {
-            foreach (int symbol in alphabet)
+            foreach (int symbol in Alphabet)
             {
                 ProcessStateSymbol(state, symbol);
             }
@@ -107,18 +109,18 @@ namespace TLDAG.Libraries.CodeGen
             return state;
         }
 
-        private int[][] CreateTransitions()
+        private void CreateTransitions()
         {
             State[] ordered = states.Values.OrderBy(state => state.Id).ToArray();
             int count = ordered.Length;
-            int[][] transitions = new int[count][];
+            TransitionsBuilder builder = new(Alphabet.Count);
 
             for (int i = 0; i < count; ++i)
             {
-                transitions[i] = ordered[i].Transitions;
+                builder.Add(ordered[i].Transitions);
             }
 
-            return transitions;
+            this.transitions = builder.Build();
         }
 
         public static ScannerData Compile(RexForest forest)

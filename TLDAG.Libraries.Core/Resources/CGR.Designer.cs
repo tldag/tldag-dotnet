@@ -61,11 +61,38 @@ namespace TLDAG.Libraries.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SC001: Invalid state: Alphabet not set.
+        ///   Looks up a localized string similar to SC001 Invalid state: Alphabet not set..
         /// </summary>
         internal static string SC001_AlphabetNotSet {
             get {
                 return ResourceManager.GetString("SC001_AlphabetNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SC002 Invalid state: Transitions not initialized..
+        /// </summary>
+        internal static string SC002_TransitionsNotInitialized {
+            get {
+                return ResourceManager.GetString("SC002_TransitionsNotInitialized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SC003  Invalid state: Transitions not set..
+        /// </summary>
+        internal static string SC003_TransitionsNotSet {
+            get {
+                return ResourceManager.GetString("SC003_TransitionsNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SC004 Illegal argument: Wrong ransitions length (expected {0}, actual {1})..
+        /// </summary>
+        internal static string SC004_InvalidTransitionsLength {
+            get {
+                return ResourceManager.GetString("SC004_InvalidTransitionsLength", resourceCulture);
             }
         }
     }

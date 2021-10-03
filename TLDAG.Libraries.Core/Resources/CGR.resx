@@ -118,6 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SC001_AlphabetNotSet" xml:space="preserve">
-    <value>SC001: Invalid state: Alphabet not set</value>
+    <value>SC001 Invalid state: Alphabet not set.</value>
+  </data>
+  <data name="SC002_TransitionsNotInitialized" xml:space="preserve">
+    <value>SC002 Invalid state: Transitions not initialized.</value>
+  </data>
+  <data name="SC003_TransitionsNotSet" xml:space="preserve">
+    <value>SC003  Invalid state: Transitions not set.</value>
+  </data>
+  <data name="SC004_InvalidTransitionsLength" xml:space="preserve">
+    <value>SC004 Illegal argument: Wrong ransitions length (expected {0}, actual {1}).</value>
   </data>
 </root>

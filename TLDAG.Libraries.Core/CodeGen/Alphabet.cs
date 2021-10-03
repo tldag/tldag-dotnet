@@ -11,12 +11,12 @@ namespace TLDAG.Libraries.Core.CodeGen
         private readonly int[] map = new int[65536];
         private int[]? classes = null;
 
-        public Alphabet() { }
-
         public Alphabet(IEnumerable<char> symbols)
         {
             FillMap(symbols);
         }
+
+        internal Alphabet() { }
 
         private int[] GetClasses()
             => classes ??= map.Distinct().OrderBy(i => i).ToArray();
@@ -41,17 +41,19 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         public void Save(Stream stream)
         {
-            IntStream intStream = new(stream);
+            IntStream output = new(stream);
 
-            intStream.Write(map);
+            output.Write(map);
         }
 
-        public void Load(Stream stream)
+        public static Alphabet Load(Stream stream)
         {
-            IntStream intStream = new(stream);
+            IntStream input = new(stream);
+            Alphabet alphabet = new();
 
-            intStream.Read(map);
-            classes = null;
+            input.Read(alphabet.map);
+
+            return alphabet;
         }
     }
 }
