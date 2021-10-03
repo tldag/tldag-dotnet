@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace TLDAG.Libraries.CodeGen.Tests
@@ -39,10 +38,6 @@ namespace TLDAG.Libraries.CodeGen.Tests
 
                 Debug.WriteLine(content);
             }
-
-            string symbols = string.Join(", ", forest.Symbols.Select(c => $"'{c}'"));
-
-            Debug.WriteLine(symbols);
         }
     }
 }

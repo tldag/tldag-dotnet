@@ -11,7 +11,7 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void EmptySet()
         {
-            IntSet set = new();
+            IntSet set = IntSet.Empty;
 
             Assert.AreEqual(0, set.Count);
         }
@@ -96,7 +96,7 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void Add()
         {
-            IntSet set = new();
+            IntSet set = IntSet.Empty;
 
             set += 2;
             Assert.AreEqual(1, set.Count);
@@ -160,7 +160,7 @@ namespace TLDAG.Libraries.Core.Tests.Collections
             IntSet expected, actual;
 
             expected = set;
-            actual = set - new IntSet();
+            actual = set - IntSet.Empty;
             Assert.AreEqual(expected, actual);
 
             expected = set;
@@ -179,12 +179,12 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void Intersect()
         {
-            IntSet set1 = new();
+            IntSet set1 = IntSet.Empty;
             IntSet set2 = new(5, 4, 3);
             IntSet set3 = new(3, 4, 7);
             IntSet expected, actual;
 
-            expected = new();
+            expected = IntSet.Empty;
             actual = set1 * set2;
             Assert.AreEqual(expected, actual);
 

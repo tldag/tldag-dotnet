@@ -31,7 +31,6 @@ namespace TLDAG.PS.Commands
         private FileInfo CreateNewSolutionFile()
         {
             FileInfo file = new(Path);
-            Guid guid = Guid.NewGuid();
             string contents = CreateNewSolutionContents();
 
             File.WriteAllText(file.FullName, contents);
@@ -39,7 +38,7 @@ namespace TLDAG.PS.Commands
             return file;
         }
 
-        private string CreateNewSolutionContents()
+        private static string CreateNewSolutionContents()
         {
             string content = Res.SolutionTemplate;
             Guid guid = Guid.NewGuid();

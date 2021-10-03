@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using TLDAG.Libraries.Core.IO;
 
 namespace TLDAG.Libraries.Core.Collections
 {
@@ -13,6 +15,8 @@ namespace TLDAG.Libraries.Core.Collections
         public int Count => values.Length;
 
         public int this[int index] => values[index];
+
+        public readonly static IntSet Empty = new();
 
         public IntSet(params int[] values)
         {
@@ -296,6 +300,23 @@ namespace TLDAG.Libraries.Core.Collections
             return new(result, true);
         }
 
+        public void Save(Stream stream)
+        {
+            IntStream output = new(stream);
+
+            output.Write(Count);
+            output.Write(values);
+        }
+
+        public static IntSet Load(Stream stream)
+        {
+            IntStream input = new(stream);
+            int count = input.Read();
+            int[] values = new int[count];
+
+            return new(values, true);
+        }
+
         private static int[] Unique(int[] values)
         {
             Sort(values, 0, values.Length);
@@ -460,7 +481,7 @@ namespace TLDAG.Libraries.Core.Collections
 
         private static int[] Copy(int[] values)
         {
-            if (values.Length == 0) return new int[0];
+            if (values.Length == 0) return Array.Empty<int>();
             if (values.Length == 1) return new int[] { values[0] };
             if (values.Length == 2) return new int[] { values[0], values[1] };
 

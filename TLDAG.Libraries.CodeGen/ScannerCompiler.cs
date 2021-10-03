@@ -13,21 +13,25 @@ namespace TLDAG.Libraries.CodeGen
             public readonly int Id;
             public readonly IntSet Positions;
             public readonly int[] Transitions;
+            public readonly string? Accept;
+            public string RequiredAccept => Accept ?? throw new InvalidOperationException();
 
-            public State(int id, IntSet positions, int transitionCount)
+            public State(int id, IntSet positions, int transitionCount, string? accept)
             {
                 Id = id;
                 Positions = positions;
                 Transitions = new int[transitionCount];
+                Accept = accept;
             }
 
-            public State(int transitionCount) : this(0, new(), transitionCount) { }
+            public State(int transitionCount) : this(0, IntSet.Empty, transitionCount, "") { }
         }
 
         private readonly Alphabet Alphabet;
         private readonly int transitionCount;
         private readonly RexNode root;
         private readonly IReadOnlyDictionary<int, RexNode.LeafNode> leafs;
+        private readonly IReadOnlyDictionary<int, string> accepts;
 
         private readonly Dictionary<IntSet, State> states = new();
         private readonly Queue<State> unmarked = new();
@@ -35,25 +39,30 @@ namespace TLDAG.Libraries.CodeGen
         private Transitions? transitions = null;
         public Transitions Transitions { get => transitions ?? throw new InvalidOperationException(); }
 
+        private AcceptingStates? acceptingStates = null;
+        public AcceptingStates AcceptingStates { get => acceptingStates ?? throw new InvalidOperationException(); }
+
         private ScannerCompiler(RexForest forest)
         {
             Alphabet = forest.Alphabet;
             transitionCount = Alphabet.Count;
             root = forest.Root;
             leafs = forest.Leafs;
+            accepts = forest.Accepts;
         }
 
         public ScannerData Compile()
         {
             CreateStates();
             CreateTransitions();
+            CreateAcceptingStates();
 
-            return new(Alphabet, Transitions);
+            return new(Alphabet, Transitions, AcceptingStates);
         }
 
         private void CreateStates()
         {
-            AddState(new(), false); // error state
+            AddState(IntSet.Empty, false); // error state
             AddState(root.Firstpos); // start state
 
             while (unmarked.Count > 0)
@@ -74,7 +83,7 @@ namespace TLDAG.Libraries.CodeGen
         {
             if (symbol == 0) return;
 
-            IntSet NewPositions = new();
+            IntSet NewPositions = IntSet.Empty;
 
             foreach (int position in state.Positions)
             {
@@ -97,7 +106,8 @@ namespace TLDAG.Libraries.CodeGen
                 return states[positions];
             }
 
-            State state = new(states.Count, positions, transitionCount);
+            string? accept = GetAccept(positions);
+            State state = new(states.Count, positions, transitionCount, accept);
 
             states[positions] = state;
 
@@ -107,6 +117,28 @@ namespace TLDAG.Libraries.CodeGen
             }
             
             return state;
+        }
+
+        private string? GetAccept(IntSet positions)
+        {
+            if (positions.Count == 0) return "";
+
+            foreach (int position in positions)
+            {
+                if (accepts.ContainsKey(position))
+                {
+                    return accepts[position];
+                }
+            }
+
+            return null;
+        }
+
+        private void CreateAcceptingStates()
+        {
+            acceptingStates = new(states.Values
+                .Where(state => state.Accept != null)
+                .ToDictionary(state => state.Id, state => state.RequiredAccept));
         }
 
         private void CreateTransitions()
@@ -120,7 +152,7 @@ namespace TLDAG.Libraries.CodeGen
                 builder.Add(ordered[i].Transitions);
             }
 
-            this.transitions = builder.Build();
+            transitions = builder.Build();
         }
 
         public static ScannerData Compile(RexForest forest)

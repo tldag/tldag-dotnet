@@ -378,11 +378,11 @@ namespace TLDAG.Libraries.CodeGen
 
     public class RexForest : RexTree
     {
-        private SortedSet<char>? symbols = null;
-        public SortedSet<char> Symbols { get => new(symbols ??= GetSymbols()); }
-
         private Alphabet? alphabet = null;
-        public Alphabet Alphabet { get => alphabet ??= new(Symbols); }
+        public Alphabet Alphabet { get => alphabet ??= new(GetSymbols()); }
+
+        private Dictionary<int, string>? accepts = null;
+        public IReadOnlyDictionary<int, string> Accepts { get => accepts ??= GetAccepts(); }
 
         internal RexForest(RexNode root) : base(root)
         {
@@ -398,6 +398,14 @@ namespace TLDAG.Libraries.CodeGen
             Root.CollectSymbols(symbols);
 
             return symbols;
+        }
+
+        private Dictionary<int, string> GetAccepts()
+        {
+            return Leafs.Values
+                .Where(leaf => leaf is RexNode.Accept)
+                .Cast<RexNode.Accept>()
+                .ToDictionary(accept => accept.Id, accept => accept.Name);
         }
     }
 

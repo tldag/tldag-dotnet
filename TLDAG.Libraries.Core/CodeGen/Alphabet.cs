@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TLDAG.Libraries.Core.Collections;
 using TLDAG.Libraries.Core.IO;
 
 namespace TLDAG.Libraries.Core.CodeGen
@@ -9,7 +10,9 @@ namespace TLDAG.Libraries.Core.CodeGen
     public class Alphabet : IReadOnlyList<int>
     {
         private readonly int[] map = new int[65536];
-        private int[]? classes = null;
+
+        private IntSet? classes = null;
+        public IntSet Classes => classes ??= new(map);
 
         public Alphabet(IEnumerable<char> symbols)
         {
@@ -18,12 +21,9 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         internal Alphabet() { }
 
-        private int[] GetClasses()
-            => classes ??= map.Distinct().OrderBy(i => i).ToArray();
-
         public int this[int index] => map[index];
 
-        public int Count => GetClasses().Length;
+        public int Count => Classes.Count;
 
         private void FillMap(IEnumerable<char> symbols)
         {
@@ -35,9 +35,8 @@ namespace TLDAG.Libraries.Core.CodeGen
             }
         }
 
-        public IEnumerator<int> GetEnumerator() => GetClassesEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => GetClassesEnumerator();
-        private IEnumerator<int> GetClassesEnumerator() => GetClasses().AsEnumerable().GetEnumerator();
+        public IEnumerator<int> GetEnumerator() => Classes.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => Classes.GetEnumerator();
 
         public void Save(Stream stream)
         {
