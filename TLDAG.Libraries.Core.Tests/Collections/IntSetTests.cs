@@ -11,7 +11,7 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void EmptySet()
         {
-            IntSet set = IntSet.Empty;
+            IntSetOld set = IntSetOld.Empty;
 
             Assert.AreEqual(0, set.Count);
         }
@@ -19,7 +19,7 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void SingleElementSet()
         {
-            IntSet set = new(2);
+            IntSetOld set = new(2);
 
             Assert.AreEqual(1, set.Count);
             Assert.AreEqual(2, set[0]);
@@ -30,7 +30,7 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void SingleElementSetEnumerators()
         {
-            IntSet set = new(2);
+            IntSetOld set = new(2);
 
             IEnumerator<int> enumerator1 = set.GetEnumerator();
 
@@ -48,7 +48,7 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void Uniqueness()
         {
-            IntSet set = new(2, 2, 2, 2);
+            IntSetOld set = new(2, 2, 2, 2);
 
             Assert.AreEqual(1, set.Count);
             Assert.AreEqual(2, set[0]);
@@ -58,7 +58,7 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void Uniqueness2()
         {
-            IntSet set = new(2, 3, 4, 2, 3, 2, 3);
+            IntSetOld set = new(2, 3, 4, 2, 3, 2, 3);
 
             Assert.AreEqual(3, set.Count);
 
@@ -75,7 +75,7 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         public void FromList()
         {
             List<int> list = new() { 5, 4, 1, 5 };
-            IntSet set = new(list);
+            IntSetOld set = new(list);
 
             Assert.AreEqual(3, set.Count);
 
@@ -87,8 +87,8 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void ContainsAny()
         {
-            IntSet set1 = new(5, 4, 3);
-            IntSet set2 = new(3, 2, 1);
+            IntSetOld set1 = new(5, 4, 3);
+            IntSetOld set2 = new(3, 2, 1);
 
             Assert.IsTrue(set1.ContainsAny(set2));
         }
@@ -96,7 +96,7 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void Add()
         {
-            IntSet set = IntSet.Empty;
+            IntSetOld set = IntSetOld.Empty;
 
             set += 2;
             Assert.AreEqual(1, set.Count);
@@ -117,9 +117,9 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void Add2()
         {
-            IntSet set1 = new(5, 4, 3);
-            IntSet set2 = new(3, 2, 1);
-            IntSet set = set1 + set2;
+            IntSetOld set1 = new(5, 4, 3);
+            IntSetOld set2 = new(3, 2, 1);
+            IntSetOld set = set1 + set2;
 
             Assert.AreEqual(5, set.Count);
             Assert.IsTrue(set.ContainsAll(set1));
@@ -129,8 +129,8 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void Sub()
         {
-            IntSet set = new(5, 4, 3);
-            IntSet expected, actual;
+            IntSetOld set = new(5, 4, 3);
+            IntSetOld expected, actual;
 
             expected = new(5, 4, 3);
             actual = set - 0;
@@ -156,35 +156,35 @@ namespace TLDAG.Libraries.Core.Tests.Collections
         [TestMethod]
         public void Sub2()
         {
-            IntSet set = new(5, 4, 3);
-            IntSet expected, actual;
+            IntSetOld set = new(5, 4, 3);
+            IntSetOld expected, actual;
 
             expected = set;
-            actual = set - IntSet.Empty;
+            actual = set - IntSetOld.Empty;
             Assert.AreEqual(expected, actual);
 
             expected = set;
-            actual = set - new IntSet(2);
+            actual = set - new IntSetOld(2);
             Assert.AreEqual(expected, actual);
 
             expected = set;
-            actual = set - new IntSet(6);
+            actual = set - new IntSetOld(6);
             Assert.AreEqual(expected, actual);
 
             expected = new(5);
-            actual = set - new IntSet(3, 4);
+            actual = set - new IntSetOld(3, 4);
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void Intersect()
         {
-            IntSet set1 = IntSet.Empty;
-            IntSet set2 = new(5, 4, 3);
-            IntSet set3 = new(3, 4, 7);
-            IntSet expected, actual;
+            IntSetOld set1 = IntSetOld.Empty;
+            IntSetOld set2 = new(5, 4, 3);
+            IntSetOld set3 = new(3, 4, 7);
+            IntSetOld expected, actual;
 
-            expected = IntSet.Empty;
+            expected = IntSetOld.Empty;
             actual = set1 * set2;
             Assert.AreEqual(expected, actual);
 

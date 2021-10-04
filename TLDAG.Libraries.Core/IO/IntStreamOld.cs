@@ -3,12 +3,12 @@ using System.IO;
 
 namespace TLDAG.Libraries.Core.IO
 {
-    public class IntStream
+    public class IntStreamOld
     {
         private readonly Stream stream;
         private readonly byte[] bytes = new byte[4];
 
-        public IntStream(Stream stream)
+        public IntStreamOld(Stream stream)
         {
             this.stream = stream;
         }

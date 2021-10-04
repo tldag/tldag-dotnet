@@ -30,14 +30,14 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen
             {
                 string content = "";
 
-                if (node is RexNode.LeafNode) { content += node.Id + ": "; }
+                if (node is RexNode.Leaf leaf) { content += leaf.Id + ": "; }
                 else if (node is RexNode.Choose) { content += "|: "; }
                 else if (node is RexNode.Concat) { content += ".: "; }
                 else if (node is RexNode.Kleene) { content += "*: "; }
 
                 content += node.Nullable + ", {" + node.Firstpos + "}, {" + node.Lastpos + "}";
 
-                if (node is RexNode.LeafNode leaf2)
+                if (node is RexNode.Leaf leaf2)
                 {
                     content += ", {" + leaf2.Followpos + "}";
                 }

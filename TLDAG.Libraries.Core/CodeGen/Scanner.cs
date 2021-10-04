@@ -13,8 +13,8 @@ namespace TLDAG.Libraries.Core.CodeGen
     {
         private readonly int[] map = new int[65536];
 
-        private IntSet? classes = null;
-        public IntSet Classes => classes ??= new(map);
+        private IntSetOld? classes = null;
+        public IntSetOld Classes => classes ??= new(map);
 
         public Alphabet(IEnumerable<char> symbols)
         {
@@ -42,14 +42,14 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         public void Save(Stream stream)
         {
-            IntStream output = new(stream);
+            IntStreamOld output = new(stream);
 
             output.Write(map);
         }
 
         public static Alphabet Load(Stream stream)
         {
-            IntStream input = new(stream);
+            IntStreamOld input = new(stream);
             Alphabet alphabet = new();
 
             input.Read(alphabet.map);

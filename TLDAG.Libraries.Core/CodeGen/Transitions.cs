@@ -23,7 +23,7 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         public static Transitions Load(Stream stream)
         {
-            IntStream input = new(stream);
+            IntStreamOld input = new(stream);
             int count = input.Read();
             int width = input.Read();
             int[][] transitions = new int[count][];
@@ -40,7 +40,7 @@ namespace TLDAG.Libraries.Core.CodeGen
         public void Save(Stream stream)
         {
             int count = transitions.Length;
-            IntStream output = new(stream);
+            IntStreamOld output = new(stream);
 
             output.Write(count);
             output.Write(width);

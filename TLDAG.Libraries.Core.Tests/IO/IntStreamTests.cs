@@ -34,7 +34,7 @@ namespace TLDAG.Libraries.Core.Tests.IO
             int[] expected = { 36, 8645, -356, 0 };
 
             MemoryStream output = new();
-            IntStream writer = new(output);
+            IntStreamOld writer = new(output);
 
             writer.Write(expected);
 
@@ -42,7 +42,7 @@ namespace TLDAG.Libraries.Core.Tests.IO
             Assert.AreEqual(16, output.Position);
 
             MemoryStream input = new(output.ToArray());
-            IntStream reader = new(input);
+            IntStreamOld reader = new(input);
             int[] actual = new int[4];
 
             reader.Read(actual);

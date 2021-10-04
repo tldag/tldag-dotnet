@@ -7,7 +7,7 @@ using TLDAG.Libraries.Core.IO;
 
 namespace TLDAG.Libraries.Core.Collections
 {
-    public sealed class IntSet : IReadOnlyList<int>, IEquatable<IntSet>, IComparable<IntSet>
+    public sealed class IntSetOld : IReadOnlyList<int>, IEquatable<IntSetOld>, IComparable<IntSetOld>
     {
         private readonly int[] values;
         private int? hashCode = null;
@@ -16,19 +16,19 @@ namespace TLDAG.Libraries.Core.Collections
 
         public int this[int index] => values[index];
 
-        public readonly static IntSet Empty = new();
+        public readonly static IntSetOld Empty = new();
 
-        public IntSet(params int[] values)
+        public IntSetOld(params int[] values)
         {
             this.values = Unique(Copy(values));
         }
 
-        public IntSet(IEnumerable<int> values)
+        public IntSetOld(IEnumerable<int> values)
         {
             this.values = Unique(Copy(values));
         }
 
-        private IntSet(int[] values, bool prepared)
+        private IntSetOld(int[] values, bool prepared)
         {
             if (!prepared) throw new InvalidOperationException();
 
@@ -45,9 +45,9 @@ namespace TLDAG.Libraries.Core.Collections
             => hashCode ??= CalculateHashCode();
 
         public override bool Equals(object? obj)
-            => EqualsIntSet(obj as IntSet);
+            => EqualsIntSet(obj as IntSetOld);
 
-        public bool Equals(IntSet? other)
+        public bool Equals(IntSetOld? other)
             => EqualsIntSet(other);
 
         public override string ToString()
@@ -60,7 +60,7 @@ namespace TLDAG.Libraries.Core.Collections
             return content;
         }
 
-        public int CompareTo(IntSet? other)
+        public int CompareTo(IntSetOld? other)
         {
             if (other == null) return values.Length;
 
@@ -100,7 +100,7 @@ namespace TLDAG.Libraries.Core.Collections
             return false;
         }
 
-        public bool ContainsAny(IntSet other)
+        public bool ContainsAny(IntSetOld other)
         {
             int[] v1 = values, v2 = other.values;
             int i1 = 0, n1 = v1.Length;
@@ -132,7 +132,7 @@ namespace TLDAG.Libraries.Core.Collections
             return true;
         }
 
-        public bool ContainsAll(IntSet other)
+        public bool ContainsAll(IntSetOld other)
         {
             int[] v1 = values, v2 = other.values;
             int i1 = 0, n1 = v1.Length;
@@ -150,13 +150,13 @@ namespace TLDAG.Libraries.Core.Collections
             return i2 == n2;
         }
 
-        public static bool operator ==(IntSet? set1, IntSet? set2)
+        public static bool operator ==(IntSetOld? set1, IntSetOld? set2)
             => set1 is null ? set2 is null : set1.EqualsIntSet(set2);
 
-        public static bool operator !=(IntSet? set1, IntSet? set2)
+        public static bool operator !=(IntSetOld? set1, IntSetOld? set2)
             => !(set1 == set2);
 
-        public static IntSet operator +(IntSet summand1, int summand2)
+        public static IntSetOld operator +(IntSetOld summand1, int summand2)
         {
             int[] oldValues = summand1.values;
             int oldCount = oldValues.Length;
@@ -177,10 +177,10 @@ namespace TLDAG.Libraries.Core.Collections
             return new(newValues, true);
         }
 
-        public static IntSet operator +(int summand1, IntSet summand2)
+        public static IntSetOld operator +(int summand1, IntSetOld summand2)
             => summand2 + summand1;
 
-        public static IntSet operator +(IntSet summand1, IntSet summand2)
+        public static IntSetOld operator +(IntSetOld summand1, IntSetOld summand2)
         {
             int[] v1 = summand1.values, v2 = summand2.values;
             int n1 = v1.Length, n2 = v2.Length;
@@ -210,7 +210,7 @@ namespace TLDAG.Libraries.Core.Collections
             return new(result, true);
         }
 
-        public static IntSet operator -(IntSet minuend, int sutrahend)
+        public static IntSetOld operator -(IntSetOld minuend, int sutrahend)
         {
             int[] values = minuend.values;
             int deletePos = GetInsertPosition(values, sutrahend);
@@ -227,7 +227,7 @@ namespace TLDAG.Libraries.Core.Collections
             return new(result, true);
         }
 
-        public static IntSet operator -(IntSet minuend, IntSet sutrahend)
+        public static IntSetOld operator -(IntSetOld minuend, IntSetOld sutrahend)
         {
             int[] v1 = minuend.values, v2 = sutrahend.values;
             int n1 = v1.Length, n2 = v2.Length;
@@ -264,7 +264,7 @@ namespace TLDAG.Libraries.Core.Collections
             return new(result, true);
         }
 
-        public static IntSet operator *(IntSet set1, IntSet set2)
+        public static IntSetOld operator *(IntSetOld set1, IntSetOld set2)
         {
             int[] v1 = set1.values, v2 = set2.values;
             int n1 = v1.Length, n2 = v2.Length;
@@ -302,15 +302,15 @@ namespace TLDAG.Libraries.Core.Collections
 
         public void Save(Stream stream)
         {
-            IntStream output = new(stream);
+            IntStreamOld output = new(stream);
 
             output.Write(Count);
             output.Write(values);
         }
 
-        public static IntSet Load(Stream stream)
+        public static IntSetOld Load(Stream stream)
         {
-            IntStream input = new(stream);
+            IntStreamOld input = new(stream);
             int count = input.Read();
             int[] values = new int[count];
 
@@ -532,7 +532,7 @@ namespace TLDAG.Libraries.Core.Collections
         private IEnumerator<int> GetValuesEnumerator()
             => values.AsEnumerable().GetEnumerator();
 
-        private bool EqualsIntSet(IntSet? other)
+        private bool EqualsIntSet(IntSetOld? other)
         {
             if (other is null) return false;
             if (values.Length != other.values.Length) return false;

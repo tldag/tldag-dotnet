@@ -14,7 +14,7 @@ namespace TLDAG.Libraries.Core.CodeGen
     {
         private readonly Dictionary<int, string> names;
 
-        public IntSet Ids { get; }
+        public IntSetOld Ids { get; }
 
         public IEnumerable<int> Keys => names.Keys;
         public IEnumerable<string> Values => names.Values;
