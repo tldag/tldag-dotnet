@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using static TLDAG.Libraries.Core.Algorithms.Unique;
-using static TLDAG.Libraries.Core.Algorithms.BinarySearch;
-using static TLDAG.Libraries.Core.Algorithms.Algorithms;
 using System.Linq;
+using static TLDAG.Libraries.Core.Algorithms.Algorithms;
+using static TLDAG.Libraries.Core.Algorithms.BinarySearch;
+using static TLDAG.Libraries.Core.Algorithms.Unique;
 
 namespace TLDAG.Libraries.Core.Collections
 {
-    public abstract class ImmutableSet<T> : IReadOnlyList<T> where T : notnull
+    public abstract partial class ImmutableSet<T> where T : notnull
     {
         protected readonly T[] values;
-
-        public T this[int index] => values[index];
-        public int Count => values.Length;
 
         public ImmutableSet(T[] values) { this.values = values; }
 
@@ -32,34 +28,9 @@ namespace TLDAG.Libraries.Core.Collections
 
         protected abstract int Compare(T v1, T v2);
         protected abstract int GetInsertPos(T value);
-
-        public IEnumerator<T> GetEnumerator() => CreateEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => CreateEnumerator();
-
-        protected IEnumerator<T> CreateEnumerator() => new Enumerator(this);
-
-        protected class Enumerator : IEnumerator<T>
-        {
-            protected readonly ImmutableSet<T> set;
-            protected int index = -1;
-
-            public T Current => set[index];
-            object IEnumerator.Current => set[index];
-
-            public Enumerator(ImmutableSet<T> set) { this.set = set; }
-
-            public void Dispose() { GC.SuppressFinalize(this); }
-            public void Reset() { index = -1; }
-
-            public bool MoveNext()
-            {
-                if (index + 1 < set.Count) { ++index; return true; }
-                return false;
-            }
-        }
     }
 
-    public class IntSet : ImmutableSet<int>
+    public partial class IntSet : ImmutableSet<int>
     {
         public static readonly IntSet Empty = new(Array.Empty<int>());
 
@@ -69,7 +40,7 @@ namespace TLDAG.Libraries.Core.Collections
         protected override int GetInsertPos(int value) => Search(values, value);
     }
 
-    public class CharSet : ImmutableSet<char>
+    public partial class CharSet : ImmutableSet<char>
     {
         public static readonly CharSet Empty = new(Array.Empty<char>());
 
@@ -79,7 +50,7 @@ namespace TLDAG.Libraries.Core.Collections
         protected override int GetInsertPos(char value) => Search(values, value);
     }
 
-    public class StringSet : ImmutableSet<string>
+    public partial class StringSet : ImmutableSet<string>
     {
         public readonly IComparer<string> Comparer;
 

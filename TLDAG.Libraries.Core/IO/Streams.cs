@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using static System.Math;
 using static TLDAG.Libraries.Core.Algorithms.Conversion;
 
 namespace TLDAG.Libraries.Core.IO
@@ -253,8 +252,8 @@ namespace TLDAG.Libraries.Core.IO
             {
                 string line = reader.ReadLine() ?? throw new EndOfStreamException();
 
-                values[offset++] = line;
-            }    
+                values[offset++] = Decode(line);
+            }
         }
 
         public void Write(string[] values, bool writeCount = false)
@@ -271,10 +270,20 @@ namespace TLDAG.Libraries.Core.IO
 
             for (int i = 0; i < count; ++i)
             {
-                writer.WriteLine(values[offset++]);
+                writer.WriteLine(Encode(values[offset++]));
             }
 
             writer.Flush();
+        }
+
+        private string Encode(string s)
+        {
+            throw new NotImplementedException();
+        }
+
+        private string Decode(string s)
+        {
+            throw new NotImplementedException();
         }
     }
 }

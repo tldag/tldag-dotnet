@@ -9,19 +9,19 @@ using TLDAG.Libraries.Core.IO;
 
 namespace TLDAG.Libraries.Core.CodeGen
 {
-    public class Alphabet : IReadOnlyList<int>
+    public class AlphabetOld : IReadOnlyList<int>
     {
         private readonly int[] map = new int[65536];
 
         private IntSetOld? classes = null;
         public IntSetOld Classes => classes ??= new(map);
 
-        public Alphabet(IEnumerable<char> symbols)
+        public AlphabetOld(IEnumerable<char> symbols)
         {
             FillMap(symbols);
         }
 
-        internal Alphabet() { }
+        internal AlphabetOld() { }
 
         public int this[int index] => map[index];
 
@@ -47,10 +47,10 @@ namespace TLDAG.Libraries.Core.CodeGen
             output.Write(map);
         }
 
-        public static Alphabet Load(Stream stream)
+        public static AlphabetOld Load(Stream stream)
         {
             IntStreamOld input = new(stream);
-            Alphabet alphabet = new();
+            AlphabetOld alphabet = new();
 
             input.Read(alphabet.map);
 
@@ -266,11 +266,11 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public class ScannerData
     {
-        public Alphabet Alphabet { get; }
+        public AlphabetOld Alphabet { get; }
         public Transitions Transitions { get; }
         public Accepting Accepting { get; }
 
-        public ScannerData(Alphabet alphabet, Transitions transitions, Accepting accepting)
+        public ScannerData(AlphabetOld alphabet, Transitions transitions, Accepting accepting)
         {
             Alphabet = alphabet;
             Transitions = transitions;
@@ -286,7 +286,7 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         public static ScannerData Load(Stream stream)
         {
-            Alphabet alphabet = Alphabet.Load(stream);
+            AlphabetOld alphabet = AlphabetOld.Load(stream);
             Transitions transitions = Transitions.Load(stream);
             Accepting accepting = Accepting.Load(stream);
 
@@ -295,7 +295,7 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         public static ScannerData FromResource(byte[] bytes, bool compressed = true)
         {
-            using Stream stream = ResourceUtils.GetStreamFromResource(bytes, compressed);
+            using Stream stream = ByteIO.ToStream(bytes, compressed);
 
             return Load(stream);
         }
@@ -303,7 +303,7 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public class Scanner : IEnumerable<Token>
     {
-        protected Alphabet alphabet;
+        protected AlphabetOld alphabet;
         protected Transitions transitions;
         protected Accepting accepting;
         protected IEnumerable<SourceCharacter> source;

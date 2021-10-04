@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TLDAG.Libraries.Core.Collections;
 using TLDAG.Libraries.Core.Resources;
 
@@ -23,7 +21,7 @@ namespace TLDAG.Libraries.Core.CodeGen
         internal abstract void CollectSymbols(SortedSet<char> symbols);
 
         internal abstract void SetFollowpos(IReadOnlyDictionary<int, Leaf> leafs);
-        internal abstract void SetSymbolClasses(Alphabet alphabet);
+        internal abstract void SetSymbolClasses(AlphabetOld alphabet);
 
         public abstract class Leaf : RexNode
         {
@@ -43,7 +41,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             }
 
             internal override void CollectSymbols(SortedSet<char> symbols) { }
-            internal override void SetSymbolClasses(Alphabet alphabet) { }
+            internal override void SetSymbolClasses(AlphabetOld alphabet) { }
         }
 
         public class Empty : Leaf
@@ -51,7 +49,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             internal Empty() { }
 
             internal override void CollectSymbols(SortedSet<char> symbols) { }
-            internal override void SetSymbolClasses(Alphabet alphabet) { }
+            internal override void SetSymbolClasses(AlphabetOld alphabet) { }
         }
 
         public class Symbol : Leaf
@@ -67,7 +65,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             internal override void CollectSymbols(SortedSet<char> symbols)
             { symbols.Add(Char); }
 
-            internal override void SetSymbolClasses(Alphabet alphabet)
+            internal override void SetSymbolClasses(AlphabetOld alphabet)
             { Class = alphabet[Char]; }
         }
 
@@ -97,7 +95,7 @@ namespace TLDAG.Libraries.Core.CodeGen
                 Right.SetFollowpos(leafs);
             }
 
-            internal override void SetSymbolClasses(Alphabet alphabet)
+            internal override void SetSymbolClasses(AlphabetOld alphabet)
             {
                 Left.SetSymbolClasses(alphabet);
                 Right.SetSymbolClasses(alphabet);
@@ -151,7 +149,7 @@ namespace TLDAG.Libraries.Core.CodeGen
                 }
             }
 
-            internal override void SetSymbolClasses(Alphabet alphabet)
+            internal override void SetSymbolClasses(AlphabetOld alphabet)
             { Child.SetSymbolClasses(alphabet); }
         }
     }
@@ -344,8 +342,8 @@ namespace TLDAG.Libraries.Core.CodeGen
                 { if (node is RexNode.Leaf leaf) leafs[leaf.Id] = leaf; }
         }
 
-        private Alphabet? alphabet = null;
-        public Alphabet Alphabet { get => alphabet ??= new(GetSymbols()); }
+        private AlphabetOld? alphabet = null;
+        public AlphabetOld Alphabet { get => alphabet ??= new(GetSymbols()); }
 
         private readonly List<RexNode> nodes = new();
         public IReadOnlyList<RexNode> Nodes { get => nodes; }
@@ -448,7 +446,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             public State(int transitionCount) : this(0, IntSetOld.Empty, transitionCount, "") { }
         }
 
-        private readonly Alphabet Alphabet;
+        private readonly AlphabetOld Alphabet;
         private readonly int transitionCount;
         private readonly RexNode root;
         private readonly IReadOnlyDictionary<int, RexNode.Leaf> leafs;

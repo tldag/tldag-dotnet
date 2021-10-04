@@ -28,7 +28,7 @@ namespace TLDAG.Libraries.Core
         IEnumerator IEnumerable.GetEnumerator()
             => CreateEnumerator();
 
-        protected abstract LinesEnumerator CreateEnumerator();
+        protected abstract IEnumerator<string> CreateEnumerator();
     }
 
     public class StringLines : Lines
@@ -40,7 +40,7 @@ namespace TLDAG.Libraries.Core
             Source = source;
         }
 
-        protected override LinesEnumerator CreateEnumerator()
+        protected override IEnumerator<string> CreateEnumerator()
             => new StringLinesEnumerator(Source);
 
         public class StringLinesEnumerator : LinesEnumerator
