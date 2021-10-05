@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.CodeDom.Compiler;
 using System.IO;
+using static TLDAG.Libraries.Core.CodeGen.Parse;
 
-namespace TLDAG.Libraries.Core.CodeGen.Grammar
+namespace TLDAG.Libraries.Core.CodeGen
 {
     public partial class GrammarCompiler
     {
-        protected readonly Gramm.Compiler compiler;
+        protected readonly Grammar.Compiler compiler;
 
         public GrammarCompiler()
         {
@@ -37,7 +38,7 @@ namespace TLDAG.Libraries.Core.CodeGen.Grammar
         public virtual void Compile(string text, FileInfo dest)
             { Save(compiler.Compile(text), dest); }
 
-        protected virtual void Save(Parse.Data data, FileInfo dest)
+        protected virtual void Save(ParseData data, FileInfo dest)
         {
             throw new NotImplementedException();
         }

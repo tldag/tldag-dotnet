@@ -9,8 +9,10 @@ namespace TLDAG.Libraries.Core.CodeGen
 {
     public static partial class Parse
     {
-        public partial class Data : Rex.Data
+        public partial class ParseData : RexData
         {
+            public ParseData(RexData rex) : base(rex.Names) { }
+
             public override void Save(Stream stream)
             {
                 base.Save(stream);
@@ -18,9 +20,9 @@ namespace TLDAG.Libraries.Core.CodeGen
                 throw new NotImplementedException();
             }
 
-            public static new Data Load(Stream stream)
+            public static new ParseData Load(Stream stream)
             {
-                Rex.Data rexData = Rex.Data.Load(stream);
+                RexData rex = RexData.Load(stream);
 
                 throw new NotImplementedException();
             }

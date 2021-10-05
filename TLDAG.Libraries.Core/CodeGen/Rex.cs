@@ -4,118 +4,123 @@ using TLDAG.Libraries.Core.Collections;
 
 namespace TLDAG.Libraries.Core.CodeGen
 {
-    public static partial class Rex
+    public interface IRexNodeVisitor
     {
-        public abstract class Node
+        public void Visit(RexNode node);
+    }
+
+    public abstract class RexNode
+    {
+        public bool Nullable = false;
+        public IntSetOld Firstpos = IntSetOld.Empty;
+        public IntSetOld Lastpos = IntSetOld.Empty;
+
+        public virtual V Visit<V>(V visitor) where V : IRexNodeVisitor
+        { visitor.Visit(this); return visitor; }
+
+        public abstract RexNode Clone();
+    }
+
+    public abstract class RexLeafNode : RexNode
+    {
+        public int Id = 0;
+        public IntSetOld Follopos = IntSetOld.Empty;
+    }
+
+    public class RexAcceptNode : RexLeafNode
+    {
+        public readonly string Name;
+
+        public RexAcceptNode(string name) { Name = name; }
+
+        public override RexNode Clone() { throw new NotSupportedException(); }
+    }
+
+    public class RexEmptyNode : RexLeafNode
+    {
+        public override RexNode Clone() => new RexEmptyNode();
+    }
+
+    public class RexSymbolNode : RexLeafNode
+    {
+        public readonly char Value;
+
+        public RexSymbolNode(char value) { Value = value; }
+
+        public override RexNode Clone() => new RexSymbolNode(Value);
+    }
+
+    public abstract class RexBinaryNode : RexNode
+    {
+        public readonly RexNode Left;
+        public readonly RexNode Right;
+
+        public RexBinaryNode(RexNode left, RexNode right) { Left = left; Right = right; }
+
+        public override V Visit<V>(V visitor)
+        { Left.Visit(visitor); Right.Visit(visitor); return base.Visit(visitor); }
+    }
+
+    public class RexChooseNode : RexBinaryNode
+    {
+        public RexChooseNode(RexNode left, RexNode right) : base(left, right) { }
+
+        public override RexNode Clone() => new RexChooseNode(Left.Clone(), Right.Clone());
+    }
+
+    public class RexConcatNode : RexBinaryNode
+    {
+        public RexConcatNode(RexNode left, RexNode right) : base(left, right) { }
+
+        public override RexNode Clone() => new RexConcatNode(Left.Clone(), Right.Clone());
+    }
+
+    public class RexKleeneNode : RexNode
+    {
+        public readonly RexNode Child;
+
+        public RexKleeneNode(RexNode child) { Child = child; }
+
+        public override RexNode Clone() => new RexKleeneNode(Child.Clone());
+    }
+
+    public class RexBuilder
+    {
+        private readonly Stack<RexNode> stack = new();
+        private readonly HashSet<string> names = new(Code.ReservedTokenNames, StringComparer.Ordinal);
+
+        public RexBuilder Accept(string name)
         {
-            public interface IVisitor
-            {
-                public void Visit(Node node);
-            }
+            if (names.Contains(name)) throw new ArgumentException("Duplicate name");
+            if (!Code.TokenNameRegex.IsMatch(name)) throw new ArgumentException("Illegal name");
 
-            public bool Nullable = false;
-            public IntSetOld Firstpos = IntSetOld.Empty;
-            public IntSetOld Lastpos = IntSetOld.Empty;
-
-            public virtual V Visit<V>(V visitor) where V : IVisitor
-                { visitor.Visit(this); return visitor; }
-
-            public abstract Node Clone();
+            names.Add(name); stack.Push(new RexAcceptNode(name)); return this;
         }
 
-        public abstract class Leaf : Node
+        public RexBuilder Empty() { stack.Push(new RexEmptyNode()); return this; }
+        public RexBuilder Symbol(char value) { stack.Push(new RexSymbolNode(value)); return this; }
+
+        public RexBuilder Choose()
+        { RexNode right = stack.Pop(); RexNode left = stack.Pop(); stack.Push(new RexChooseNode(left, right)); return this; }
+
+        public RexBuilder Concat()
+        { RexNode right = stack.Pop(); RexNode left = stack.Pop(); stack.Push(new RexConcatNode(left, right)); return this; }
+
+        public RexBuilder Kleene() { stack.Push(new RexKleeneNode(stack.Pop())); return this; }
+
+        public RexNode Build()
         {
-            public int Id = 0;
-            public IntSetOld Follopos = IntSetOld.Empty;
+            if (stack.Count == 0) return new RexEmptyNode();
+            if (stack.Count > 1) throw new InvalidOperationException();
+
+            return stack.Pop();
         }
 
-        public class Accept : Leaf
-        {
-            public readonly string Name;
-
-            public Accept(string name) { Name = name; }
-
-            public override Node Clone() { throw new NotSupportedException(); }
-        }
-
-        public class Empty : Leaf
-        {
-            public override Node Clone() => new Empty();
-        }
-
-        public class Symbol : Leaf
-        {
-            public readonly char Value;
-
-            public Symbol(char value) { Value = value; }
-
-            public override Node Clone() => new Symbol(Value);
-        }
-
-        public abstract class Binary : Node
-        {
-            public readonly Node Left;
-            public readonly Node Right;
-
-            public Binary(Node left, Node right) { Left = left; Right = right; }
-
-            public override V Visit<V>(V visitor)
-                { Left.Visit(visitor); Right.Visit(visitor); return base.Visit(visitor); }
-        }
-
-        public class Choose : Binary
-        {
-            public Choose(Node left, Node right) : base(left, right) { }
-
-            public override Node Clone() => new Choose(Left.Clone(), Right.Clone());
-        }
-
-        public class Concat : Binary
-        {
-            public Concat(Node left, Node right) : base(left, right) { }
-
-            public override Node Clone() => new Concat(Left.Clone(), Right.Clone());
-        }
-
-        public class Kleene : Node
-        {
-            public readonly Node Child;
-
-            public Kleene(Node child) { Child = child; }
-
-            public override Node Clone() => new Kleene(Child.Clone());
-        }
-
-        public class Builder
-        {
-            private readonly Stack<Node> stack = new();
-            private readonly HashSet<string> names = new(Code.ReservedTokenNames, StringComparer.Ordinal);
-
-            public Builder Accept(string name)
-            {
-                if (names.Contains(name)) throw new ArgumentException("Duplicate name");
-                if (!Code.TokenNameRegex.IsMatch(name)) throw new ArgumentException("Illegal name");
-
-                names.Add(name); stack.Push(new Accept(name)); return this;
-            }
-
-            public Builder Empty() { stack.Push(new Empty()); return this; }
-            public Builder Symbol(char value) { stack.Push(new Symbol(value)); return this; }
-
-            public Builder Choose()
-            { Node right = stack.Pop(); Node left = stack.Pop(); stack.Push(new Choose(left, right)); return this; }
-
-            public Builder Concat()
-            { Node right = stack.Pop(); Node left = stack.Pop(); stack.Push(new Concat(left, right)); return this; }
-
-            public Builder Kleene() { stack.Push(new Kleene(stack.Pop())); return this; }
-
-            public Node Build()
-            {
-                if (stack.Count != 1) throw new InvalidOperationException();
-
-                return stack.Pop();
-            }
-        }
+        public RexBuilder A(string name) => Accept(name);
+        public RexBuilder E() => Empty();
+        public RexBuilder S(char value) => Symbol(value);
+        public RexBuilder CH() => Choose();
+        public RexBuilder CN() => Concat();
+        public RexBuilder K() => Kleene();
     }
 }

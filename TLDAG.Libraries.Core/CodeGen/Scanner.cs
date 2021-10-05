@@ -58,31 +58,31 @@ namespace TLDAG.Libraries.Core.CodeGen
         }
     }
 
-    public class SourcePosition
+    public class SourcePositionOld
     {
         public int Line { get; }
         public int Column { get; }
 
-        public SourcePosition(int line, int column)
+        public SourcePositionOld(int line, int column)
         {
             Line = line;
             Column = column;
         }
     }
 
-    public class SourceCharacter
+    public class SourceCharacterOld
     {
-        public SourcePosition Position { get; }
+        public SourcePositionOld Position { get; }
         public char Value { get; }
 
-        public SourceCharacter(SourcePosition position, char value)
+        public SourceCharacterOld(SourcePositionOld position, char value)
         {
             Position = position;
             Value = value;
         }
     }
 
-    public class SourceLine : IEnumerable<SourceCharacter>
+    public class SourceLineOld : IEnumerable<SourceCharacterOld>
     {
         private readonly char[] characters;
 
@@ -90,31 +90,31 @@ namespace TLDAG.Libraries.Core.CodeGen
         public bool Last { get; internal set; }
         public string Source { get => new(characters); }
 
-        public SourceLine(int line, bool last, string source)
+        public SourceLineOld(int line, bool last, string source)
         {
             Line = line;
             Last = last;
             characters = source.ToCharArray();
         }
 
-        internal SourceLine(string source)
+        internal SourceLineOld(string source)
             : this(0, false, source) { }
 
-        public IEnumerator<SourceCharacter> GetEnumerator()
+        public IEnumerator<SourceCharacterOld> GetEnumerator()
             => new SourceLineEnumerator(Line, Last, characters);
 
         IEnumerator IEnumerable.GetEnumerator()
             => new SourceLineEnumerator(Line, Last, characters);
 
-        private class SourceLineEnumerator : IEnumerator<SourceCharacter>
+        private class SourceLineEnumerator : IEnumerator<SourceCharacterOld>
         {
             private readonly int line;
             private readonly bool last;
             private readonly char[] characters;
             private int state;
 
-            private SourceCharacter? current = null;
-            public SourceCharacter Current => current ?? throw new InvalidOperationException();
+            private SourceCharacterOld? current = null;
+            public SourceCharacterOld Current => current ?? throw new InvalidOperationException();
             object IEnumerator.Current => current ?? throw new InvalidOperationException();
 
             public SourceLineEnumerator(int line, bool last, char[] characters)
@@ -131,7 +131,7 @@ namespace TLDAG.Libraries.Core.CodeGen
                 if (state > characters.Length) return false;
                 if (state == characters.Length && last) return false;
 
-                SourcePosition position = new(line, state + 1);
+                SourcePositionOld position = new(line, state + 1);
 
                 if (state == characters.Length)
                 {
@@ -155,11 +155,11 @@ namespace TLDAG.Libraries.Core.CodeGen
         }
     }
 
-    public class SourceLines : IEnumerable<SourceCharacter>
+    public class SourceLinesOld : IEnumerable<SourceCharacterOld>
     {
-        private readonly SourceLine[] lines;
+        private readonly SourceLineOld[] lines;
 
-        public SourceLines(IEnumerable<SourceLine> lines)
+        public SourceLinesOld(IEnumerable<SourceLineOld> lines)
         {
             this.lines = lines.ToArray();
 
@@ -167,7 +167,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             SetLast(this.lines);
         }
 
-        private static void SetLineNumbers(SourceLine[] lines)
+        private static void SetLineNumbers(SourceLineOld[] lines)
         {
             for (int i = 0, n = lines.Length; i < n; ++i)
             {
@@ -175,7 +175,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             }
         }
 
-        private static void SetLast(SourceLine[] lines)
+        private static void SetLast(SourceLineOld[] lines)
         {
             int count = lines.Length;
 
@@ -185,26 +185,26 @@ namespace TLDAG.Libraries.Core.CodeGen
             }
         }
 
-        public SourceLines(string source)
-            : this(new StringLines(source).Select(line => new SourceLine(line))) { }
+        public SourceLinesOld(string source)
+            : this(new StringLines(source).Select(line => new SourceLineOld(line))) { }
 
-        public IEnumerator<SourceCharacter> GetEnumerator()
+        public IEnumerator<SourceCharacterOld> GetEnumerator()
             => new SourceLinesEnumerator(lines);
 
         IEnumerator IEnumerable.GetEnumerator()
             => new SourceLinesEnumerator(lines);
 
-        private class SourceLinesEnumerator : IEnumerator<SourceCharacter>
+        private class SourceLinesEnumerator : IEnumerator<SourceCharacterOld>
         {
-            private readonly IEnumerable<SourceLine> lines;
-            private IEnumerator<SourceLine> line;
-            private IEnumerator<SourceCharacter>? characters;
+            private readonly IEnumerable<SourceLineOld> lines;
+            private IEnumerator<SourceLineOld> line;
+            private IEnumerator<SourceCharacterOld>? characters;
             private bool done;
 
-            public SourceCharacter Current => characters?.Current ?? throw new InvalidOperationException();
+            public SourceCharacterOld Current => characters?.Current ?? throw new InvalidOperationException();
             object IEnumerator.Current => characters?.Current ?? throw new InvalidOperationException();
 
-            public SourceLinesEnumerator(IEnumerable<SourceLine> lines)
+            public SourceLinesEnumerator(IEnumerable<SourceLineOld> lines)
             {
                 this.lines = lines;
                 line = lines.GetEnumerator();
@@ -248,29 +248,29 @@ namespace TLDAG.Libraries.Core.CodeGen
         }
     }
 
-    public class Token
+    public class TokenOld
     {
-        public SourcePosition Position { get; }
+        public SourcePositionOld Position { get; }
         public string Name { get; }
         public string Value { get; }
 
-        public Token(SourcePosition position, string name, string value)
+        public TokenOld(SourcePositionOld position, string name, string value)
         {
             Position = position;
             Name = name;
             Value = value;
         }
 
-        public static readonly Token EOF = new(new(0, 0), "EOF", "");
+        public static readonly TokenOld EOF = new(new(0, 0), "EOF", "");
     }
 
-    public class ScannerData
+    public class ScannerDataOld
     {
         public AlphabetOld Alphabet { get; }
-        public Transitions Transitions { get; }
-        public Accepting Accepting { get; }
+        public TransitionsOld Transitions { get; }
+        public AcceptingOld Accepting { get; }
 
-        public ScannerData(AlphabetOld alphabet, Transitions transitions, Accepting accepting)
+        public ScannerDataOld(AlphabetOld alphabet, TransitionsOld transitions, AcceptingOld accepting)
         {
             Alphabet = alphabet;
             Transitions = transitions;
@@ -284,16 +284,16 @@ namespace TLDAG.Libraries.Core.CodeGen
             Accepting.Save(stream);
         }
 
-        public static ScannerData Load(Stream stream)
+        public static ScannerDataOld Load(Stream stream)
         {
             AlphabetOld alphabet = AlphabetOld.Load(stream);
-            Transitions transitions = Transitions.Load(stream);
-            Accepting accepting = Accepting.Load(stream);
+            TransitionsOld transitions = TransitionsOld.Load(stream);
+            AcceptingOld accepting = AcceptingOld.Load(stream);
 
             return new(alphabet, transitions, accepting);
         }
 
-        public static ScannerData FromResource(byte[] bytes, bool compressed = true)
+        public static ScannerDataOld FromResource(byte[] bytes, bool compressed = true)
         {
             using Stream stream = ByteIO.ToStream(bytes, compressed);
 
@@ -301,14 +301,15 @@ namespace TLDAG.Libraries.Core.CodeGen
         }
     }
 
-    public class Scanner : IEnumerable<Token>
+    public class ScannerOld
+        : IEnumerable<TokenOld>
     {
         protected AlphabetOld alphabet;
-        protected Transitions transitions;
-        protected Accepting accepting;
-        protected IEnumerable<SourceCharacter> source;
+        protected TransitionsOld transitions;
+        protected AcceptingOld accepting;
+        protected IEnumerable<SourceCharacterOld> source;
 
-        public Scanner(ScannerData data, IEnumerable<SourceCharacter> source)
+        public ScannerOld(ScannerDataOld data, IEnumerable<SourceCharacterOld> source)
         {
             alphabet = data.Alphabet;
             transitions = data.Transitions;
@@ -317,27 +318,27 @@ namespace TLDAG.Libraries.Core.CodeGen
             this.source = source;
         }
 
-        public Scanner(ScannerData data, string source)
-            : this(data, new SourceLines(source)) { }
+        public ScannerOld(ScannerDataOld data, string source)
+            : this(data, new SourceLinesOld(source)) { }
 
-        public IEnumerator<Token> GetEnumerator()
+        public IEnumerator<TokenOld> GetEnumerator()
             => CreateEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
             => CreateEnumerator();
 
-        public delegate Token GetNextToken(IEnumerator<SourceCharacter> input);
+        public delegate TokenOld GetNextToken(IEnumerator<SourceCharacterOld> input);
 
-        protected virtual IEnumerator<Token> CreateEnumerator()
-            => new ScannerEnumerator(NextToken, source);
+        protected virtual IEnumerator<TokenOld> CreateEnumerator()
+            => new ScannerEnumeratorOld(NextToken, source);
 
-        public virtual Token NextToken(IEnumerator<SourceCharacter> input)
+        public virtual TokenOld NextToken(IEnumerator<SourceCharacterOld> input)
         {
-            if (!input.MoveNext()) return Token.EOF;
+            if (!input.MoveNext()) return TokenOld.EOF;
 
             int state = 1;
-            SourceCharacter current = input.Current;
-            SourcePosition start = current.Position;
+            SourceCharacterOld current = input.Current;
+            SourcePositionOld start = current.Position;
             StringBuilder value = new();
 
             while (true)
@@ -353,23 +354,23 @@ namespace TLDAG.Libraries.Core.CodeGen
                     return new(start, accepting[state], value.ToString());
                 }
 
-                if (!input.MoveNext()) return Token.EOF;
+                if (!input.MoveNext()) return TokenOld.EOF;
 
                 current = input.Current;
             }
         }
 
-        public class ScannerEnumerator : IEnumerator<Token>
+        public class ScannerEnumeratorOld : IEnumerator<TokenOld>
         {
             protected readonly GetNextToken getNextToken;
-            protected IEnumerable<SourceCharacter> source;
-            protected IEnumerator<SourceCharacter> input;
+            protected IEnumerable<SourceCharacterOld> source;
+            protected IEnumerator<SourceCharacterOld> input;
 
-            protected Token? current;
-            public Token Current => current ?? throw new InvalidOperationException();
+            protected TokenOld? current;
+            public TokenOld Current => current ?? throw new InvalidOperationException();
             object IEnumerator.Current => current ?? throw new InvalidOperationException();
 
-            public ScannerEnumerator(GetNextToken getNextToken, IEnumerable<SourceCharacter> source)
+            public ScannerEnumeratorOld(GetNextToken getNextToken, IEnumerable<SourceCharacterOld> source)
             {
                 this.getNextToken = getNextToken;
                 this.source = source;

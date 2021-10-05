@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static TLDAG.Libraries.Core.CodeGen.Parse;
 
-namespace TLDAG.Libraries.Core.CodeGen.Grammar
+namespace TLDAG.Libraries.Core.CodeGen
 {
-    public static partial class Gramm
+    public static partial class Grammar
     {
         public partial class Scanner
         {
@@ -20,9 +21,9 @@ namespace TLDAG.Libraries.Core.CodeGen.Grammar
 
         public partial class Compiler
         {
-            public Parse.Data Compile(string text)
+            public ParseData Compile(string text)
             {
-                throw new NotImplementedException();
+                return ParseCompiler.Create().Compile();
             }
         }
     }

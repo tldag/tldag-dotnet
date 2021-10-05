@@ -8,7 +8,8 @@ using TLDAG.Libraries.Core.Collections;
 
 namespace TLDAG.Libraries.Core.CodeGen
 {
-    public class Accepting : IReadOnlyDictionary<int, string>
+    public class AcceptingOld
+        : IReadOnlyDictionary<int, string>
     {
         private readonly Dictionary<int, string> names;
 
@@ -20,7 +21,7 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         public string this[int id] => names[id];
 
-        public Accepting(IReadOnlyDictionary<int, string> names)
+        public AcceptingOld(IReadOnlyDictionary<int, string> names)
         {
             this.names = new();
 
@@ -32,7 +33,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             Ids = new(this.names.Keys);
         }
 
-        private Accepting(Dictionary<int, string> names, bool prepared)
+        private AcceptingOld(Dictionary<int, string> names, bool prepared)
         {
             if (!prepared) throw new InvalidOperationException();
 
@@ -40,7 +41,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             Ids = new(this.names.Keys);
         }
 
-        public static Accepting Load(Stream stream)
+        public static AcceptingOld Load(Stream stream)
         {
             Dictionary<int, string> names = new();
             using StreamReader reader = new(stream, Encoding.UTF8);

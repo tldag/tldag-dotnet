@@ -7,9 +7,9 @@ using TLDAG.Libraries.Core.Resources;
 
 namespace TLDAG.Libraries.Core.CodeGen
 {
-    public abstract class RexNode
+    public abstract class RexNodeOld
     {
-        public interface IVisitor { void Visit(RexNode node); }
+        public interface IVisitor { void Visit(RexNodeOld node); }
 
         public bool Nullable { get; internal set; } = false;
         public IntSetOld Firstpos { get; internal set; } = IntSetOld.Empty;
@@ -23,7 +23,7 @@ namespace TLDAG.Libraries.Core.CodeGen
         internal abstract void SetFollowpos(IReadOnlyDictionary<int, Leaf> leafs);
         internal abstract void SetSymbolClasses(AlphabetOld alphabet);
 
-        public abstract class Leaf : RexNode
+        public abstract class Leaf : RexNodeOld
         {
             public int Id { get; internal set; } = -1;
             public IntSetOld Followpos { get; internal set; } = new();
@@ -69,12 +69,12 @@ namespace TLDAG.Libraries.Core.CodeGen
             { Class = alphabet[Char]; }
         }
 
-        public abstract class BinaryNode : RexNode
+        public abstract class BinaryNode : RexNodeOld
         {
-            public RexNode Left { get; }
-            public RexNode Right { get; }
+            public RexNodeOld Left { get; }
+            public RexNodeOld Right { get; }
 
-            protected BinaryNode(RexNode left, RexNode right)
+            protected BinaryNode(RexNodeOld left, RexNodeOld right)
             {
                 Left = left;
                 Right = right;
@@ -104,13 +104,13 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         public class Choose : BinaryNode
         {
-            internal Choose(RexNode left, RexNode right)
+            internal Choose(RexNodeOld left, RexNodeOld right)
                 : base(left, right) { }
         }
 
         public class Concat : BinaryNode
         {
-            internal Concat(RexNode left, RexNode right)
+            internal Concat(RexNodeOld left, RexNodeOld right)
                 : base(left, right) { }
 
             internal override void SetFollowpos(IReadOnlyDictionary<int, Leaf> leafs)
@@ -124,11 +124,11 @@ namespace TLDAG.Libraries.Core.CodeGen
             }
         }
 
-        public class Kleene : RexNode
+        public class Kleene : RexNodeOld
         {
-            public RexNode Child { get; }
+            public RexNodeOld Child { get; }
 
-            internal Kleene(RexNode child)
+            internal Kleene(RexNodeOld child)
             {
                 Child = child;
             }
@@ -157,15 +157,15 @@ namespace TLDAG.Libraries.Core.CodeGen
     public class RexTree
     {
         public string Name { get; }
-        public RexNode Root { get; }
+        public RexNodeOld Root { get; }
 
-        internal RexTree(string name, RexNode root)
+        internal RexTree(string name, RexNodeOld root)
         {
             Name = name;
             Root = root;
         }
 
-        protected RexTree(RexNode root) : this("", root) { }
+        protected RexTree(RexNodeOld root) : this("", root) { }
 
         internal void CollectSymbols(SortedSet<char> symbols)
             { Root.CollectSymbols(symbols); }
@@ -175,7 +175,7 @@ namespace TLDAG.Libraries.Core.CodeGen
     {
         public static readonly Regex NameRex = new("^[A-Z][_A-Z0-9]*$");
 
-        private readonly Stack<RexNode> stack = new();
+        private readonly Stack<RexNodeOld> stack = new();
 
         public string Name { get; }
 
@@ -197,23 +197,23 @@ namespace TLDAG.Libraries.Core.CodeGen
             if (stack.Count != 1)
                 throw new CompilerException(CGR.SC100_RexTreeStackNotOne);
 
-            RexNode left = stack.Pop();
-            RexNode right = new RexNode.Accept(Name);
-            RexNode root = new RexNode.Concat(left, right);
+            RexNodeOld left = stack.Pop();
+            RexNodeOld right = new RexNodeOld.Accept(Name);
+            RexNodeOld root = new RexNodeOld.Concat(left, right);
 
             return new(Name, root);
         }
 
         public RexTreeBuilder AddEmpty()
         {
-            stack.Push(new RexNode.Empty());
+            stack.Push(new RexNodeOld.Empty());
 
             return this;
         }
 
         public RexTreeBuilder AddSymbol(char value)
         {
-            stack.Push(new RexNode.Symbol(value));
+            stack.Push(new RexNodeOld.Symbol(value));
 
             return this;
         }
@@ -223,10 +223,10 @@ namespace TLDAG.Libraries.Core.CodeGen
             if (stack.Count < 2)
                 throw new CompilerException(CGR.SC101_RexTreeNotEnoughEntries, 2);
 
-            RexNode right = stack.Pop();
-            RexNode left = stack.Pop();
+            RexNodeOld right = stack.Pop();
+            RexNodeOld left = stack.Pop();
 
-            stack.Push(new RexNode.Choose(left, right));
+            stack.Push(new RexNodeOld.Choose(left, right));
 
             return this;
         }
@@ -236,10 +236,10 @@ namespace TLDAG.Libraries.Core.CodeGen
             if (stack.Count < 2)
                 throw new CompilerException(CGR.SC101_RexTreeNotEnoughEntries, 2);
 
-            RexNode right = stack.Pop();
-            RexNode left = stack.Pop();
+            RexNodeOld right = stack.Pop();
+            RexNodeOld left = stack.Pop();
 
-            stack.Push(new RexNode.Concat(left, right));
+            stack.Push(new RexNodeOld.Concat(left, right));
 
             return this;
         }
@@ -249,9 +249,9 @@ namespace TLDAG.Libraries.Core.CodeGen
             if (stack.Count < 1)
                 throw new CompilerException(CGR.SC101_RexTreeNotEnoughEntries, 1);
 
-            RexNode child = stack.Pop();
+            RexNodeOld child = stack.Pop();
 
-            stack.Push(new RexNode.Kleene(child));
+            stack.Push(new RexNodeOld.Kleene(child));
 
             return this;
         }
@@ -259,24 +259,24 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public class RexForest : RexTree
     {
-        public class SetNullableVisitor : RexNode.IVisitor
+        public class SetNullableVisitor : RexNodeOld.IVisitor
         {
-            public void Visit(RexNode node)
+            public void Visit(RexNodeOld node)
             {
-                if (node is RexNode.Empty) node.Nullable = true;
-                else if (node is RexNode.Choose choose) node.Nullable = choose.Left.Nullable || choose.Right.Nullable;
-                else if (node is RexNode.Concat concat) node.Nullable = concat.Left.Nullable && concat.Right.Nullable;
-                else if (node is RexNode.Kleene) node.Nullable = true;
+                if (node is RexNodeOld.Empty) node.Nullable = true;
+                else if (node is RexNodeOld.Choose choose) node.Nullable = choose.Left.Nullable || choose.Right.Nullable;
+                else if (node is RexNodeOld.Concat concat) node.Nullable = concat.Left.Nullable && concat.Right.Nullable;
+                else if (node is RexNodeOld.Kleene) node.Nullable = true;
             }
         }
 
-        public class SetIdVisitor : RexNode.IVisitor
+        public class SetIdVisitor : RexNodeOld.IVisitor
         {
             private int nextId = 1;
 
-            public void Visit(RexNode node)
+            public void Visit(RexNodeOld node)
             {
-                if (node is RexNode.Leaf leaf)
+                if (node is RexNodeOld.Leaf leaf)
                 {
                     leaf.Id = nextId;
                     ++nextId;
@@ -284,77 +284,77 @@ namespace TLDAG.Libraries.Core.CodeGen
             }
         }
 
-        public class SetFirstposVisitor : RexNode.IVisitor
+        public class SetFirstposVisitor : RexNodeOld.IVisitor
         {
-            public void Visit(RexNode node)
+            public void Visit(RexNodeOld node)
             {
-                if (node is RexNode.Leaf leaf)
+                if (node is RexNodeOld.Leaf leaf)
                     node.Firstpos = new(leaf.Id);
 
-                else if (node is RexNode.Choose choose)
+                else if (node is RexNodeOld.Choose choose)
                     node.Firstpos = choose.Left.Firstpos + choose.Right.Firstpos;
 
-                else if (node is RexNode.Concat concat)
+                else if (node is RexNodeOld.Concat concat)
                     node.Firstpos = concat.Left.Nullable ? (concat.Left.Firstpos + concat.Right.Firstpos) : concat.Left.Firstpos;
 
-                else if (node is RexNode.Kleene kleene)
+                else if (node is RexNodeOld.Kleene kleene)
                     node.Firstpos = kleene.Child.Firstpos;
             }
         }
 
-        public class SetLastposVisitor : RexNode.IVisitor
+        public class SetLastposVisitor : RexNodeOld.IVisitor
         {
-            public void Visit(RexNode node)
+            public void Visit(RexNodeOld node)
             {
-                if (node is RexNode.Leaf leaf)
+                if (node is RexNodeOld.Leaf leaf)
                     node.Lastpos = new(leaf.Id);
 
-                else if (node is RexNode.Choose choose)
+                else if (node is RexNodeOld.Choose choose)
                     node.Lastpos = choose.Left.Lastpos + choose.Right.Lastpos;
 
-                else if (node is RexNode.Concat concat)
+                else if (node is RexNodeOld.Concat concat)
                     node.Lastpos = concat.Right.Nullable ? (concat.Left.Lastpos + concat.Right.Lastpos) : concat.Right.Lastpos;
 
-                else if (node is RexNode.Kleene kleene)
+                else if (node is RexNodeOld.Kleene kleene)
                     node.Lastpos = kleene.Child.Lastpos;
             }
         }
 
-        public class CollectNodesVisitor : RexNode.IVisitor
+        public class CollectNodesVisitor : RexNodeOld.IVisitor
         {
-            private readonly List<RexNode> nodes;
+            private readonly List<RexNodeOld> nodes;
 
-            public CollectNodesVisitor(List<RexNode> nodes)
+            public CollectNodesVisitor(List<RexNodeOld> nodes)
                 { this.nodes = nodes; }
 
-            public void Visit(RexNode node)
+            public void Visit(RexNodeOld node)
                 { nodes.Add(node); }
         }
 
-        public class CollectLeafsVisitor : RexNode.IVisitor
+        public class CollectLeafsVisitor : RexNodeOld.IVisitor
         {
-            private readonly Dictionary<int, RexNode.Leaf> leafs;
+            private readonly Dictionary<int, RexNodeOld.Leaf> leafs;
 
-            public CollectLeafsVisitor(Dictionary<int, RexNode.Leaf> leafs)
+            public CollectLeafsVisitor(Dictionary<int, RexNodeOld.Leaf> leafs)
                 { this.leafs = leafs; }
 
-            public void Visit(RexNode node)
-                { if (node is RexNode.Leaf leaf) leafs[leaf.Id] = leaf; }
+            public void Visit(RexNodeOld node)
+                { if (node is RexNodeOld.Leaf leaf) leafs[leaf.Id] = leaf; }
         }
 
         private AlphabetOld? alphabet = null;
         public AlphabetOld Alphabet { get => alphabet ??= new(GetSymbols()); }
 
-        private readonly List<RexNode> nodes = new();
-        public IReadOnlyList<RexNode> Nodes { get => nodes; }
+        private readonly List<RexNodeOld> nodes = new();
+        public IReadOnlyList<RexNodeOld> Nodes { get => nodes; }
 
-        private readonly Dictionary<int, RexNode.Leaf> leafs = new();
-        public IReadOnlyDictionary<int, RexNode.Leaf> Leafs { get => leafs; }
+        private readonly Dictionary<int, RexNodeOld.Leaf> leafs = new();
+        public IReadOnlyDictionary<int, RexNodeOld.Leaf> Leafs { get => leafs; }
 
         private Dictionary<int, string>? accepts = null;
         public IReadOnlyDictionary<int, string> Accepts { get => accepts ??= GetAccepts(); }
 
-        internal RexForest(RexNode root) : base(root)
+        internal RexForest(RexNodeOld root) : base(root)
         {
             Root.SetSymbolClasses(Alphabet);
             Root.Visit(new SetIdVisitor());
@@ -378,8 +378,8 @@ namespace TLDAG.Libraries.Core.CodeGen
         private Dictionary<int, string> GetAccepts()
         {
             return Leafs.Values
-                .Where(leaf => leaf is RexNode.Accept)
-                .Cast<RexNode.Accept>()
+                .Where(leaf => leaf is RexNodeOld.Accept)
+                .Cast<RexNodeOld.Accept>()
                 .ToDictionary(accept => accept.Id, accept => accept.Name);
         }
     }
@@ -399,15 +399,15 @@ namespace TLDAG.Libraries.Core.CodeGen
             if (trees.Count < 1)
                 throw new CompilerException(CGR.SC102_RexForestEmpty);
 
-            RexNode[] roots = trees.Select(tree => tree.Root).ToArray();
-            RexNode root = roots[0];
+            RexNodeOld[] roots = trees.Select(tree => tree.Root).ToArray();
+            RexNodeOld root = roots[0];
 
             for (int i = 1, n = roots.Length; i < n; ++i)
             {
-                RexNode left = root;
-                RexNode right = roots[i];
+                RexNodeOld left = root;
+                RexNodeOld right = roots[i];
 
-                root = new RexNode.Choose(left, right);
+                root = new RexNodeOld.Choose(left, right);
             }
 
             return new(root);
@@ -425,7 +425,7 @@ namespace TLDAG.Libraries.Core.CodeGen
         }
     }
 
-    public class RexCompiler
+    public class RexCompilerOld
     {
         public class State
         {
@@ -448,20 +448,20 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         private readonly AlphabetOld Alphabet;
         private readonly int transitionCount;
-        private readonly RexNode root;
-        private readonly IReadOnlyDictionary<int, RexNode.Leaf> leafs;
+        private readonly RexNodeOld root;
+        private readonly IReadOnlyDictionary<int, RexNodeOld.Leaf> leafs;
         private readonly IReadOnlyDictionary<int, string> accepts;
 
         private readonly Dictionary<IntSetOld, State> states = new();
         private readonly Queue<State> unmarked = new();
 
-        private Transitions? transitions = null;
-        public Transitions Transitions { get => transitions ?? throw new InvalidOperationException(); }
+        private TransitionsOld? transitions = null;
+        public TransitionsOld Transitions { get => transitions ?? throw new InvalidOperationException(); }
 
-        private Accepting? accepting = null;
-        public Accepting Accepting { get => accepting ?? throw new InvalidOperationException(); }
+        private AcceptingOld? accepting = null;
+        public AcceptingOld Accepting { get => accepting ?? throw new InvalidOperationException(); }
 
-        private RexCompiler(RexForest forest)
+        private RexCompilerOld(RexForest forest)
         {
             Alphabet = forest.Alphabet;
             transitionCount = Alphabet.Count;
@@ -470,7 +470,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             accepts = forest.Accepts;
         }
 
-        public ScannerData Compile()
+        public ScannerDataOld Compile()
         {
             CreateStates();
             CreateTransitions();
@@ -506,7 +506,7 @@ namespace TLDAG.Libraries.Core.CodeGen
 
             foreach (int position in state.Positions)
             {
-                if (leafs[position] is RexNode.Symbol symbolNode)
+                if (leafs[position] is RexNodeOld.Symbol symbolNode)
                 {
                     if (symbolNode.Class == symbol)
                     {
@@ -564,7 +564,7 @@ namespace TLDAG.Libraries.Core.CodeGen
         {
             State[] ordered = states.Values.OrderBy(state => state.Id).ToArray();
             int count = ordered.Length;
-            TransitionsBuilder builder = new(Alphabet.Count);
+            TransitionsBuilderOld builder = new(Alphabet.Count);
 
             for (int i = 0; i < count; ++i)
             {
@@ -574,9 +574,9 @@ namespace TLDAG.Libraries.Core.CodeGen
             transitions = builder.Build();
         }
 
-        public static ScannerData Compile(RexForest forest)
+        public static ScannerDataOld Compile(RexForest forest)
         {
-            RexCompiler compiler = new(forest);
+            RexCompilerOld compiler = new(forest);
 
             return compiler.Compile();
         }

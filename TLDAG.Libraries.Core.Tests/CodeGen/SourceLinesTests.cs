@@ -11,9 +11,9 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen
         [TestMethod]
         public void Empty()
         {
-            SourceLines lines = new("");
+            SourceLinesOld lines = new("");
             char[] expected = Array.Empty<char>();
-            SourceCharacter[] actual = lines.ToArray();
+            SourceCharacterOld[] actual = lines.ToArray();
 
             AreEqual(expected, actual);
         }
@@ -21,9 +21,9 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen
         [TestMethod]
         public void OneLine()
         {
-            SourceLines lines = new("1");
+            SourceLinesOld lines = new("1");
             char[] expected = { '1' };
-            SourceCharacter[] actual = lines.ToArray();
+            SourceCharacterOld[] actual = lines.ToArray();
 
             AreEqual(expected, actual);
         }
@@ -31,14 +31,14 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen
         [TestMethod]
         public void MultiLine()
         {
-            SourceLines lines = new("1\r2\r\n3\n4");
+            SourceLinesOld lines = new("1\r2\r\n3\n4");
             char[] expected = { '1', '\n', '2', '\n', '3', '\n', '4' };
-            SourceCharacter[] actual = lines.ToArray();
+            SourceCharacterOld[] actual = lines.ToArray();
 
             AreEqual(expected, actual);
         }
 
-        private static void AreEqual(char[] expected, SourceCharacter[] actual)
+        private static void AreEqual(char[] expected, SourceCharacterOld[] actual)
         {
             Assert.AreEqual(expected.Length, actual.Length);
 

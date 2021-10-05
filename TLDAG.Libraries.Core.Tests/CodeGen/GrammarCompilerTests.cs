@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
-using TLDAG.Libraries.Core.CodeGen.Grammar;
+using TLDAG.Libraries.Core.CodeGen;
 using static TLDAG.Libraries.Core.IO.Directories;
 
-namespace TLDAG.Libraries.Core.Tests.CodeGen.Grammar
+namespace TLDAG.Libraries.Core.Tests.CodeGen
 {
     [TestClass]
     public class GrammarCompilerTests
@@ -32,8 +32,7 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen.Grammar
         private static GrammarCompiler CreateGrammarCompiler()
         {
 #if DEBUG
-            Gramm.Parser parser = new();
-            Gramm.Compiler compiler = new(parser);
+            Grammar.Compiler compiler = new(Grammar.GrammarGrammar);
 
             return new(compiler);
 #else

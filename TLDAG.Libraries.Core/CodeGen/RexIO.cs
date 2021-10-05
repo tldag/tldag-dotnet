@@ -7,19 +7,16 @@ using System.Threading.Tasks;
 
 namespace TLDAG.Libraries.Core.CodeGen
 {
-    public static partial class Rex
+    public partial class RexData
     {
-        public partial class Data
+        public virtual void Save(Stream stream)
         {
-            public virtual void Save(Stream stream)
-            {
-                throw new NotImplementedException();
-            }
+            throw new NotImplementedException();
+        }
 
-            public static Data Load(Stream stream)
-            {
-                throw new NotImplementedException();
-            }
+        public static RexData Load(Stream stream)
+        {
+            throw new NotImplementedException();
         }
     }
 }

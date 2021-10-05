@@ -11,9 +11,9 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen
         [TestMethod]
         public void Empty()
         {
-            SourceLine line = new(1, false, "");
+            SourceLineOld line = new(1, false, "");
             char[] expected = { '\n' };
-            SourceCharacter[] actual = line.ToArray();
+            SourceCharacterOld[] actual = line.ToArray();
 
             AreEqual(expected, actual);
         }
@@ -21,9 +21,9 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen
         [TestMethod]
         public void EmptyLast()
         {
-            SourceLine line = new(1, true, "");
+            SourceLineOld line = new(1, true, "");
             char[] expected = Array.Empty<char>();
-            SourceCharacter[] actual = line.ToArray();
+            SourceCharacterOld[] actual = line.ToArray();
 
             AreEqual(expected, actual);
         }
@@ -31,9 +31,9 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen
         [TestMethod]
         public void Foo()
         {
-            SourceLine line = new(1, false, "abc");
+            SourceLineOld line = new(1, false, "abc");
             char[] expected = { 'a', 'b', 'c', '\n' };
-            SourceCharacter[] actual = line.ToArray();
+            SourceCharacterOld[] actual = line.ToArray();
 
             AreEqual(expected, actual);
         }
@@ -41,14 +41,14 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen
         [TestMethod]
         public void FooLast()
         {
-            SourceLine line = new(1, true, "abc");
+            SourceLineOld line = new(1, true, "abc");
             char[] expected = { 'a', 'b', 'c' };
-            SourceCharacter[] actual = line.ToArray();
+            SourceCharacterOld[] actual = line.ToArray();
 
             AreEqual(expected, actual);
         }
 
-        private static void AreEqual(char[] expected, SourceCharacter[] actual)
+        private static void AreEqual(char[] expected, SourceCharacterOld[] actual)
         {
             Assert.AreEqual(expected.Length, actual.Length);
 

@@ -8,18 +8,20 @@ namespace TLDAG.Libraries.Core.CodeGen
 {
     public static partial class Parse
     {
-        public partial class Data
+        public partial class ParseData
         {
         }
 
-        public class Compiler
+        public class ParseCompiler
         {
-            public Compiler(NonTerminal root)
+            public ParseCompiler()
             {
                 throw new NotImplementedException();
             }
 
-            public Data Compile()
+            public static ParseCompiler Create() => throw new NotImplementedException();
+
+            public ParseData Compile()
             {
                 throw new NotImplementedException();
             }

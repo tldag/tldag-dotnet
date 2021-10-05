@@ -5,12 +5,12 @@ using TLDAG.Libraries.Core.Resources;
 
 namespace TLDAG.Libraries.Core.CodeGen
 {
-    public class Transitions
+    public class TransitionsOld
     {
         private readonly int width;
         private readonly int[][] transitions;
 
-        internal Transitions(int width, int[][] transitions)
+        internal TransitionsOld(int width, int[][] transitions)
         {
             this.width = width;
             this.transitions = transitions;
@@ -21,7 +21,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             get => transitions[state][symbol];
         }
 
-        public static Transitions Load(Stream stream)
+        public static TransitionsOld Load(Stream stream)
         {
             IntStreamOld input = new(stream);
             int count = input.Read();
@@ -52,20 +52,20 @@ namespace TLDAG.Libraries.Core.CodeGen
         }
     }
 
-    public class TransitionsBuilder
+    public class TransitionsBuilderOld
     {
         private readonly int width;
         private readonly List<int[]> list = new();
 
-        public TransitionsBuilder(int width)
+        public TransitionsBuilderOld(int width)
         {
             this.width = width;
         }
 
-        public static TransitionsBuilder Create(int width)
+        public static TransitionsBuilderOld Create(int width)
             => new(width);
 
-        public TransitionsBuilder Add(int[] transitions)
+        public TransitionsBuilderOld Add(int[] transitions)
         {
             if (width != transitions.Length)
                 throw new CompilerException(CGR.SC004_InvalidTransitionsLength, width, transitions.Length);
@@ -75,7 +75,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             return this;
         }
 
-        public Transitions Build()
+        public TransitionsOld Build()
             => new(width, list.ToArray());
     }
 }

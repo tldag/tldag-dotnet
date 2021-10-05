@@ -13,9 +13,9 @@ namespace TLDAG.Libraries.Core.Algorithms
             { throw new NotImplementedException(); }
 
         public static int Search(string[] values, string value, IComparer<string>? comparer = null)
-            => Search<string>(values, value, comparer ?? DefaultStringComparer);
+            => Search<string>(values, value, comparer ?? OrdinalStringComparer);
 
-        public static int Search<T>(T[] values, string value, IComparer<T> comparer)
+        public static int Search<T>(T[] values, T value, IComparer<T> comparer)
         {
             throw new NotImplementedException();
         }
