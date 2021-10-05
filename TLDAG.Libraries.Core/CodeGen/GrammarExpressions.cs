@@ -1,6 +1,5 @@
 ﻿#if DEBUG
 
-using System;
 
 namespace TLDAG.Libraries.Core.CodeGen
 {

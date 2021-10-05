@@ -9,12 +9,12 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     }
 
-    public class Terminal : ParseNode
+    public class ParseTerminal : ParseNode
     {
 
     }
 
-    public class Production : ParseNode
+    public class ParseProduction : ParseNode
     {
 
     }
@@ -29,10 +29,10 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         public static ProductionBuilder Create(RexData rex) => new(rex);
 
-        public Production Build()
+        public ParseProduction Build()
         {
             if (stack.Count != 1) throw new InvalidOperationException();
-            if (stack.Peek() is not Production root) throw new InvalidOperationException();
+            if (stack.Peek() is not ParseProduction root) throw new InvalidOperationException();
 
             stack.Pop();
 
@@ -43,7 +43,7 @@ namespace TLDAG.Libraries.Core.CodeGen
         {
             if (!terminalNames.Contains(name)) throw new ArgumentException();
 
-            stack.Push(new Terminal());
+            stack.Push(new ParseTerminal());
 
             return this;
         }
@@ -59,7 +59,7 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public class Parser
     {
-        public Production Parse()
+        public ParseProduction Parse()
         {
             throw new NotImplementedException();
         }

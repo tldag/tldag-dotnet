@@ -22,7 +22,24 @@ namespace TLDAG.Libraries.Core.Algorithms
 
         public static int[] UniqueInts(int[] values, bool copy)
         {
-            throw new NotImplementedException();
+            if (values.Length == 0) return values;
+
+            int[] sorted = copy ? Copy(values) : values;
+
+            Sort(sorted);
+
+            int count = UniqueIntsCount(sorted);
+            int[] result = new int[count];
+            int current = result[0] = sorted[0];
+
+            for (int i = 1, j = 1; j < count; ++i)
+            {
+                int candidate = sorted[i];
+
+                if (candidate > current) { result[j++] = current = candidate; }
+            }
+
+            return result;
         }
         
         public static char[] UniqueChars(char[] values, bool copy)
@@ -39,6 +56,11 @@ namespace TLDAG.Libraries.Core.Algorithms
 
             Sort(values, comparer);
 
+            throw new NotImplementedException();
+        }
+
+        private static int UniqueIntsCount(int[] sorted)
+        {
             throw new NotImplementedException();
         }
     }

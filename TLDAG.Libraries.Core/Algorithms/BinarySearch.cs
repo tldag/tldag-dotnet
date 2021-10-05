@@ -19,5 +19,10 @@ namespace TLDAG.Libraries.Core.Algorithms
         {
             throw new NotImplementedException();
         }
+
+        public static int Search<T>(T[] values, T value, int first, int last, IComparer<T> comparer)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

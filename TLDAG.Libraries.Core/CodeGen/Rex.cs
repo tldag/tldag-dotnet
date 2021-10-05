@@ -12,11 +12,17 @@ namespace TLDAG.Libraries.Core.CodeGen
     public abstract class RexNode
     {
         public bool Nullable = false;
-        public IntSetOld Firstpos = IntSetOld.Empty;
-        public IntSetOld Lastpos = IntSetOld.Empty;
+        public IntSet Firstpos = IntSet.Empty;
+        public IntSet Lastpos = IntSet.Empty;
+
+        public virtual V VisitDepthFirst<V>(V visitor) where V : IRexNodeVisitor
+            => Visit(visitor);
+
+        public virtual V VisitPreOrder<V>(V visitor) where V : IRexNodeVisitor
+            => Visit(visitor);
 
         public virtual V Visit<V>(V visitor) where V : IRexNodeVisitor
-        { visitor.Visit(this); return visitor; }
+            { visitor.Visit(this); return visitor; }
 
         public abstract RexNode Clone();
     }
@@ -24,7 +30,7 @@ namespace TLDAG.Libraries.Core.CodeGen
     public abstract class RexLeafNode : RexNode
     {
         public int Id = 0;
-        public IntSetOld Follopos = IntSetOld.Empty;
+        public IntSet Followpos = IntSet.Empty;
     }
 
     public class RexAcceptNode : RexLeafNode
@@ -52,13 +58,16 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public abstract class RexBinaryNode : RexNode
     {
-        public readonly RexNode Left;
-        public readonly RexNode Right;
+        public RexNode Left;
+        public RexNode Right;
 
         public RexBinaryNode(RexNode left, RexNode right) { Left = left; Right = right; }
 
-        public override V Visit<V>(V visitor)
-        { Left.Visit(visitor); Right.Visit(visitor); return base.Visit(visitor); }
+        public override V VisitDepthFirst<V>(V visitor)
+            { Left.VisitDepthFirst(visitor); Right.VisitDepthFirst(visitor); return Visit(visitor); }
+
+        public override V VisitPreOrder<V>(V visitor)
+            { Visit(visitor); Left.VisitPreOrder(visitor); Right.VisitPreOrder(visitor); return visitor; }
     }
 
     public class RexChooseNode : RexBinaryNode
@@ -77,9 +86,15 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public class RexKleeneNode : RexNode
     {
-        public readonly RexNode Child;
+        public RexNode Child;
 
         public RexKleeneNode(RexNode child) { Child = child; }
+
+        public override V VisitDepthFirst<V>(V visitor)
+            { Child.VisitDepthFirst(visitor); return Visit(visitor); }
+
+        public override V VisitPreOrder<V>(V visitor)
+            { Visit(visitor); Child.VisitPreOrder(visitor); return visitor; }
 
         public override RexNode Clone() => new RexKleeneNode(Child.Clone());
     }

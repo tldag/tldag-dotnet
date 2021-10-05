@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using TLDAG.Libraries.Core.Collections;
 
 namespace TLDAG.Libraries.Core.CodeGen

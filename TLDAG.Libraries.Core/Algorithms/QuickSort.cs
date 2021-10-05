@@ -7,6 +7,7 @@ namespace TLDAG.Libraries.Core.Algorithms
     public static class QuickSort
     {
         public static void Sort(byte[] values) { Sort(values, 0, values.Length); }
+        public static void Sort(int[] values) { Sort(values, 0, values.Length); }
         public static void Sort<T>(T[] values, IComparer<T> comparer) { Sort(values, 0, values.Length, comparer); }
 
         public static void Sort(byte[] values, int offset, int count)

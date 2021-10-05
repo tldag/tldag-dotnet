@@ -1,14 +1,12 @@
 ﻿#if DEBUG
 
-using static TLDAG.Libraries.Core.CodeGen.Parse;
-
 namespace TLDAG.Libraries.Core.CodeGen
 {
     public static partial class Grammar
     {
         public partial class Compiler
         {
-            public Compiler(Production root)
+            public Compiler(ParseProduction root)
             {
 
             }
