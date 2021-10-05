@@ -1,14 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using TLDAG.Libraries.Core.Algorithms;
 using TLDAG.Libraries.Core.Collections;
 
 namespace TLDAG.Libraries.Core.CodeGen
 {
+    public partial class RexTransitions
+    {
+        private readonly int width;
+        private readonly int[][] transitions;
+
+        internal RexTransitions(int width, int[][] transitions) { this.width = width; this.transitions = transitions; }
+    }
+
+    public class RexTransitionsBuilder
+    {
+        private readonly int width;
+        private readonly List<int[]> list = new();
+
+        public RexTransitionsBuilder(int width) { this.width = width; }
+        public static RexTransitionsBuilder Create(int width) => new(width);
+
+        public RexTransitionsBuilder Add(int[] transitions)
+        {
+            if (transitions.Length != width) throw new ArgumentException();
+            list.Add(transitions); return this;
+        }
+
+        public RexTransitions Build() => new(width, list.ToArray());
+    }
+
+    public partial class RexAccepts
+    {
+        private readonly IntMap<string> map;
+
+        public RexAccepts(IntMap<string> map) { this.map = map; }
+
+        public string? this[int state] { get => map[state]; }
+    }
+
     public partial class RexData
     {
-        public StringSet Names { get; }
+        public StringSet Names => throw new NotImplementedException();
 
-        public RexData(StringSet names) { Names = names; }
+        public RexData() { }
+        protected RexData(RexData rex) { }
     }
 
     public class RexExpandTree : IRexNodeVisitor
@@ -45,6 +82,8 @@ namespace TLDAG.Libraries.Core.CodeGen
     public class RexInitTree : IRexNodeVisitor
     {
         private int nextId = 1;
+
+        public readonly List<char> Symbols = new();
 
         public void Visit(RexNode node)
         {
@@ -98,11 +137,27 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public class RexState
     {
+        public readonly int Id;
+        public readonly string? Accept;
+        private readonly int[] transitions;
+
+        public int[] Transitions => ArrayUtils.Copy(transitions);
+
+        public RexState(int id, string? accept, int width)
+        {
+            Id = id;
+            Accept = accept;
+            transitions = new int[width];
+        }
     }
 
     public class RexCompiler
     {
         private readonly RexNode root;
+
+        private readonly Alphabet alphabet;
+        private readonly int width;
+
         private readonly SmartMap<IntSet, RexState> states = new();
         private readonly Queue<RexState> unmarked = new();
 
@@ -111,15 +166,19 @@ namespace TLDAG.Libraries.Core.CodeGen
             this.root = RexExpandTree.Expand(root);
 
             RexInitTree init = RexInitTree.Init(root);
+
+            alphabet = new(init.Symbols);
+            width = alphabet.Count;
         }
 
         public RexData Compile()
         {
             CreateStates();
-            CreateTransitions();
-            CreateAccepting();
 
-            throw new NotImplementedException();
+            RexTransitions transitions = CreateTransitions();
+            RexAccepts accepts = CreateAccepts();
+
+            return new();
         }
 
         private void CreateStates()
@@ -143,7 +202,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             {
                 string? accept = GetAccept(positions);
 
-                state = new();
+                state = new(states.Count, accept, width);
                 states[positions] = state;
                 if (asUnmarked) unmarked.Enqueue(state);
             }
@@ -153,17 +212,39 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         private string? GetAccept(IntSet positions)
         {
-            throw new NotImplementedException();
+            if (positions.Count == 0) return "";
+
+            foreach (int position in positions)
+            {
+                throw new NotImplementedException();
+            }
+
+            return null;
         }
 
-        private void CreateTransitions()
+        private RexTransitions CreateTransitions()
         {
-            throw new NotImplementedException();
+            RexState[] ordered = states.Values.OrderBy(state => state.Id).ToArray();
+            int count = ordered.Length;
+            RexTransitionsBuilder builder = new(width);
+
+            for (int i = 0; i < count; ++i) builder.Add(ordered[i].Transitions);
+
+            return builder.Build();
         }
 
-        private void CreateAccepting()
+        private RexAccepts CreateAccepts()
         {
-            throw new NotImplementedException();
+            IntMap<string> accepts = new();
+
+            foreach (RexState state in states.Values)
+            {
+                string? accept = state.Accept;
+
+                if (accept is not null) accepts[state.Id] = accept;
+            }
+
+            return new(accepts);
         }
 
         public static RexCompiler Create(RexNode root) => new(root);

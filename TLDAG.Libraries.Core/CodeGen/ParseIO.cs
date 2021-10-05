@@ -5,7 +5,7 @@ namespace TLDAG.Libraries.Core.CodeGen
 {
     public partial class ParseData : RexData
     {
-        public ParseData(RexData rex) : base(rex.Names) { }
+        public ParseData(RexData rex) : base(rex) { }
 
         public override void Save(Stream stream)
         {

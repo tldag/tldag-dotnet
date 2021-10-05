@@ -9,18 +9,23 @@ namespace TLDAG.Libraries.Core.CodeGen
     {
         public readonly CharSet Symbols;
 
-        private readonly int[] map;
+        private readonly int[] map = new int[65536];
         private readonly IntSet classes;
+
+        public readonly int Count;
 
         public Alphabet(IEnumerable<char> symbols)
         {
             Symbols = new(symbols);
 
-            map = CreateMap(Symbols);
+            int nextId = 0;
+
+            foreach (char c in Symbols) map[c] = ++nextId;
             classes = new(map);
+            Count = classes.Count;
         }
 
-        public int this[char index]
+        public int this[char key]
         {
             get { throw new NotImplementedException(); }
         }
@@ -28,11 +33,6 @@ namespace TLDAG.Libraries.Core.CodeGen
         public IEnumerator<int> GetEnumerator() => classes.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        private static int[] CreateMap(CharSet symbols)
         {
             throw new NotImplementedException();
         }

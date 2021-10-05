@@ -1,18 +1,15 @@
 ﻿using System;
+using TLDAG.Libraries.Core.Algorithms;
 
 namespace TLDAG.Libraries.Core.Collections
 {
     public partial class IntSet : IEquatable<IntSet>, IComparable<IntSet>
     {
         public int CompareTo(IntSet? other)
-        {
-            throw new NotImplementedException();
-        }
+            => other is null ? 1 : Comparing.Compare(values, other.values);
 
         public bool Equals(IntSet? other)
-        {
-            throw new NotImplementedException();
-        }
+            => CompareTo(other) == 0;
     }
 
     public partial class CharSet : IEquatable<CharSet>, IComparable<CharSet>
