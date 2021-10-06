@@ -5,21 +5,34 @@ using static TLDAG.Libraries.Core.CodeGen.Code;
 
 namespace TLDAG.Libraries.Core.CodeGen
 {
+    public interface IParseNodeVisitor
+    {
+        public void Visit(ParseNode node);
+    }
+
     public class ParseNode
     {
-
+        public virtual V VisitDepthFirst<V>(V visitor) where V : IParseNodeVisitor => Visit(visitor);
+        public virtual V VisitPreOrder<V>(V visitor) where V : IParseNodeVisitor => Visit(visitor);
+        protected virtual V Visit<V>(V visitor) where V : IParseNodeVisitor { visitor.Visit(this); return visitor; }
     }
 
     public class ParseTerminal : ParseNode
     {
-
     }
 
     public class ParseProduction : ParseNode
     {
         public readonly string Name;
+        private readonly ParseNode[] children;
 
-        public ParseProduction(string name) { Name = name; }
+        public ParseProduction(string name, ParseNode[] children) { Name = name; this.children = children; }
+
+        public override V VisitDepthFirst<V>(V visitor)
+        {
+            foreach (ParseNode node in children) node.VisitDepthFirst(visitor);
+            return base.Visit(visitor);
+        }
     }
 
     public class ProductionBuilder
@@ -63,13 +76,19 @@ namespace TLDAG.Libraries.Core.CodeGen
 
             for (int i = count - 1; i >= 0; --i) children[i] = stack.Pop();
 
-            ParseProduction production = new(name);
+            ParseProduction production = new(name, children);
 
             stack.Push(production); Add(production); return this;
         }
 
+        public ProductionBuilder Production(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public ProductionBuilder T(string name) => Terminal(name);
         public ProductionBuilder P(string name, int count) => Production(name, count);
+        public ProductionBuilder P(string name) => Production(name);
 
         private void ValidateStack(int min, int max = int.MaxValue)
         {

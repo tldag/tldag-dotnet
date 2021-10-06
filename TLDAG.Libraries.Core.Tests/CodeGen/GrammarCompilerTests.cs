@@ -10,12 +10,12 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen
     public class GrammarCompilerTests
     {
         [TestMethod]
-        public void MyTestMethod()
+        public void Test()
         {
             DirectoryInfo directory = GetDirectory();
             FileInfo source = new(Path.Combine(directory.FullName, "Grammar.g"));
             FileInfo dest = new(Path.Combine(directory.FullName, "Grammar.gz"));
-            GrammarCompiler compiler = CreateGrammarCompiler();
+            GrammarCompiler compiler = new();
 
             compiler.Compile(source, dest);
         }
@@ -27,18 +27,6 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen
             DirectoryInfo root = GetDirectoryOfFileAbove(start, "tldag-dotnet.sln");
 
             return new(Path.Combine(root.FullName, "TLDAG.Libraries.Core", "Resources"));
-        }
-
-        private static GrammarCompiler CreateGrammarCompiler()
-        {
-#if DEBUG
-            Grammar.Compiler compiler = new(Grammar.GrammarGrammar);
-
-            return new(compiler);
-#else
-            return new();
-#endif
-            throw new NotImplementedException();
         }
     }
 }

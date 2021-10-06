@@ -8,12 +8,12 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public class ParseCompiler
     {
-        public ParseCompiler()
+        public ParseCompiler(ParseNode root)
         {
             throw new NotImplementedException();
         }
 
-        public static ParseCompiler Create() => throw new NotImplementedException();
+        public static ParseCompiler Create(ParseNode root) => throw new NotImplementedException();
 
         public ParseData Compile()
         {

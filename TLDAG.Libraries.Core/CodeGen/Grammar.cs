@@ -1,23 +1,17 @@
-﻿namespace TLDAG.Libraries.Core.CodeGen
+﻿using System;
+
+namespace TLDAG.Libraries.Core.CodeGen
 {
     public static partial class Grammar
     {
-        public partial class Scanner
-        {
+        public static Scanner CreateScanner(string text) => throw new NotImplementedException();
+        public static Parser CreateParser(string text) => throw new NotImplementedException();
+        public static ParseCompiler CreateCompiler() => throw new NotImplementedException();
 
-        }
-
-        public partial class Parser
-        {
-
-        }
-
-        public partial class Compiler
-        {
-            public ParseData Compile(string text)
-            {
-                return ParseCompiler.Create().Compile();
-            }
-        }
+#if DEBUG
+        public static Scanner CreateDevScanner(string text) => new(GrammarRexData, text);
+        public static Parser CreateDevParser(string text) => throw new NotImplementedException();
+        public static ParseCompiler CreateDevCompiler() => throw new NotImplementedException();
+#endif
     }
 }

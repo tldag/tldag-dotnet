@@ -15,14 +15,9 @@ namespace TLDAG.Libraries.Core.CodeGen
         public IntSet Firstpos = IntSet.Empty;
         public IntSet Lastpos = IntSet.Empty;
 
-        public virtual V VisitDepthFirst<V>(V visitor) where V : IRexNodeVisitor
-            => Visit(visitor);
-
-        public virtual V VisitPreOrder<V>(V visitor) where V : IRexNodeVisitor
-            => Visit(visitor);
-
-        protected virtual V Visit<V>(V visitor) where V : IRexNodeVisitor
-            { visitor.Visit(this); return visitor; }
+        public virtual V VisitDepthFirst<V>(V visitor) where V : IRexNodeVisitor => Visit(visitor);
+        public virtual V VisitPreOrder<V>(V visitor) where V : IRexNodeVisitor  => Visit(visitor);
+        protected virtual V Visit<V>(V visitor) where V : IRexNodeVisitor { visitor.Visit(this); return visitor; }
 
         public abstract RexNode Clone();
     }

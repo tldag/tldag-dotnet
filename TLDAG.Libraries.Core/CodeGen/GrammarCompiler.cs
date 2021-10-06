@@ -7,8 +7,6 @@ namespace TLDAG.Libraries.Core.CodeGen
 {
     public partial class GrammarCompiler
     {
-        protected readonly Grammar.Compiler compiler;
-
         public GrammarCompiler()
         {
             throw new NotImplementedException();
@@ -32,7 +30,8 @@ namespace TLDAG.Libraries.Core.CodeGen
         }
 
         public virtual void Compile(string text, FileInfo dest)
-            { Save(compiler.Compile(text), dest); }
+            { throw new NotImplementedException(); }
+            // { Save(compiler.Compile(text), dest); }
 
         protected virtual void Save(ParseData data, FileInfo dest)
         {

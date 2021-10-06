@@ -40,6 +40,8 @@ namespace TLDAG.Libraries.Core
             Source = source;
         }
 
+        public static StringLines Create(string source) => new(source);
+
         protected override IEnumerator<string> CreateEnumerator()
             => new StringLinesEnumerator(Source);
 

@@ -44,13 +44,15 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public partial class RexData
     {
-        public RexAccepts Accepts;
+        public readonly RexAccepts Accepts;
+        public readonly int StartState;
 
         public StringSet Names => Accepts.Values;
 
-        public RexData(RexAccepts accepts)
+        public RexData(RexAccepts accepts, int startState)
         {
             Accepts = accepts;
+            StartState = startState;
         }
 
         protected RexData(RexData rex)
@@ -213,7 +215,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             RexTransitions transitions = CreateTransitions();
             RexAccepts accepts = CreateAccepts();
 
-            return new(accepts);
+            return new(accepts, 1);
         }
 
         private void CreateStates()
