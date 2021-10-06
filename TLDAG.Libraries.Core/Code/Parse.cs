@@ -19,9 +19,12 @@ namespace TLDAG.Libraries.Core.Code
 
     public class ParseTerminal : ParseNode
     {
-        public static readonly ParseTerminal EndOfFile = new();
+        public static readonly ParseTerminal EndOfFile = new(EndOfFileName);
 
         public int Id = 0;
+        public readonly string Name;
+
+        public ParseTerminal(string name) { Name = name; }
     }
 
     public class ParseEmptyNode : ParseNode

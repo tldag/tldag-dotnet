@@ -1,4 +1,5 @@
 ﻿using System;
+using TLDAG.Libraries.Core.Collections;
 using static TLDAG.Libraries.Core.Code.Constants;
 
 namespace TLDAG.Libraries.Core.Code
@@ -7,13 +8,42 @@ namespace TLDAG.Libraries.Core.Code
     {
     }
 
+    public class ParseInitTerminals : IParseNodeVisitor
+    {
+        private readonly IntMap<ParseTerminal> terminals = new();
+
+        public void Visit(ParseNode node)
+        {
+            if (node is ParseTerminal terminal)
+            {
+                if (terminal.Id == 0)
+                {
+                    terminal.Id = terminals.Count + 1;
+                    terminals[terminal.Id] = terminal;
+                }
+            }
+        }
+
+        public static IntMap<ParseTerminal> Init(ParseNode root)
+        {
+            ParseInitTerminals visitor = new();
+
+            root.VisitDepthFirst(visitor);
+
+            return visitor.terminals;
+        }
+    }
+
     public class ParseCompiler
     {
-        private ParseNode root;
+        private readonly ParseNode root;
+        private readonly IntMap<ParseTerminal> terminals;
 
         public ParseCompiler(ParseNode root)
         {
             this.root = Extend(root);
+
+            terminals = ParseInitTerminals.Init(this.root);
         }
 
         private static ParseProduction Extend(ParseNode root)
