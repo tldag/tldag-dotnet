@@ -1,9 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TLDAG.Libraries.Core.Code;
 using static TLDAG.Libraries.Core.Code.Constants;
 
@@ -19,7 +15,9 @@ namespace TLDAG.Libraries.Core.Tests.Code
             IEnumerator<Token> enumerator = scanner.GetEnumerator();
 
             Assert.IsTrue(enumerator.MoveNext());
+            Assert.IsTrue(enumerator.Current.IsEndOfFile);
             Assert.AreEqual(EndOfFileName, enumerator.Current.Name);
+            Assert.IsFalse(enumerator.MoveNext());
         }
     }
 }

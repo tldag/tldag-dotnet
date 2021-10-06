@@ -102,7 +102,7 @@ namespace TLDAG.Libraries.Core.Code
         protected virtual Token? NextToken()
         {
             if (done) return null;
-            if (!input.MoveNext()) { done = true; return Token.EOF(position); }
+            if (!input.MoveNext()) { done = true; return Token.EndOfFile(position); }
 
             throw new NotImplementedException();
         }

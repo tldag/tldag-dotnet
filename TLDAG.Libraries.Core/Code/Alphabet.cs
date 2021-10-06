@@ -2,14 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using TLDAG.Libraries.Core.Collections;
+using static TLDAG.Libraries.Core.Code.Constants;
 
 namespace TLDAG.Libraries.Core.Code
 {
     public partial class Alphabet : IEnumerable<int>
     {
+        public const int OtherClass = 0;
+        public const int EndOfFileClass = 1;
+
         public readonly CharSet Symbols;
 
-        private readonly int[] map = new int[65536];
+        private readonly int[] map;
         private readonly IntSet classes;
 
         public readonly int Count;
@@ -18,23 +22,19 @@ namespace TLDAG.Libraries.Core.Code
         {
             Symbols = new(symbols);
 
-            int nextId = 0;
+            int nextId = 2;
 
-            foreach (char c in Symbols) map[c] = ++nextId;
+            map = new int[65536];
+            foreach (char c in Symbols) map[c] = nextId++;
+            map[EndOfFileChar] = EndOfFileClass;
+
             classes = new(map);
             Count = classes.Count;
         }
 
-        public int this[char key]
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public int this[char key] => map[key];
 
         public IEnumerator<int> GetEnumerator() => classes.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => classes.GetEnumerator();
     }
 }

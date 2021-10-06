@@ -51,10 +51,14 @@ namespace TLDAG.Libraries.Core.Code
         public readonly ScanPosition Position;
         public readonly string Name;
         public readonly string Value;
+        public readonly bool IsEndOfFile;
 
-        public Token(ScanPosition position, string name, string value) { Position = position; Name = name; Value = value; }
+        public Token(ScanPosition position, string name, string value) : this(position, name, value, false) { }
 
-        public static Token EOF(ScanPosition position) => new(position, EndOfFileName, "");
+        private Token(ScanPosition position, string name, string value, bool isEndOfFile)
+            { Position = position; Name = name; Value = value; IsEndOfFile = isEndOfFile; }
+
+        public static Token EndOfFile(ScanPosition position) => new(position, EndOfFileName, "", true);
     }
 
     public partial class Scanner

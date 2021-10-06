@@ -1,4 +1,5 @@
 ﻿using System;
+using static TLDAG.Libraries.Core.Code.Constants;
 
 namespace TLDAG.Libraries.Core.Code
 {
@@ -17,9 +18,9 @@ namespace TLDAG.Libraries.Core.Code
 
         private static ParseProduction Extend(ParseNode root)
         {
-            ParseNode[] children = { root, ParseTerminal.EOF };
+            ParseNode[] children = { root, ParseTerminal.EndOfFile };
 
-            return new("<root>", children);
+            return new(ExtendedGrammarRootName, children);
         }
 
         public static ParseCompiler Create(ParseNode root) => new(root);
