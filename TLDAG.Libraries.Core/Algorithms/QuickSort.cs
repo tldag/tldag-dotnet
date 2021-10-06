@@ -105,13 +105,37 @@ namespace TLDAG.Libraries.Core.Algorithms
 
         private static void Sort3(int[] values, int offset0)
         {
-            throw new NotImplementedException();
+            int offset1 = offset0 + 1, offset2 = offset0 + 2;
+            int v0 = values[offset0], v1 = values[offset1], v2 = values[offset2];
+
+            if (v0 <= v1) { if (v1 <= v2) return; values[offset1] = v2; values[offset2] = v1; }
+            else
+            {
+                if (v1 <= v2)
+                {
+                    if (v0 <= v2) { values[offset0] = v1; values[offset1] = v0; }
+                    else { values[offset0] = v1; values[offset1] = v2; values[offset2] = v0; }
+                }
+                else { values[offset0] = v2; values[offset2] = v0; }
+            }
         }
 
         private static void Sort3<T>(T[] values, int offset0, Func<T, T, int> compare)
         {
-            throw new NotImplementedException();
-        }    
+            int offset1 = offset0 + 1, offset2 = offset0 + 2;
+            T v0 = values[offset0], v1 = values[offset1], v2 = values[offset2];
+
+            if (compare(v0, v1) <= 0) { if (compare(v1, v2) <= 0) return; values[offset1] = v2; values[offset2] = v1; }
+            else
+            {
+                if (compare(v1, v2) <= 0)
+                {
+                    if (compare(v0, v2) <= 0) { values[offset0] = v1; values[offset1] = v0; }
+                    else { values[offset0] = v1; values[offset1] = v2; values[offset2] = v0; }
+                }
+                else { values[offset0] = v2; values[offset2] = v0; }
+            }
+        }
 
         private static void Merge(int[] values, int offset, int count1, int count2)
         {

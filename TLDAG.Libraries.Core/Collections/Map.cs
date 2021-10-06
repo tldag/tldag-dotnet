@@ -44,6 +44,13 @@ namespace TLDAG.Libraries.Core.Collections
         public V? SetValue(K key, V? value)
             => value == null ? RemoveKey(key) : InsertValue(key, value);
 
+        public bool ContainsKey(K key)
+        {
+            int pos = search(keys, key, count);
+
+            return pos != count && equals(key, keys[pos]);
+        }
+
         public V? RemoveKey(K key)
         {
             throw new NotImplementedException();

@@ -86,7 +86,7 @@ namespace TLDAG.Libraries.Core.Collections
             : base(UniqueValues(values, compare)) { this.compare = compare; }
 
         protected override int GetHashCode(T value) => value.GetHashCode();
-        protected override int Compare(T v1, T v2) => throw new NotImplementedException();
+        protected override int Compare(T v1, T v2) => compare(v1, v2);
         protected override int GetInsertPos(T value) => Search(values, value, 0, values.Length, compare);
 
         public static ValueSet<U> Empty<U>(IComparer<U> comparer) where U : notnull
