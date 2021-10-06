@@ -2,7 +2,7 @@
 
 namespace TLDAG.Libraries.Core.Algorithms
 {
-    public static class ArrayUtils
+    public static class Arrays
     {
         public static T[] Copy<T>(T[] values)
         {

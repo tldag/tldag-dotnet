@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TLDAG.Libraries.Core.Collections;
 using static System.Math;
 
 namespace TLDAG.Libraries.Core.Algorithms
@@ -9,7 +10,9 @@ namespace TLDAG.Libraries.Core.Algorithms
         public static void Sort(byte[] values) { Sort(values, 0, values.Length); }
         public static void Sort(int[] values) { Sort(values, 0, values.Length); }
         public static void Sort(char[] values) { Sort(values, 0, values.Length); }
+
         public static void Sort<T>(T[] values, IComparer<T> comparer) { Sort(values, 0, values.Length, comparer); }
+        public static void Sort<T>(T[] values, Func<T, T, int> compare) { Sort(values, 0, values.Length, compare); }
 
         public static void Sort(byte[] values, int offset, int count)
         {
@@ -43,8 +46,21 @@ namespace TLDAG.Libraries.Core.Algorithms
         }
 
         public static void Sort<T>(T[] values, int offset, int count, IComparer<T> comparer)
+            => Sort(values, offset, count, comparer.ToFunc());
+
+        public static void Sort<T>(T[] values, int offset, int count, Func<T, T, int> compare)
         {
-            throw new NotImplementedException();
+            offset = Max(0, offset); count = Min(values.Length - offset, count);
+
+            if (count < 2) return;
+            if (count == 2) { Sort2(values, offset, compare); return; }
+            if (count == 3) { Sort3(values, offset, compare); return; }
+
+            int count1 = count / 2, count2 = count - count1;
+
+            Sort(values, offset, count1, compare);
+            Sort(values, offset + count1, count2, compare);
+            Merge(values, offset, count1, count2, compare);
         }
 
         private static void Sort2(byte[] values, int offset0)
@@ -63,6 +79,11 @@ namespace TLDAG.Libraries.Core.Algorithms
 
             if (v0 <= v1) return;
             values[offset0] = v1; values[offset1] = v0;
+        }
+
+        private static void Sort2<T>(T[] values, int offset, Func<T, T, int> compare)
+        {
+            throw new NotImplementedException();
         }
 
         private static void Sort3(byte[] values, int offset0)
@@ -87,6 +108,11 @@ namespace TLDAG.Libraries.Core.Algorithms
             throw new NotImplementedException();
         }
 
+        private static void Sort3<T>(T[] values, int offset0, Func<T, T, int> compare)
+        {
+            throw new NotImplementedException();
+        }    
+
         private static void Merge(int[] values, int offset, int count1, int count2)
         {
             int i1 = offset, e1 = i1 + count1, i2 = e1, e2 = i2 + count2;
@@ -99,6 +125,11 @@ namespace TLDAG.Libraries.Core.Algorithms
                 if (v1 <= v2) { ++i1; }
                 else { values[i1] = v2; values[i2] = v1; }
             }
+        }
+
+        private static void Merge<T>(T[] values, int offset, int count1, int count2, Func<T, T, int> compare)
+        {
+            throw new NotImplementedException();
         }
     }
 }

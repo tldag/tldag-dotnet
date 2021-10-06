@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using static TLDAG.Libraries.Core.Algorithms.ArrayUtils;
+using TLDAG.Libraries.Core.Collections;
+using static TLDAG.Libraries.Core.Algorithms.Arrays;
 using static TLDAG.Libraries.Core.Algorithms.QuickSort;
 
 namespace TLDAG.Libraries.Core.Algorithms
@@ -19,6 +20,9 @@ namespace TLDAG.Libraries.Core.Algorithms
 
         public static T[] UniqueValues<T>(IEnumerable<T> values, IComparer<T> comparer)
             => values is T[] array ? UniqueValues(array, true, comparer) : UniqueValues(values.ToArray(), false, comparer);
+
+        public static T[] UniqueValues<T>(IEnumerable<T> values, Func<T, T, int> compare)
+            => values is T[] array ? UniqueValues(array, true, compare) : UniqueValues(values.ToArray(), false, compare);
 
         public static int[] UniqueInts(int[] values, bool copy)
         {
@@ -68,12 +72,28 @@ namespace TLDAG.Libraries.Core.Algorithms
             => UniqueValues(values, copy, comparer ?? StringComparer.Ordinal);
 
         public static T[] UniqueValues<T>(T[] values, bool copy, IComparer<T> comparer)
+            => UniqueValues(values, copy, comparer.ToFunc());
+
+        public static T[] UniqueValues<T>(T[] values, bool copy, Func<T, T, int> compare)
         {
-            values = copy ? Copy(values) : values;
+            if (values.Length == 0) return values;
 
-            Sort(values, comparer);
+            T[] sorted = copy ? Copy(values) : values;
 
-            throw new NotImplementedException();
+            Sort(sorted, compare);
+
+            int count = UniqueValuesCount(sorted, compare);
+            T[] result = new T[count];
+            T current = result[0] = sorted[0];
+
+            for (int i = 1, j = 1; j < count; ++i)
+            {
+                T candidate = sorted[i];
+
+                if (compare(candidate, current) > 0) { result[j++] = current = candidate; }
+            }
+
+            return result;
         }
 
         private static int UniqueIntsCount(int[] sorted)
@@ -97,6 +117,24 @@ namespace TLDAG.Libraries.Core.Algorithms
         private static int UniqueCharsCount(char[] sorted)
         {
             throw new NotImplementedException();
+        }
+
+        private static int UniqueValuesCount<T>(T[] sorted, Func<T, T, int> compare)
+        {
+            int count = sorted.Length;
+
+            if (count == 0) return 0;
+
+            int result = 1; T last = sorted[0];
+
+            for (int i = 1; i < count; ++i)
+            {
+                T current = sorted[i];
+
+                if (compare(current, last) > 0) { ++result; last = current; }
+            }
+
+            return result;
         }
     }
 }

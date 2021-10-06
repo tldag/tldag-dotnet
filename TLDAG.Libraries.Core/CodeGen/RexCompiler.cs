@@ -35,6 +35,8 @@ namespace TLDAG.Libraries.Core.CodeGen
     {
         private readonly IntMap<string> map;
 
+        public StringSet Values => new(map.Values);
+
         public RexAccepts(IntMap<string> map) { this.map = map; }
 
         public string? this[int state] { get => map[state]; }
@@ -42,10 +44,39 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public partial class RexData
     {
-        public StringSet Names => throw new NotImplementedException();
+        public RexAccepts Accepts;
 
-        public RexData() { }
-        protected RexData(RexData rex) { }
+        public StringSet Names => Accepts.Values;
+
+        public RexData(RexAccepts accepts)
+        {
+            Accepts = accepts;
+        }
+
+        protected RexData(RexData rex)
+        {
+            Accepts = rex.Accepts;
+        }
+    }
+
+    public class RexGetAlphabet : IRexNodeVisitor
+    {
+        private readonly List<char> symbols = new();
+
+        public void Visit(RexNode node)
+        {
+            if (node is RexSymbolNode symbolNode) symbols.Add(symbolNode.Value);
+            else if (node is RexNotNode notNode) throw new NotImplementedException();
+        }
+
+        public static Alphabet GetAlphabet(RexNode root)
+        {
+            RexGetAlphabet visitor = new();
+
+            root.VisitDepthFirst(visitor);
+
+            return new(visitor.symbols);
+        }
     }
 
     public class RexExpandTree : IRexNodeVisitor
@@ -53,7 +84,7 @@ namespace TLDAG.Libraries.Core.CodeGen
         public void Visit(RexNode node)
         {
             if (node is RexBinaryNode binaryNode) ExpandBinary(binaryNode);
-            if (node is RexKleeneNode kleeneNode) ExpandKleene(kleeneNode);
+            else if (node is RexKleeneNode kleeneNode) ExpandKleene(kleeneNode);
         }
 
         private static void ExpandBinary(RexBinaryNode binaryNode)
@@ -64,12 +95,17 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         private static RexNode InternalExpand(RexNode node)
         {
-            // TODO: Expand RexNotNode
+            if (node is RexNotNode notNode) return ExpandNotNode(notNode);
 
             return node;
         }
 
-        public static RexNode Expand(RexNode root)
+        private static RexNode ExpandNotNode(RexNotNode notNode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static RexNode Expand(RexNode root, Alphabet alphabet)
         {
             RexExpandTree visitor = new();
 
@@ -83,8 +119,6 @@ namespace TLDAG.Libraries.Core.CodeGen
     {
         private int nextId = 1;
 
-        public readonly List<char> Symbols = new();
-
         public void Visit(RexNode node)
         {
             if (node is RexLeafNode leafNode) InitLeaf(leafNode);
@@ -94,6 +128,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             if (node is RexChooseNode chooseNode) InitChoose(chooseNode);
             if (node is RexConcatNode concatNode) InitConcat(concatNode);
             if (node is RexKleeneNode kleeneNode) InitKleene(kleeneNode);
+            if (node is RexNotNode) throw new NotSupportedException();
         }
 
         private void InitLeaf(RexLeafNode leafNode) { leafNode.Id = nextId++; }
@@ -125,13 +160,11 @@ namespace TLDAG.Libraries.Core.CodeGen
             throw new NotImplementedException();
         }
 
-        public static RexInitTree Init(RexNode root)
+        public static void Init(RexNode root)
         {
             RexInitTree init = new();
 
             root.VisitDepthFirst(init);
-
-            return init;
         }
     }
 
@@ -141,7 +174,7 @@ namespace TLDAG.Libraries.Core.CodeGen
         public readonly string? Accept;
         private readonly int[] transitions;
 
-        public int[] Transitions => ArrayUtils.Copy(transitions);
+        public int[] Transitions => Arrays.Copy(transitions);
 
         public RexState(int id, string? accept, int width)
         {
@@ -153,22 +186,24 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public class RexCompiler
     {
-        private readonly RexNode root;
-
         private readonly Alphabet alphabet;
         private readonly int width;
+
+        private readonly RexNode root;
 
         private readonly SmartMap<IntSet, RexState> states = new();
         private readonly Queue<RexState> unmarked = new();
 
         public RexCompiler(RexNode root)
         {
-            this.root = RexExpandTree.Expand(root);
+            this.root = root;
 
-            RexInitTree init = RexInitTree.Init(root);
-
-            alphabet = new(init.Symbols);
+            alphabet = RexGetAlphabet.GetAlphabet(this.root);
             width = alphabet.Count;
+
+            this.root = RexExpandTree.Expand(this.root, alphabet);
+
+            RexInitTree.Init(this.root);
         }
 
         public RexData Compile()
@@ -178,7 +213,7 @@ namespace TLDAG.Libraries.Core.CodeGen
             RexTransitions transitions = CreateTransitions();
             RexAccepts accepts = CreateAccepts();
 
-            return new();
+            return new(accepts);
         }
 
         private void CreateStates()

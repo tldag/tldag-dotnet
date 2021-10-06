@@ -21,11 +21,14 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public class ProductionBuilder
     {
-        private StringSet terminalNames => throw new InvalidOperationException();
+        private readonly StringSet terminalNames;
 
         private readonly Stack<ParseNode> stack = new();
 
-        public ProductionBuilder(RexData rex) { }
+        public ProductionBuilder(RexData rex)
+        {
+            terminalNames = rex.Names;
+        }
 
         public static ProductionBuilder Create(RexData rex) => new(rex);
 

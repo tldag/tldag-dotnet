@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TLDAG.Libraries.Core.Algorithms;
 using static TLDAG.Libraries.Core.Algorithms.BinarySearch;
-using static TLDAG.Libraries.Core.Algorithms.ArrayUtils;
+using static TLDAG.Libraries.Core.Algorithms.Arrays;
 using System.Linq;
 
 namespace TLDAG.Libraries.Core.Collections
@@ -24,8 +24,7 @@ namespace TLDAG.Libraries.Core.Collections
         public IReadOnlyList<K> Keys => keys.Take(count).ToList();
         public IReadOnlyList<V> Values => values.Take(count).ToList();
 
-        public Map(EqualKeys equals, SearchKey search)
-        { this.equals = equals; this.search = search; }
+        public Map(EqualKeys equals, SearchKey search) { this.equals = equals; this.search = search; }
 
         public V? this[K key]
         {
@@ -95,15 +94,9 @@ namespace TLDAG.Libraries.Core.Collections
     public class SmartMap<K, V> : Map<K, V>
         where K : notnull, IEquatable<K>, IComparable<K>
     {
-        private class Comparer : IComparer<K>
-        {
-            public int Compare(K? x, K? y)
-                => x is null ? (y is null ? 0 : -1) : (y is null ? 1 : x.CompareTo(y));
-        }
-
-        private static readonly Comparer comparer = new();
+        private static readonly Func<K, K, int> compare = (a, b) => a.CompareTo(b);
         private static readonly EqualKeys equalKeys = (a, b) => a.Equals(b);
-        private static readonly SearchKey searchKey = (keys, key, count) => Search(keys, key, 0, count, comparer);
+        private static readonly SearchKey searchKey = (keys, key, count) => Search(keys, key, 0, count, compare);
 
         public SmartMap() : base(equalKeys, searchKey) { }
     }

@@ -21,7 +21,7 @@ namespace TLDAG.Libraries.Core.CodeGen
         public virtual V VisitPreOrder<V>(V visitor) where V : IRexNodeVisitor
             => Visit(visitor);
 
-        public virtual V Visit<V>(V visitor) where V : IRexNodeVisitor
+        protected virtual V Visit<V>(V visitor) where V : IRexNodeVisitor
             { visitor.Visit(this); return visitor; }
 
         public abstract RexNode Clone();
@@ -54,6 +54,11 @@ namespace TLDAG.Libraries.Core.CodeGen
         public RexSymbolNode(char value) { Value = value; }
 
         public override RexNode Clone() => new RexSymbolNode(Value);
+    }
+
+    public class RexNotNode : RexNode
+    {
+        public override RexNode Clone() => throw new NotImplementedException();
     }
 
     public abstract class RexBinaryNode : RexNode
@@ -114,6 +119,7 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         public RexBuilder Empty() { stack.Push(new RexEmptyNode()); return this; }
         public RexBuilder Symbol(char value) { stack.Push(new RexSymbolNode(value)); return this; }
+        public RexBuilder Not(IEnumerable<char> values) { throw new NotImplementedException(); }
 
         public RexBuilder Choose()
         { RexNode right = stack.Pop(); RexNode left = stack.Pop(); stack.Push(new RexChooseNode(left, right)); return this; }
@@ -134,6 +140,7 @@ namespace TLDAG.Libraries.Core.CodeGen
         public RexBuilder A(string name) => Accept(name);
         public RexBuilder E() => Empty();
         public RexBuilder S(char value) => Symbol(value);
+        public RexBuilder N(IEnumerable<char> values) => Not(values);
         public RexBuilder CH() => Choose();
         public RexBuilder CN() => Concat();
         public RexBuilder K() => Kleene();
