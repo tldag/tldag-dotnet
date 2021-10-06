@@ -3,8 +3,7 @@ using TLDAG.Libraries.Core.Collections;
 
 namespace TLDAG.Libraries.Core.Code
 {
-    public static partial class CodeConstants
-
+    public static partial class Constants
     {
         public const char EndOfLineChar = '\n';
         public const char EndOfFileChar = (char)0xffff;

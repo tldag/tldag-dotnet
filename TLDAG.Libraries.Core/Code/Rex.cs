@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TLDAG.Libraries.Core.Collections;
-using static TLDAG.Libraries.Core.Code.CodeConstants;
+using static TLDAG.Libraries.Core.Code.Constants;
 
 namespace TLDAG.Libraries.Core.Code
 {

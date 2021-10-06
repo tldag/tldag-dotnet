@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using static TLDAG.Libraries.Core.Code.CodeConstants;
+using static TLDAG.Libraries.Core.Code.Constants;
 
 namespace TLDAG.Libraries.Core.Code
 {

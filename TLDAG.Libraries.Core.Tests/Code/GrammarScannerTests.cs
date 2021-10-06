@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TLDAG.Libraries.Core.Code;
-using static TLDAG.Libraries.Core.Code.CodeConstants;
+using static TLDAG.Libraries.Core.Code.Constants;
 
 namespace TLDAG.Libraries.Core.Tests.Code
 {
