@@ -11,7 +11,7 @@ namespace TLDAG.Libraries.Core.CodeGen
 #if DEBUG
         public static Scanner CreateDevScanner(string text) => new(GrammarRexData, text);
         public static Parser CreateDevParser(string text) => throw new NotImplementedException();
-        public static ParseCompiler CreateDevCompiler() => throw new NotImplementedException();
+        public static ParseCompiler CreateDevCompiler() => ParseCompiler.Create(GrammarDocument);
 #endif
     }
 }

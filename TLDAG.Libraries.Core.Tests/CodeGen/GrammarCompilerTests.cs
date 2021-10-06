@@ -9,12 +9,31 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen
     [TestClass]
     public class GrammarCompilerTests
     {
-        [TestMethod]
-        public void Test()
+        private readonly DirectoryInfo directory = GetDirectory();
+        private readonly FileInfo source;
+        private readonly FileInfo dest;
+
+        public GrammarCompilerTests()
         {
-            DirectoryInfo directory = GetDirectory();
-            FileInfo source = new(Path.Combine(directory.FullName, "Grammar.g"));
-            FileInfo dest = new(Path.Combine(directory.FullName, "Grammar.gz"));
+            source = new(Path.Combine(directory.FullName, "Grammar.g"));
+            dest = new(Path.Combine(directory.FullName, "Grammar.gz"));
+        }
+
+#if DEBUG
+        [TestMethod]
+        public void TestGrammarDevCompiler()
+        {
+            ParseCompiler compiler = Grammar.CreateDevCompiler();
+
+            compiler.Compile();
+        }
+#endif
+
+        [TestMethod]
+        public void CreateGrammarGz()
+        {
+            if (dest.Exists) return;
+
             GrammarCompiler compiler = new();
 
             compiler.Compile(source, dest);

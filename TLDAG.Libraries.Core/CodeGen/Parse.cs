@@ -19,6 +19,14 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public class ParseTerminal : ParseNode
     {
+        public static readonly ParseTerminal EOF = new();
+    }
+
+    public class ParseEmptyNode : ParseNode
+    {
+        private ParseEmptyNode() { }
+
+        public static readonly ParseEmptyNode Instance = new();
     }
 
     public class ParseProduction : ParseNode
@@ -38,6 +46,7 @@ namespace TLDAG.Libraries.Core.CodeGen
     public class ProductionBuilder
     {
         private readonly StringSet terminalNames;
+        private readonly SmartMap<string, ParseTerminal> terminals = new();
         private readonly SmartMap<string, ParseProduction> productions = new();
 
         private readonly Stack<ParseNode> stack = new();
@@ -62,10 +71,17 @@ namespace TLDAG.Libraries.Core.CodeGen
         public ProductionBuilder Terminal(string name)
         {
             ValidateTerminalName(name);
-            stack.Push(new ParseTerminal());
+            stack.Push(GetTerminal(name));
 
             return this;
         }
+
+        private ParseTerminal GetTerminal(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ProductionBuilder Empty() { stack.Push(ParseEmptyNode.Instance); return this; }
 
         public ProductionBuilder Production(string name, int count)
         {
@@ -87,6 +103,7 @@ namespace TLDAG.Libraries.Core.CodeGen
         }
 
         public ProductionBuilder T(string name) => Terminal(name);
+        public ProductionBuilder E() => Empty();
         public ProductionBuilder P(string name, int count) => Production(name, count);
         public ProductionBuilder P(string name) => Production(name);
 
@@ -98,6 +115,7 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         private void ValidateTerminalName(string name)
         {
+            if (ReservedTerminalNames.Contains(name)) throw new ArgumentException();
             if (ReservedTokenNames.Contains(name)) return;
             if (!terminalNames.Contains(name)) throw new ArgumentException();
         }

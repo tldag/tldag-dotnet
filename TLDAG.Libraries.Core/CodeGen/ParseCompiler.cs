@@ -8,12 +8,21 @@ namespace TLDAG.Libraries.Core.CodeGen
 
     public class ParseCompiler
     {
+        private ParseNode root;
+
         public ParseCompiler(ParseNode root)
         {
-            throw new NotImplementedException();
+            this.root = Extend(root);
         }
 
-        public static ParseCompiler Create(ParseNode root) => throw new NotImplementedException();
+        private static ParseProduction Extend(ParseNode root)
+        {
+            ParseNode[] children = { root, ParseTerminal.EOF };
+
+            return new("<root>", children);
+        }
+
+        public static ParseCompiler Create(ParseNode root) => new(root);
 
         public ParseData Compile()
         {

@@ -7,7 +7,7 @@ namespace TLDAG.Libraries.Core.CodeGen
         private static readonly ProductionBuilder pbuilder = ProductionBuilder.Create(GrammarRexData);
 
         public static readonly ParseProduction GrammarDocument
-            = pbuilder.T("EOF").P("grammar", 1).Build();
+            = pbuilder.E().P("grammar", 1).Build();
     }
 }
 
