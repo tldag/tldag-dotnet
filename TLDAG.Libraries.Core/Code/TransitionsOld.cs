@@ -3,7 +3,7 @@ using System.IO;
 using TLDAG.Libraries.Core.IO;
 using TLDAG.Libraries.Core.Resources;
 
-namespace TLDAG.Libraries.Core.CodeGen
+namespace TLDAG.Libraries.Core.Code
 {
     public class TransitionsOld
     {

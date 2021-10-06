@@ -1,4 +1,4 @@
-﻿namespace TLDAG.Libraries.Core.CodeGen
+﻿namespace TLDAG.Libraries.Core.Code
 {
     public class CompilerException : ExceptionWithArgs
     {

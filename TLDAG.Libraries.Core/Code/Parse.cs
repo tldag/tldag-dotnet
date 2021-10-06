@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using TLDAG.Libraries.Core.Collections;
-using static TLDAG.Libraries.Core.CodeGen.Code;
+using static TLDAG.Libraries.Core.Code.CodeConstants;
 
-namespace TLDAG.Libraries.Core.CodeGen
+namespace TLDAG.Libraries.Core.Code
 {
     public interface IParseNodeVisitor
     {

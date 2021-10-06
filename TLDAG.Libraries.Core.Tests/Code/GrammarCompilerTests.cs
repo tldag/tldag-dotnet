@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
-using TLDAG.Libraries.Core.CodeGen;
+using TLDAG.Libraries.Core.Code;
 using static TLDAG.Libraries.Core.IO.Directories;
 
-namespace TLDAG.Libraries.Core.Tests.CodeGen
+namespace TLDAG.Libraries.Core.Tests.Code
 {
     [TestClass]
     public class GrammarCompilerTests

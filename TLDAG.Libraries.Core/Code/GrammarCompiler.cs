@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace TLDAG.Libraries.Core.CodeGen
+namespace TLDAG.Libraries.Core.Code
 {
     public partial class GrammarCompiler
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TLDAG.Libraries.Core.CodeGen
+namespace TLDAG.Libraries.Core.Code
 {
     public partial class ParseData
     {

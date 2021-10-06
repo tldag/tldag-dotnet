@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace TLDAG.Libraries.Core.CodeGen
+namespace TLDAG.Libraries.Core.Code
 {
     public partial class RexData
     {

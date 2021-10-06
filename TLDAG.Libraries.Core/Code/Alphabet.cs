@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TLDAG.Libraries.Core.Collections;
 
-namespace TLDAG.Libraries.Core.CodeGen
+namespace TLDAG.Libraries.Core.Code
 {
     public partial class Alphabet : IEnumerable<int>
     {

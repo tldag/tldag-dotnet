@@ -7,7 +7,7 @@ using System.Text;
 using TLDAG.Libraries.Core.Collections;
 using TLDAG.Libraries.Core.IO;
 
-namespace TLDAG.Libraries.Core.CodeGen
+namespace TLDAG.Libraries.Core.Code
 {
     public class AlphabetOld : IReadOnlyList<int>
     {

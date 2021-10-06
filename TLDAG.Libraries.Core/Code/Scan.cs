@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using static TLDAG.Libraries.Core.Code.CodeConstants;
 
-namespace TLDAG.Libraries.Core.CodeGen
+namespace TLDAG.Libraries.Core.Code
 {
     public class ScanPosition
     {
@@ -53,7 +54,7 @@ namespace TLDAG.Libraries.Core.CodeGen
 
         public Token(ScanPosition position, string name, string value) { Position = position; Name = name; Value = value; }
 
-        public static Token EOF(ScanPosition position) => new(position, Code.EOF, "");
+        public static Token EOF(ScanPosition position) => new(position, EndOfFileName, "");
     }
 
     public partial class Scanner

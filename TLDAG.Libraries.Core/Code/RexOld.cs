@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using TLDAG.Libraries.Core.Collections;
 using TLDAG.Libraries.Core.Resources;
 
-namespace TLDAG.Libraries.Core.CodeGen
+namespace TLDAG.Libraries.Core.Code
 {
     public abstract class RexNodeOld
     {

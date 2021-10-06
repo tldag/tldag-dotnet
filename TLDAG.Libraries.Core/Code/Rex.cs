@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using TLDAG.Libraries.Core.Collections;
+using static TLDAG.Libraries.Core.Code.CodeConstants;
 
-namespace TLDAG.Libraries.Core.CodeGen
+namespace TLDAG.Libraries.Core.Code
 {
     public interface IRexNodeVisitor
     {
@@ -102,12 +103,12 @@ namespace TLDAG.Libraries.Core.CodeGen
     public class RexBuilder
     {
         private readonly Stack<RexNode> stack = new();
-        private readonly HashSet<string> names = new(Code.ReservedTokenNames, StringComparer.Ordinal);
+        private readonly HashSet<string> names = new(ReservedTokenNames, StringComparer.Ordinal);
 
         public RexBuilder Accept(string name)
         {
             if (names.Contains(name)) throw new ArgumentException("Duplicate name");
-            if (!Code.TokenNameRegex.IsMatch(name)) throw new ArgumentException("Illegal name");
+            if (!TokenNameRegex.IsMatch(name)) throw new ArgumentException("Illegal name");
 
             names.Add(name); stack.Push(new RexAcceptNode(name)); return this;
         }

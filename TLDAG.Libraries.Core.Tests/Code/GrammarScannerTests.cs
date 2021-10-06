@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TLDAG.Libraries.Core.CodeGen;
+using TLDAG.Libraries.Core.Code;
+using static TLDAG.Libraries.Core.Code.CodeConstants;
 
-namespace TLDAG.Libraries.Core.Tests.CodeGen
+namespace TLDAG.Libraries.Core.Tests.Code
 {
     [TestClass]
     public class GrammarScannerTests
@@ -18,7 +19,7 @@ namespace TLDAG.Libraries.Core.Tests.CodeGen
             IEnumerator<Token> enumerator = scanner.GetEnumerator();
 
             Assert.IsTrue(enumerator.MoveNext());
-            Assert.AreEqual(Code.EOF, enumerator.Current.Name);
+            Assert.AreEqual(EndOfFileName, enumerator.Current.Name);
         }
     }
 }

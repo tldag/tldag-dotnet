@@ -4,7 +4,7 @@ using System.Linq;
 using TLDAG.Libraries.Core.Algorithms;
 using TLDAG.Libraries.Core.Collections;
 
-namespace TLDAG.Libraries.Core.CodeGen
+namespace TLDAG.Libraries.Core.Code
 {
     public partial class RexTransitions
     {

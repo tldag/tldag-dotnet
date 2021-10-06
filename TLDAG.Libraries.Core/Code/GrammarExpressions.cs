@@ -1,7 +1,7 @@
 ﻿#if DEBUG
 
 
-namespace TLDAG.Libraries.Core.CodeGen
+namespace TLDAG.Libraries.Core.Code
 {
     public static partial class Grammar
     {
