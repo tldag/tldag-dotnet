@@ -12,7 +12,7 @@ namespace TLDAG.Core.Algorithms
         public static void Sort(char[] values) { Sort(values, 0, values.Length); }
 
         public static void Sort<T>(T[] values, IComparer<T> comparer) { Sort(values, 0, values.Length, comparer); }
-        public static void Sort<T>(T[] values, Func<T, T, int> compare) { Sort(values, 0, values.Length, compare); }
+        public static void Sort<T>(T[] values, Compare<T> compare) { Sort(values, 0, values.Length, compare); }
 
         public static void Sort(byte[] values, int offset, int count)
         {
@@ -46,9 +46,9 @@ namespace TLDAG.Core.Algorithms
         }
 
         public static void Sort<T>(T[] values, int offset, int count, IComparer<T> comparer)
-            => Sort(values, offset, count, comparer.ToFunc());
+            => Sort(values, offset, count, comparer.ToCompare());
 
-        public static void Sort<T>(T[] values, int offset, int count, Func<T, T, int> compare)
+        public static void Sort<T>(T[] values, int offset, int count, Compare<T> compare)
         {
             offset = Max(0, offset); count = Min(values.Length - offset, count);
 
@@ -81,7 +81,7 @@ namespace TLDAG.Core.Algorithms
             values[offset0] = v1; values[offset1] = v0;
         }
 
-        private static void Sort2<T>(T[] values, int offset, Func<T, T, int> compare)
+        private static void Sort2<T>(T[] values, int offset, Compare<T> compare)
         {
             throw new NotImplementedException();
         }
@@ -120,7 +120,7 @@ namespace TLDAG.Core.Algorithms
             }
         }
 
-        private static void Sort3<T>(T[] values, int offset0, Func<T, T, int> compare)
+        private static void Sort3<T>(T[] values, int offset0, Compare<T> compare)
         {
             int offset1 = offset0 + 1, offset2 = offset0 + 2;
             T v0 = values[offset0], v1 = values[offset1], v2 = values[offset2];
@@ -151,7 +151,7 @@ namespace TLDAG.Core.Algorithms
             }
         }
 
-        private static void Merge<T>(T[] values, int offset, int count1, int count2, Func<T, T, int> compare)
+        private static void Merge<T>(T[] values, int offset, int count1, int count2, Compare<T> compare)
         {
             throw new NotImplementedException();
         }

@@ -21,7 +21,7 @@ namespace TLDAG.Core.Algorithms
         public static T[] UniqueValues<T>(IEnumerable<T> values, IComparer<T> comparer)
             => values is T[] array ? UniqueValues(array, true, comparer) : UniqueValues(values.ToArray(), false, comparer);
 
-        public static T[] UniqueValues<T>(IEnumerable<T> values, Func<T, T, int> compare)
+        public static T[] UniqueValues<T>(IEnumerable<T> values, Compare<T> compare)
             => values is T[] array ? UniqueValues(array, true, compare) : UniqueValues(values.ToArray(), false, compare);
 
         public static int[] UniqueInts(int[] values, bool copy)
@@ -72,9 +72,9 @@ namespace TLDAG.Core.Algorithms
             => UniqueValues(values, copy, comparer ?? StringComparer.Ordinal);
 
         public static T[] UniqueValues<T>(T[] values, bool copy, IComparer<T> comparer)
-            => UniqueValues(values, copy, comparer.ToFunc());
+            => UniqueValues(values, copy, comparer.ToCompare());
 
-        public static T[] UniqueValues<T>(T[] values, bool copy, Func<T, T, int> compare)
+        public static T[] UniqueValues<T>(T[] values, bool copy, Compare<T> compare)
         {
             if (values.Length == 0) return values;
 
@@ -119,7 +119,7 @@ namespace TLDAG.Core.Algorithms
             throw new NotImplementedException();
         }
 
-        private static int UniqueValuesCount<T>(T[] sorted, Func<T, T, int> compare)
+        private static int UniqueValuesCount<T>(T[] sorted, Compare<T> compare)
         {
             int count = sorted.Length;
 

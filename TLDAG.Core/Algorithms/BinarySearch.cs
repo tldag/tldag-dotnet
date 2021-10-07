@@ -17,9 +17,9 @@ namespace TLDAG.Core.Algorithms
             => Search<string>(values, value, comparer ?? OrdinalStringComparer);
 
         public static int Search<T>(T[] values, T value, IComparer<T> comparer)
-            => Search(values, value, 0, values.Length, comparer.ToFunc());
+            => Search(values, value, 0, values.Length, comparer.ToCompare());
 
-        public static int Search<T>(T[] values, T value, Func<T, T, int> compare)
+        public static int Search<T>(T[] values, T value, Compare<T> compare)
             => Search(values, value, 0, values.Length, compare);
 
         public static int Search(int[] values, int value, int first, int last)
@@ -45,9 +45,9 @@ namespace TLDAG.Core.Algorithms
         }
 
         public static int Search<T>(T[] values, T value, int first, int last, IComparer<T> comparer)
-            => Search(values, value, first, last, comparer.ToFunc());
+            => Search(values, value, first, last, comparer.ToCompare());
 
-        public static int Search<T>(T[] values, T value, int first, int last, Func<T, T, int> compare)
+        public static int Search<T>(T[] values, T value, int first, int last, Compare<T> compare)
         {
             while (first < last)
             {

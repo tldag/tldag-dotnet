@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TLDAG.Core.Algorithms;
 using static TLDAG.Core.Algorithms.Arrays;
 using static TLDAG.Core.Algorithms.BinarySearch;
 
@@ -100,7 +101,7 @@ namespace TLDAG.Core.Collections
     public class SmartMap<K, V> : Map<K, V>
         where K : notnull, IEquatable<K>, IComparable<K>
     {
-        private static readonly Func<K, K, int> compare = (a, b) => a.CompareTo(b);
+        private static readonly Compare<K> compare = (a, b) => a.CompareTo(b);
         private static readonly EqualKeys equalKeys = (a, b) => a.Equals(b);
         private static readonly SearchKey searchKey = (keys, key, count) => Search(keys, key, 0, count, compare);
 

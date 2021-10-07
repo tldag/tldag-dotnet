@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TLDAG.Core.Algorithms;
 using static TLDAG.Core.Algorithms.Algorithms;
 using static TLDAG.Core.Algorithms.BinarySearch;
 using static TLDAG.Core.Algorithms.Unique;
@@ -79,12 +80,12 @@ namespace TLDAG.Core.Collections
 
     public partial class ValueSet<T> : ImmutableSet<T> where T : notnull
     {
-        private readonly Func<T, T, int> compare;
+        private readonly Compare<T> compare;
 
         public ValueSet(IEnumerable<T> values, IComparer<T> comparer)
-            : this(values, comparer.ToFunc()) { }
+            : this(values, comparer.ToCompare()) { }
 
-        public ValueSet(IEnumerable<T> values, Func<T, T, int> compare)
+        public ValueSet(IEnumerable<T> values, Compare<T> compare)
             : base(UniqueValues(values, compare)) { this.compare = compare; }
 
         protected override int GetHashCode(T value) => value.GetHashCode();
@@ -102,13 +103,13 @@ namespace TLDAG.Core.Collections
         public StringSet(IEnumerable<string> values, IComparer<string>? comparer = null)
             : base(values, comparer ?? OrdinalStringComparer) { }
 
-        public StringSet(IEnumerable<string> values, Func<string, string, int> compare)
+        public StringSet(IEnumerable<string> values, Compare<string> compare)
             : base(values, compare) { }
 
         public override int GetHashCode() => throw new NotImplementedException();
         public override bool Equals(object? obj) => throw new NotImplementedException();
 
         public static StringSet Empty(IComparer<string>? comparer = null) => new(Array.Empty<string>(), comparer);
-        public static StringSet Empty(Func<string, string, int> compare) => new(Array.Empty<string>(), compare);
+        public static StringSet Empty(Compare<string> compare) => new(Array.Empty<string>(), compare);
     }
 }
