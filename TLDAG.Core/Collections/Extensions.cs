@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TLDAG.Libraries.Core.Collections
+namespace TLDAG.Core.Collections
 {
     public static class CollectionExtensions
     {

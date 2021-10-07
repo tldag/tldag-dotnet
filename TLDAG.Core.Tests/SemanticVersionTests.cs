@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace TLDAG.Libraries.Core.Tests
+namespace TLDAG.Core.Tests
 {
     [TestClass]
     public class SemanticVersionTests

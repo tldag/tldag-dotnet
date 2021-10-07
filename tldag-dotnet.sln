@@ -17,13 +17,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Libs.PS.Tests", "TLDA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Libraries.Core", "TLDAG.Libraries.Core\TLDAG.Libraries.Core.csproj", "{941E0A90-AA9C-43EA-B92C-465E568FA1D6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Libraries.Core.Tests", "TLDAG.Libraries.Core.Tests\TLDAG.Libraries.Core.Tests.csproj", "{4B99A8BD-DFD6-4CB8-B3E5-18E1E7AC3138}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Libraries.NuGet.Tests", "TLDAG.Libraries.NuGet.Tests\TLDAG.Libraries.NuGet.Tests.csproj", "{BFF4C204-C42A-4B1F-A829-A68143D6087D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLDAG.Libraries.CodeGen", "TLDAG.Libraries.CodeGen\TLDAG.Libraries.CodeGen.csproj", "{94545F2D-3093-45F5-B923-EA9D61EB1D70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Libraries.CodeGen", "TLDAG.Libraries.CodeGen\TLDAG.Libraries.CodeGen.csproj", "{94545F2D-3093-45F5-B923-EA9D61EB1D70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLDAG.Libraries.CodeGen.Tests", "TLDAG.Libraries.CodeGen.Tests\TLDAG.Libraries.CodeGen.Tests.csproj", "{ADB660D8-6F10-4B27-B3C6-556986C12A3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Libraries.CodeGen.Tests", "TLDAG.Libraries.CodeGen.Tests\TLDAG.Libraries.CodeGen.Tests.csproj", "{ADB660D8-6F10-4B27-B3C6-556986C12A3E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Core", "TLDAG.Core\TLDAG.Core.csproj", "{F8CA2DB8-5244-41BD-9A56-6B26F3B61C1B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Core.Tests", "TLDAG.Core.Tests\TLDAG.Core.Tests.csproj", "{B46F8CD8-8450-4A93-AB55-B9D214E08BC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +45,6 @@ Global
 		{941E0A90-AA9C-43EA-B92C-465E568FA1D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{941E0A90-AA9C-43EA-B92C-465E568FA1D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{941E0A90-AA9C-43EA-B92C-465E568FA1D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B99A8BD-DFD6-4CB8-B3E5-18E1E7AC3138}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B99A8BD-DFD6-4CB8-B3E5-18E1E7AC3138}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B99A8BD-DFD6-4CB8-B3E5-18E1E7AC3138}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B99A8BD-DFD6-4CB8-B3E5-18E1E7AC3138}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BFF4C204-C42A-4B1F-A829-A68143D6087D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BFF4C204-C42A-4B1F-A829-A68143D6087D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFF4C204-C42A-4B1F-A829-A68143D6087D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -59,6 +57,14 @@ Global
 		{ADB660D8-6F10-4B27-B3C6-556986C12A3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADB660D8-6F10-4B27-B3C6-556986C12A3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADB660D8-6F10-4B27-B3C6-556986C12A3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8CA2DB8-5244-41BD-9A56-6B26F3B61C1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8CA2DB8-5244-41BD-9A56-6B26F3B61C1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8CA2DB8-5244-41BD-9A56-6B26F3B61C1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8CA2DB8-5244-41BD-9A56-6B26F3B61C1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B46F8CD8-8450-4A93-AB55-B9D214E08BC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B46F8CD8-8450-4A93-AB55-B9D214E08BC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B46F8CD8-8450-4A93-AB55-B9D214E08BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B46F8CD8-8450-4A93-AB55-B9D214E08BC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

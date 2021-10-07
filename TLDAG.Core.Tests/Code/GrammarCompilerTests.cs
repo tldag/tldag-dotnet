@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
-using TLDAG.Libraries.Core.Code;
-using static TLDAG.Libraries.Core.IO.Directories;
+using TLDAG.Core.Code;
+using static TLDAG.Core.IO.Directories;
 
 namespace TLDAG.Libraries.Core.Tests.Code
 {
@@ -45,7 +45,7 @@ namespace TLDAG.Libraries.Core.Tests.Code
             DirectoryInfo start = assembly.Directory ?? throw new FileNotFoundException();
             DirectoryInfo root = GetDirectoryOfFileAbove(start, "tldag-dotnet.sln");
 
-            return new(Path.Combine(root.FullName, "TLDAG.Libraries.Core", "Resources"));
+            return new(Path.Combine(root.FullName, "TLDAG.Core", "Resources"));
         }
     }
 }

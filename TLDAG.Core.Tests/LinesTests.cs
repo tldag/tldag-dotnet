@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TLDAG.Libraries.Core.Tests
+namespace TLDAG.Core.Tests
 {
     [TestClass]
     public class LinesTests

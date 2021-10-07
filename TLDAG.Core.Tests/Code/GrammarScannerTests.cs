@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using TLDAG.Libraries.Core.Code;
-using static TLDAG.Libraries.Core.Code.Constants;
+using TLDAG.Core.Code;
+using static TLDAG.Core.Code.Constants;
 
-namespace TLDAG.Libraries.Core.Tests.Code
+namespace TLDAG.Core.Tests.Code
 {
     [TestClass]
     public class GrammarScannerTests
