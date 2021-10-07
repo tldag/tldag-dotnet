@@ -19,6 +19,21 @@ namespace TLDAG.Core.Algorithms
 
         public static void Move<T>(T[] values, int srcPos, int dstPos, int count)
         {
+            if (srcPos == dstPos || count == 0) return;
+
+            if (dstPos > srcPos) MoveRight(values, srcPos, dstPos, count);
+            else MoveLeft(values, srcPos, dstPos, count);
+        }
+
+        private static void MoveRight<T>(T[] values, int srcPos, int dstPos, int count)
+        {
+            int i = srcPos + count - 1, j = dstPos + count - 1;
+
+            while (count > 0) { values[j--] = values[i--]; --count; }
+        }
+
+        private static void MoveLeft<T>(T[] values, int srcPos, int dstPos, int count)
+        {
             throw new NotImplementedException();
         }
 

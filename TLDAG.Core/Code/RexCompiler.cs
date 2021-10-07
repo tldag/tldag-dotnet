@@ -6,14 +6,6 @@ using TLDAG.Core.Collections;
 
 namespace TLDAG.Core.Code
 {
-    public partial class RexTransitions
-    {
-        private readonly int width;
-        private readonly int[][] transitions;
-
-        internal RexTransitions(int width, int[][] transitions) { this.width = width; this.transitions = transitions; }
-    }
-
     public class RexTransitionsBuilder
     {
         private readonly int width;
@@ -29,36 +21,6 @@ namespace TLDAG.Core.Code
         }
 
         public RexTransitions Build() => new(width, list.ToArray());
-    }
-
-    public partial class RexAccepts
-    {
-        private readonly IntMap<string> map;
-
-        public StringSet Values => new(map.Values);
-
-        public RexAccepts(IntMap<string> map) { this.map = map; }
-
-        public string? this[int state] { get => map[state]; }
-    }
-
-    public partial class RexData
-    {
-        public readonly RexAccepts Accepts;
-        public readonly int StartState;
-
-        public StringSet Names => Accepts.Values;
-
-        public RexData(RexAccepts accepts, int startState)
-        {
-            Accepts = accepts;
-            StartState = startState;
-        }
-
-        protected RexData(RexData rex)
-        {
-            Accepts = rex.Accepts;
-        }
     }
 
     public class RexGetAlphabet : IRexNodeVisitor

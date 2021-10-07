@@ -50,6 +50,8 @@ namespace TLDAG.Core.Collections
     public partial class IntSet : ImmutableSet<int>
     {
         public IntSet(IEnumerable<int> values) : base(UniqueInts(values)) { }
+        public IntSet(IEnumerable<int> values, int value) : this(values.Append(value)) { }
+        public IntSet(IEnumerable<int> v1, IEnumerable<int> v2) : this(v1.Concat(v2)) { }
 
         public override int GetHashCode() => throw new NotImplementedException();
         public override bool Equals(object? obj) => throw new NotImplementedException();

@@ -10,6 +10,7 @@ namespace TLDAG.Core.Code
 
         public const string EndOfLineName = "EOL";
         public const string EndOfFileName = "EOF";
+        public const string EmptyNodeName = "ε";
         public const string ExtendedGrammarRootName = "<root>";
 
         public static readonly StringSet ReservedTokenNames = new(new string[] { "", EndOfLineName, EndOfFileName });

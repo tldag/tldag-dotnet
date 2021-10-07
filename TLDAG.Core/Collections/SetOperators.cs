@@ -9,9 +9,9 @@ namespace TLDAG.Core.Collections
         public static bool operator <(IntSet a, IntSet b) => throw new NotImplementedException();
         public static bool operator >(IntSet a, IntSet b) => throw new NotImplementedException();
 
-        public static IntSet operator +(IntSet a, IntSet b) => throw new NotImplementedException();
-        public static IntSet operator +(IntSet a, int b) => throw new NotImplementedException();
-        public static IntSet operator +(int a, IntSet b) => throw new NotImplementedException();
+        public static IntSet operator +(IntSet a, IntSet b) => new(a, b);
+        public static IntSet operator +(IntSet a, int b) => new(a, b);
+        public static IntSet operator +(int a, IntSet b) => new(b, a);
         public static IntSet operator -(IntSet a, IntSet b) => throw new NotImplementedException();
         public static IntSet operator -(IntSet a, int b) => throw new NotImplementedException();
 

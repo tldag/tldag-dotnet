@@ -6,8 +6,8 @@ namespace TLDAG.Core.Code
     {
         private static readonly ProductionBuilder pbuilder = ProductionBuilder.Create(GrammarRexData);
 
-        public static readonly ParseProduction GrammarDocument
-            = pbuilder.E().P("grammar", 1).Build();
+        public static readonly ParseProductionNode GrammarDocument
+            = pbuilder.P("grammar", 0).Build();
     }
 }
 
