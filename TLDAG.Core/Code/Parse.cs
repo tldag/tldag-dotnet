@@ -12,8 +12,11 @@ namespace TLDAG.Core.Code
 
     public class ParseNode
     {
+        public int Id { get; internal set; }
         private IntSet first = IntSet.Empty;
         public IntSet First => first;
+
+        public ParseNode(int id) { Id = id; }
 
         public bool AddToFirst(int id) { if (first.Contains(id)) return false; first += id; return true; }
         public bool AddToFirst(IntSet ids) { if (first.ContainsAll(ids)) return false; first += ids; return true; }
@@ -25,11 +28,10 @@ namespace TLDAG.Core.Code
 
     public class ParseTerminalNode : ParseNode
     {
-        public int Id;
         public readonly string Name;
 
         public ParseTerminalNode(string name) : this(0, name) { }
-        private ParseTerminalNode(int id, string name) { Id = id; Name = name; }
+        private ParseTerminalNode(int id, string name) : base(id) { Name = name; }
 
         public const int EndOfFileId = 1;
         public const int EmptyId = 2;
@@ -46,7 +48,7 @@ namespace TLDAG.Core.Code
         public IReadOnlyList<ParseNode> Children => children;
         public int Count => children.Length;
 
-        public ParseProductionNode(string name, ParseNode[] children) { Name = name; this.children = children; }
+        public ParseProductionNode(string name, ParseNode[] children) : base(0) { Name = name; this.children = children; }
 
         public override V VisitDepthFirst<V>(V visitor)
         {

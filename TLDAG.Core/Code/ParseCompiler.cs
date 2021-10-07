@@ -5,6 +5,33 @@ using static TLDAG.Core.Code.Constants;
 
 namespace TLDAG.Core.Code
 {
+    public class ParseElement : IEquatable<ParseElement>, IComparable<ParseElement>
+    {
+        public readonly ParseProductionNode Production;
+        public readonly int Position;
+        public readonly ParseTerminalNode Terminal;
+
+        public ParseElement(ParseProductionNode production, int position, ParseTerminalNode terminal)
+            { Production = production; Position = position; Terminal = terminal; }
+
+        public override int GetHashCode() => Production.Id * 311 + Position * 31 + Terminal.Id;
+        public override bool Equals(object? obj) => EqualsTo(obj as ParseElement);
+        public bool Equals(ParseElement? other) => EqualsTo(other);
+
+        private bool EqualsTo(ParseElement? other)
+        {
+            if (other is null) return false;
+            if (Production.Id != other.Production.Id) return false;
+            if (Position != other.Position) return false;
+            return true;
+        }
+
+        public int CompareTo(ParseElement? other)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class ParseInitTerminals : IParseNodeVisitor
     {
         private int nextId = ParseTerminalNode.NextId;
@@ -26,6 +53,30 @@ namespace TLDAG.Core.Code
             root.VisitDepthFirst(visitor);
 
             return visitor.terminals;
+        }
+    }
+
+    public class ParseInitProductions : IParseNodeVisitor
+    {
+        private readonly IntMap<ParseProductionNode> productions = new();
+        private int nextId = 1;
+
+        public void Visit(ParseNode node)
+        {
+            if (node is ParseProductionNode productionNode)
+            {
+                if (productionNode.Id == 0) productionNode.Id = nextId++;
+                productions[productionNode.Id] = productionNode;
+            }
+        }
+
+        public static IntMap<ParseProductionNode> Init(ParseNode root)
+        {
+            ParseInitProductions visitor = new();
+
+            root.VisitPreOrder(visitor);
+
+            return visitor.productions;
         }
     }
 
@@ -82,12 +133,14 @@ namespace TLDAG.Core.Code
     {
         private readonly ParseNode root;
         private readonly IntMap<ParseTerminalNode> terminals;
+        private readonly IntMap<ParseProductionNode> productions;
 
         public ParseCompiler(ParseNode root)
         {
             this.root = Extend(root);
 
             terminals = ParseInitTerminals.Init(this.root);
+            productions = ParseInitProductions.Init(this.root);
         }
 
         private static ParseProductionNode Extend(ParseNode root)
