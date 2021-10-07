@@ -16,6 +16,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <TldagAutomation>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Automation', 'TLDAG.Automation.csproj' ))</TldagAutomation>
     <TldagCore>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Core', 'TLDAG.Core.csproj' ))</TldagCore>
     <TldagCommands>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Commands', 'TLDAG.Commands.csproj' ))</TldagCommands>
     <TldagLibrariesCodeGen>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Libraries.CodeGen', 'TLDAG.Libraries.CodeGen.csproj' ))</TldagLibrariesCodeGen>

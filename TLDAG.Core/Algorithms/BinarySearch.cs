@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using TLDAG.Core.Collections;
 using static TLDAG.Core.Algorithms.Algorithms;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Algorithms
 {
     public static class BinarySearch
     {
         public static int Search(int[] values, int value)
-            { throw new NotImplementedException(); }
+            { throw NotYetImplemented(nameof(Search)); }
 
         public static int Search(char[] values, char value)
-            { throw new NotImplementedException(); }
+            { throw NotYetImplemented(nameof(Search)); }
 
         public static int Search(string[] values, string value, IComparer<string>? comparer = null)
             => Search<string>(values, value, comparer ?? OrdinalStringComparer);
@@ -41,7 +42,19 @@ namespace TLDAG.Core.Algorithms
 
         public static int Search(char[] values, int value, int first, int last)
         {
-            throw new NotImplementedException();
+            while (first < last)
+            {
+                int middle = (first + last) >> 1;
+                char candidate = values[middle];
+                int result = value < candidate ? -1 : (value > candidate ? 1 : 0);
+
+                if (result == 0) return middle;
+
+                if (result < 0) last = middle;
+                else first = middle + 1;
+            }
+
+            return first;
         }
 
         public static int Search<T>(T[] values, T value, int first, int last, IComparer<T> comparer)

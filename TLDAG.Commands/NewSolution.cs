@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Management.Automation;
+using TLDAG.Automation;
 using TLDAG.Commands.Resources;
 using TLDAG.Core.IO;
 
@@ -8,12 +9,21 @@ namespace TLDAG.Commands
 {
     [Cmdlet(VerbsCommon.New, "Solution")]
     [OutputType(typeof(FileInfo))]
-    public class NewSolution : Cmdlet
+    public class NewSolution : Command
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
         public string Path { get; set; } = "";
 
-        protected override void ProcessRecord()
+        private static void CreateNewSolutionFile(FileInfo file)
+        {
+            string content = Res.SolutionTemplate;
+            Guid guid = Guid.NewGuid();
+
+            content = content.Replace("GUID", guid.ToString());
+            File.WriteAllText(file.FullName, content);
+        }
+
+        protected override void Process()
         {
             FileInfo file = new(Path);
 
@@ -24,17 +34,6 @@ namespace TLDAG.Commands
             }
 
             WriteObject(file);
-
-            base.ProcessRecord();
-        }
-
-        private static void CreateNewSolutionFile(FileInfo file)
-        {
-            string content = Res.SolutionTemplate;
-            Guid guid = Guid.NewGuid();
-
-            content = content.Replace("GUID", guid.ToString());
-            File.WriteAllText(file.FullName, content);
         }
     }
 }

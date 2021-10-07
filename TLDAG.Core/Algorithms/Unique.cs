@@ -102,7 +102,8 @@ namespace TLDAG.Core.Algorithms
 
             if (count == 0) return 0;
 
-            int result = 1, last = sorted[0];
+            int result = 1;
+            int last = sorted[0];
 
             for (int i = 1; i < count; ++i)
             {
@@ -116,7 +117,21 @@ namespace TLDAG.Core.Algorithms
 
         private static int UniqueCharsCount(char[] sorted)
         {
-            throw new NotImplementedException();
+            int count = sorted.Length;
+
+            if (count == 0) return 0;
+
+            int result = 1;
+            char last = sorted[0];
+
+            for (int i = 1; i < count; ++i)
+            {
+                char current = sorted[i];
+
+                if (current > last) { ++result; last = current; }
+            }
+
+            return result;
         }
 
         private static int UniqueValuesCount<T>(T[] sorted, Compare<T> compare)

@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
-using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Algorithms.Conversion;
+using static TLDAG.Core.Algorithms.Maths;
 
 namespace TLDAG.Core.Cryptography
 {
@@ -11,6 +12,7 @@ namespace TLDAG.Core.Cryptography
         public static byte[] Bytes(byte[] bytes) { rng.GetBytes(bytes); return bytes; }
         public static byte[] Bytes(byte[] bytes, int offset, int count) { rng.GetBytes(bytes, offset, count); return bytes; }
 
-        public static int NextInt(int min, int max) => throw NotYetImplemented(nameof(NextInt));
+        public static int NextInt(int min, int max) => Mod(NextInt(), min, max);
+        public static int NextInt() => ToInt(Bytes(4));
     }
 }

@@ -10,7 +10,7 @@
             dest[destOffset] = (byte)value;
         }
 
-        public static int ToInt(byte[] src, int srcOffset)
+        public static int ToInt(byte[] src, int srcOffset = 0)
         {
             int value = 0;
 

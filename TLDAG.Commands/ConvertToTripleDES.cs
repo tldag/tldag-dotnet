@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management.Automation;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Management.Automation;
+using TLDAG.Automation;
 using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Commands
 {
     [Cmdlet(VerbsData.ConvertTo, "TripleDES")]
-    public class ConvertToTripleDES : Cmdlet
+    public class ConvertToTripleDES : Command
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
         public string Path { get; set; } = "";
@@ -23,11 +19,9 @@ namespace TLDAG.Commands
         [Parameter(Mandatory = false)]
         public string Extension { get; set; } = ".enc";
 
-        protected override void ProcessRecord()
+        protected override void Process()
         {
             throw NotYetImplemented(nameof(ProcessRecord));
-
-            // base.ProcessRecord();
         }
     }
 }

@@ -24,9 +24,9 @@ namespace TLDAG.Core.Collections
         public static bool operator <(CharSet a, CharSet b) => throw new NotImplementedException();
         public static bool operator >(CharSet a, CharSet b) => throw new NotImplementedException();
 
-        public static CharSet operator +(CharSet a, CharSet b) => throw new NotImplementedException();
-        public static CharSet operator +(CharSet a, char b) => throw new NotImplementedException();
-        public static CharSet operator +(char a, CharSet b) => throw new NotImplementedException();
+        public static CharSet operator +(CharSet a, CharSet b) => new(a, b);
+        public static CharSet operator +(CharSet a, char b) => new(a, b);
+        public static CharSet operator +(char a, CharSet b) => new(b, a);
         public static CharSet operator -(CharSet a, CharSet b) => throw new NotImplementedException();
         public static CharSet operator -(CharSet a, char b) => throw new NotImplementedException();
 

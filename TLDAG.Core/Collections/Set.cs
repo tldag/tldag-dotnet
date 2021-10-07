@@ -67,6 +67,8 @@ namespace TLDAG.Core.Collections
     public partial class CharSet : ImmutableSet<char>
     {
         public CharSet(IEnumerable<char> values) : base(UniqueChars(values)) { }
+        public CharSet(IEnumerable<char> values, char value) : this(values.Append(value)) { }
+        public CharSet(IEnumerable<char> v1, IEnumerable<char> v2) : this(v1.Concat(v2)) { }
 
         public override int GetHashCode() => throw new NotImplementedException();
         public override bool Equals(object? obj) => throw new NotImplementedException();

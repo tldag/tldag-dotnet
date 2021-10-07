@@ -1,29 +1,21 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Management.Automation;
-using System.Text;
-using System.Threading.Tasks;
+using TLDAG.Automation;
 
 namespace TLDAG.Commands.Tests
 {
     [TestClass]
-    public class NewPasswordTests : PowerShellTests
+    public class NewPasswordTests : CommandTests
     {
-        protected override Type Command => typeof(NewPassword);
+        protected override Type CommandType => typeof(NewPassword);
 
         [TestMethod]
         public void MyTestMethod()
         {
-            Shell.AddScript("New-Password");
+            string password = Invoke<string>("New-Password");
 
-            Collection<string> passwords = Shell.Invoke<string>();
-
-            Assert.AreEqual(1, passwords.Count);
-            Assert.AreEqual(24, passwords[0].Length);
+            Assert.AreEqual(24, password.Length);
         }
     }
 }
