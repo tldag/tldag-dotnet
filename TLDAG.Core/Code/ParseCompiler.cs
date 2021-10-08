@@ -93,6 +93,7 @@ namespace TLDAG.Core.Code
         {
             if (node is ParseTerminalNode terminalNode) VisitTerminal(terminalNode);
             else if (node is ParseProductionNode productionNode) VisitProduction(productionNode);
+            else if (node is ParseChooseNode chooseNode) VisitChooseNode(chooseNode);
         }
 
         private void VisitTerminal(ParseTerminalNode node)
@@ -115,6 +116,11 @@ namespace TLDAG.Core.Code
             }
 
             AddToFirst(node, EmptyId);
+        }
+
+        private void VisitChooseNode(ParseChooseNode node)
+        {
+            throw NotYetImplemented();
         }
 
         private void AddToFirst(ParseNode node, int id) { if (node.AddToFirst(id)) modified = true; }

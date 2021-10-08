@@ -56,6 +56,19 @@ namespace TLDAG.Core.Code
             foreach (ParseNode node in children) node.VisitDepthFirst(visitor);
             return base.Visit(visitor);
         }
+
+        public override V VisitPreOrder<V>(V visitor) { throw NotYetImplemented(); }
+    }
+
+    public class ParseChooseNode : ParseNode
+    {
+        public readonly ParseNode Left;
+        public readonly ParseNode Right;
+
+        public ParseChooseNode(ParseNode left, ParseNode right) : base(0) { Left = left; Right = right; }
+
+        public override V VisitDepthFirst<V>(V visitor) { throw NotYetImplemented(); }
+        public override V VisitPreOrder<V>(V visitor) { throw NotYetImplemented(); }
     }
 
     public class ProductionBuilder
@@ -119,10 +132,16 @@ namespace TLDAG.Core.Code
             throw NotYetImplemented();
         }
 
+        public ProductionBuilder Choose()
+        {
+            throw NotYetImplemented();
+        }
+
         public ProductionBuilder T(string name) => Terminal(name);
         public ProductionBuilder E() => Empty();
         public ProductionBuilder P(string name, int count) => Production(name, count);
         public ProductionBuilder P(string name) => Production(name);
+        public ProductionBuilder C() => Choose();
 
         private void ValidateStack(int min, int max = int.MaxValue)
         {

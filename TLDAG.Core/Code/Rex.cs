@@ -116,6 +116,7 @@ namespace TLDAG.Core.Code
 
         public RexBuilder Empty() { stack.Push(new RexEmptyNode()); return this; }
         public RexBuilder Symbol(char value) { stack.Push(new RexSymbolNode(value)); return this; }
+        public RexBuilder Range(char start, char end) { throw NotYetImplemented(); }
         public RexBuilder Not(IEnumerable<char> values) { throw NotYetImplemented(); }
 
         public RexBuilder Choose()
@@ -137,6 +138,7 @@ namespace TLDAG.Core.Code
         public RexBuilder A(string name) => Accept(name);
         public RexBuilder E() => Empty();
         public RexBuilder S(char value) => Symbol(value);
+        public RexBuilder R(char start, char end) => Range(start, end);
         public RexBuilder N(IEnumerable<char> values) => Not(values);
         public RexBuilder CH() => Choose();
         public RexBuilder CN() => Concat();
