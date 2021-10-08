@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TLDAG.Core.Collections;
 using static TLDAG.Core.Code.Constants;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Code
 {
@@ -11,10 +12,13 @@ namespace TLDAG.Core.Code
         public readonly int Position;
         public readonly ParseTerminalNode Terminal;
 
+        private int? hash = null;
+
         public ParseElement(ParseProductionNode production, int position, ParseTerminalNode terminal)
             { Production = production; Position = position; Terminal = terminal; }
 
-        public override int GetHashCode() => Production.Id * 311 + Position * 31 + Terminal.Id;
+        private int ComputeHashCode() => Production.Id << 21 + Position << 16 + Terminal.Id;
+        public override int GetHashCode() => hash ??= ComputeHashCode();
         public override bool Equals(object? obj) => EqualsTo(obj as ParseElement);
         public bool Equals(ParseElement? other) => EqualsTo(other);
 
@@ -28,7 +32,7 @@ namespace TLDAG.Core.Code
 
         public int CompareTo(ParseElement? other)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 
@@ -156,7 +160,7 @@ namespace TLDAG.Core.Code
         {
             ParseComputeFirst.Compute(root);
 
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace TLDAG.Core.Tests.Cryptography
         [TestMethod]
         public void MyTestMethod()
         {
-            Assert.AreEqual(8, Passwords.NewPassword(0));
+            Assert.AreEqual(8, Passwords.NewPassword(0).Length);
         }
     }
 }

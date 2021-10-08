@@ -9,10 +9,10 @@ namespace TLDAG.Core.Algorithms
     public static class BinarySearch
     {
         public static int Search(int[] values, int value)
-            { throw NotYetImplemented(nameof(Search)); }
+            { throw NotYetImplemented(); }
 
         public static int Search(char[] values, char value)
-            { throw NotYetImplemented(nameof(Search)); }
+            { throw NotYetImplemented(); }
 
         public static int Search(string[] values, string value, IComparer<string>? comparer = null)
             => Search<string>(values, value, comparer ?? OrdinalStringComparer);

@@ -4,8 +4,8 @@ using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Commands
 {
-    [Cmdlet(VerbsData.ConvertTo, "TripleDES")]
-    public class ConvertToTripleDES : Command
+    [Cmdlet(VerbsData.ConvertTo, "TripleDESEncryted")]
+    public class ConvertToTripleDESEncryted : Command
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
         public string Path { get; set; } = "";
@@ -24,7 +24,7 @@ namespace TLDAG.Commands
 
         protected override void Process()
         {
-            throw NotYetImplemented(nameof(ProcessRecord));
+            throw NotYetImplemented();
         }
     }
 }
