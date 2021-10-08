@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using static System.IO.SearchOption;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.IO
 {
@@ -29,7 +30,7 @@ namespace TLDAG.Core.IO
                 directory = directory.Parent;
             }
 
-            throw new FileNotFoundException();
+            throw FileNotFound(fileName);
         }
     }
 }

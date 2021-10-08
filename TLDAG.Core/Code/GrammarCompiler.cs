@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Code
 {
@@ -9,7 +10,7 @@ namespace TLDAG.Core.Code
     {
         public GrammarCompiler()
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         public void Compile(FileInfo source, FileInfo dest, Encoding? encoding = null)
@@ -30,12 +31,12 @@ namespace TLDAG.Core.Code
         }
 
         public virtual void Compile(string text, FileInfo dest)
-            { throw new NotImplementedException(); }
+            { throw NotYetImplemented(); }
             // { Save(compiler.Compile(text), dest); }
 
         protected virtual void Save(ParseData data, FileInfo dest)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 }

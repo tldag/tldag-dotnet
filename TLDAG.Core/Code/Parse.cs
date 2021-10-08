@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TLDAG.Core.Collections;
 using static TLDAG.Core.Code.Constants;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Code
 {
@@ -92,7 +93,7 @@ namespace TLDAG.Core.Code
 
         private ParseTerminalNode GetTerminal(string name)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         public ProductionBuilder Empty() { stack.Push(ParseTerminalNode.Empty); return this; }
@@ -115,7 +116,7 @@ namespace TLDAG.Core.Code
 
         public ProductionBuilder Production(string name)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         public ProductionBuilder T(string name) => Terminal(name);
@@ -157,7 +158,7 @@ namespace TLDAG.Core.Code
     {
         public ParseProductionNode Parse()
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 }

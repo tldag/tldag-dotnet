@@ -1,5 +1,6 @@
 ﻿using System;
 using TLDAG.Core.Algorithms;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Collections
 {
@@ -16,12 +17,12 @@ namespace TLDAG.Core.Collections
     {
         public int CompareTo(CharSet? other)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         public bool Equals(CharSet? other)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 
@@ -30,12 +31,12 @@ namespace TLDAG.Core.Collections
     {
         public int CompareTo(ValueSet<T>? other)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         public bool Equals(ValueSet<T>? other)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 
@@ -43,12 +44,12 @@ namespace TLDAG.Core.Collections
     {
         public int CompareTo(StringSet? other)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         public bool Equals(StringSet? other)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 }

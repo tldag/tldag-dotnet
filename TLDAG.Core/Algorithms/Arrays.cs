@@ -1,4 +1,5 @@
 ﻿using System;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Algorithms
 {
@@ -34,7 +35,7 @@ namespace TLDAG.Core.Algorithms
 
         private static void MoveLeft<T>(T[] values, int srcPos, int dstPos, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         public static T[] Resize<T>(T[] values, int newSize)

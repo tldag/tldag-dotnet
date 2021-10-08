@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Cryptography
 {
@@ -10,12 +6,12 @@ namespace TLDAG.Core.Cryptography
     {
         public static byte[] Encrypt(byte[] plain, string password)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         public static byte[] Decrypt(byte[] plain, string password)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 }

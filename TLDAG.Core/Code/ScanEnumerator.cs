@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Code
 {
@@ -15,19 +13,19 @@ namespace TLDAG.Core.Code
 
     public class ScanLineEnumerator : IEnumerator<ScanCharacter>
     {
-        public ScanCharacter Current => throw new NotImplementedException();
-        object IEnumerator.Current => throw new NotImplementedException();
+        public ScanCharacter Current => throw NotYetImplemented();
+        object IEnumerator.Current => throw NotYetImplemented();
 
         public void Dispose() { GC.SuppressFinalize(this); }
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         public bool MoveNext()
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 
@@ -104,7 +102,7 @@ namespace TLDAG.Core.Code
             if (done) return null;
             if (!input.MoveNext()) { done = true; return Token.EndOfFile(position); }
 
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 }

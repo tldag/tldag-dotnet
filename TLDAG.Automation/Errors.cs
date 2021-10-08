@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Management.Automation;
 
 namespace TLDAG.Automation
@@ -7,6 +8,9 @@ namespace TLDAG.Automation
     {
         public static ErrorRecord Create(Exception exception)
         {
+#if DEBUG
+            Debug.WriteLine($"No specific ErrorRecord for '{exception.GetType().FullName}'");
+#endif
             return CreateUnspecified(exception);
         }
 

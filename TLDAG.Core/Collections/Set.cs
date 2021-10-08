@@ -5,6 +5,7 @@ using TLDAG.Core.Algorithms;
 using static TLDAG.Core.Algorithms.Algorithms;
 using static TLDAG.Core.Algorithms.BinarySearch;
 using static TLDAG.Core.Algorithms.Unique;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Collections
 {
@@ -54,8 +55,8 @@ namespace TLDAG.Core.Collections
         public IntSet(IEnumerable<int> values, int value) : this(values.Append(value)) { }
         public IntSet(IEnumerable<int> v1, IEnumerable<int> v2) : this(v1.Concat(v2)) { }
 
-        public override int GetHashCode() => throw new NotImplementedException();
-        public override bool Equals(object? obj) => throw new NotImplementedException();
+        public override int GetHashCode() => throw NotYetImplemented();
+        public override bool Equals(object? obj) => throw NotYetImplemented();
 
         protected override int GetHashCode(int value) => value;
         protected override int Compare(int v1, int v2) => v1 < v2 ? -1 : (v1 > v2 ? 1 : 0);
@@ -70,8 +71,8 @@ namespace TLDAG.Core.Collections
         public CharSet(IEnumerable<char> values, char value) : this(values.Append(value)) { }
         public CharSet(IEnumerable<char> v1, IEnumerable<char> v2) : this(v1.Concat(v2)) { }
 
-        public override int GetHashCode() => throw new NotImplementedException();
-        public override bool Equals(object? obj) => throw new NotImplementedException();
+        public override int GetHashCode() => throw NotYetImplemented();
+        public override bool Equals(object? obj) => throw NotYetImplemented();
 
         protected override int GetHashCode(char value) => value;
         protected override int Compare(char v1, char v2) => v1 < v2 ? -1 : (v1 > v2 ? 1 : 0);
@@ -95,9 +96,9 @@ namespace TLDAG.Core.Collections
         protected override int GetInsertPos(T value) => Search(values, value, 0, values.Length, compare);
 
         public static ValueSet<U> Empty<U>(IComparer<U> comparer) where U : notnull
-            => throw new NotImplementedException();
+            => throw NotYetImplemented();
         public static ValueSet<U> Empty<U>(Func<U, U, int> compare) where U : notnull
-            => throw new NotImplementedException();
+            => throw NotYetImplemented();
     }
 
     public partial class StringSet : ValueSet<string>
@@ -108,8 +109,8 @@ namespace TLDAG.Core.Collections
         public StringSet(IEnumerable<string> values, Compare<string> compare)
             : base(values, compare) { }
 
-        public override int GetHashCode() => throw new NotImplementedException();
-        public override bool Equals(object? obj) => throw new NotImplementedException();
+        public override int GetHashCode() => throw NotYetImplemented();
+        public override bool Equals(object? obj) => throw NotYetImplemented();
 
         public static StringSet Empty(IComparer<string>? comparer = null) => new(Array.Empty<string>(), comparer);
         public static StringSet Empty(Compare<string> compare) => new(Array.Empty<string>(), compare);

@@ -23,7 +23,7 @@ namespace TLDAG.Core.Algorithms
             if (count == 2) { Sort2(values, offset); return; }
             if (count == 3) { Sort3(values, offset); return; }
 
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         public static void Sort(int[] values, int offset, int count)
@@ -103,7 +103,7 @@ namespace TLDAG.Core.Algorithms
 
         private static void Sort2<T>(T[] values, int offset, Compare<T> compare)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         private static void Sort3(byte[] values, int offset0)
@@ -204,7 +204,7 @@ namespace TLDAG.Core.Algorithms
 
         private static void Merge<T>(T[] values, int offset, int count1, int count2, Compare<T> compare)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 }

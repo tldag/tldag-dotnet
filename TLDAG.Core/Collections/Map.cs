@@ -4,6 +4,7 @@ using System.Linq;
 using TLDAG.Core.Algorithms;
 using static TLDAG.Core.Algorithms.Arrays;
 using static TLDAG.Core.Algorithms.BinarySearch;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Collections
 {
@@ -53,7 +54,7 @@ namespace TLDAG.Core.Collections
 
         public V? RemoveKey(K key)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         private V? InsertValue(K key, V value)
@@ -67,7 +68,7 @@ namespace TLDAG.Core.Collections
 
         private V ReplaceValueAt(int pos, V value)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         private V? InsertValueAt(int pos, K key, V value)

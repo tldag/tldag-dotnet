@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TLDAG.Core.Collections;
 using static TLDAG.Core.Code.Constants;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Code
 {
@@ -54,7 +55,7 @@ namespace TLDAG.Core.Code
 
     public class RexNotNode : RexNode
     {
-        public override RexNode Clone() => throw new NotImplementedException();
+        public override RexNode Clone() => throw NotYetImplemented();
     }
 
     public abstract class RexBinaryNode : RexNode
@@ -115,7 +116,7 @@ namespace TLDAG.Core.Code
 
         public RexBuilder Empty() { stack.Push(new RexEmptyNode()); return this; }
         public RexBuilder Symbol(char value) { stack.Push(new RexSymbolNode(value)); return this; }
-        public RexBuilder Not(IEnumerable<char> values) { throw new NotImplementedException(); }
+        public RexBuilder Not(IEnumerable<char> values) { throw NotYetImplemented(); }
 
         public RexBuilder Choose()
         { RexNode right = stack.Pop(); RexNode left = stack.Pop(); stack.Push(new RexChooseNode(left, right)); return this; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TLDAG.Core.Algorithms;
 using TLDAG.Core.Collections;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Code
 {
@@ -30,7 +31,7 @@ namespace TLDAG.Core.Code
         public void Visit(RexNode node)
         {
             if (node is RexSymbolNode symbolNode) symbols.Add(symbolNode.Value);
-            else if (node is RexNotNode notNode) throw new NotImplementedException();
+            else if (node is RexNotNode notNode) throw NotYetImplemented();
         }
 
         public static Alphabet GetAlphabet(RexNode root)
@@ -66,7 +67,7 @@ namespace TLDAG.Core.Code
 
         private static RexNode ExpandNotNode(RexNotNode notNode)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         public static RexNode Expand(RexNode root, Alphabet alphabet)
@@ -99,29 +100,29 @@ namespace TLDAG.Core.Code
 
         private void InitAccept(RexAcceptNode acceptNode)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         private void InitEmpty(RexEmptyNode emptyNode) { emptyNode.Nullable = true; }
 
         private void InitSymbol(RexSymbolNode symbolNode)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         private void InitChoose(RexChooseNode chooseNode)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         private void InitConcat(RexConcatNode concatNode)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         private void InitKleene(RexKleeneNode kleeneNode)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         public static void Init(RexNode root)
@@ -190,7 +191,7 @@ namespace TLDAG.Core.Code
 
         private void ProcessState(RexState state)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         private RexState AddState(IntSet positions, bool asUnmarked = true)
@@ -215,7 +216,7 @@ namespace TLDAG.Core.Code
 
             foreach (int position in positions)
             {
-                throw new NotImplementedException();
+                throw NotYetImplemented();
             }
 
             return null;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using static TLDAG.Core.Algorithms.Conversion;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.IO
 {
@@ -95,12 +96,12 @@ namespace TLDAG.Core.IO
 
         protected override void Convert(byte[] src, short[] dest, int destOffset, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         protected override void Convert(short[] src, int srcOffset, byte[] dest, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 
@@ -110,12 +111,12 @@ namespace TLDAG.Core.IO
 
         protected override void Convert(byte[] src, ushort[] dest, int destOffset, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         protected override void Convert(ushort[] src, int srcOffset, byte[] dest, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 
@@ -125,12 +126,12 @@ namespace TLDAG.Core.IO
 
         protected override void Convert(byte[] src, int[] dest, int destOffset, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         protected override void Convert(int[] src, int srcOffset, byte[] dest, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 
@@ -140,12 +141,12 @@ namespace TLDAG.Core.IO
 
         protected override void Convert(byte[] src, uint[] dest, int destOffset, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         protected override void Convert(uint[] src, int srcOffset, byte[] dest, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 
@@ -155,12 +156,12 @@ namespace TLDAG.Core.IO
 
         protected override void Convert(byte[] src, long[] dest, int destOffset, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         protected override void Convert(long[] src, int srcOffset, byte[] dest, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 
@@ -170,12 +171,12 @@ namespace TLDAG.Core.IO
 
         protected override void Convert(byte[] src, ulong[] dest, int destOffset, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         protected override void Convert(ulong[] src, int srcOffset, byte[] dest, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 
@@ -185,12 +186,12 @@ namespace TLDAG.Core.IO
 
         protected override void Convert(byte[] src, float[] dest, int destOffset, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         protected override void Convert(float[] src, int srcOffset, byte[] dest, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 
@@ -200,12 +201,12 @@ namespace TLDAG.Core.IO
 
         protected override void Convert(byte[] src, double[] dest, int destOffset, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         protected override void Convert(double[] src, int srcOffset, byte[] dest, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 
@@ -215,12 +216,12 @@ namespace TLDAG.Core.IO
 
         protected override void Convert(byte[] src, char[] dest, int destOffset, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
 
         protected override void Convert(char[] src, int srcOffset, byte[] dest, int count)
         {
-            throw new NotImplementedException();
+            throw NotYetImplemented();
         }
     }
 }
