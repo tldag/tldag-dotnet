@@ -11,16 +11,18 @@ namespace TLDAG.Core.Collections
 {
     public abstract partial class ImmutableSet<T> where T : notnull
     {
+        protected readonly Compare<T> compare;
+
         protected readonly T[] values;
         private int? hashCode;
 
-        public ImmutableSet(T[] values) { this.values = values; }
+        public ImmutableSet(Compare<T> compare, T[] values) { this.compare = compare; this.values = values; }
 
         public bool Contains(T value)
         {
-            int insertPos = GetInsertPos(value);
+            int insertPos = SearchValue(value);
 
-            return insertPos != values.Length && Compare(values[insertPos], value) == 0;
+            return insertPos != values.Length && EqualValues(values[insertPos], value);
         }
 
         public bool ContainsAny(IEnumerable<T> candidates)
@@ -30,6 +32,7 @@ namespace TLDAG.Core.Collections
             => candidates.Where(Contains).Count() == candidates.Count();
 
         public override int GetHashCode() => hashCode ??= ComputeHashCode();
+        public override bool Equals(object? obj) => throw NotYetImplemented();
 
         private int ComputeHashCode()
         {
@@ -44,70 +47,70 @@ namespace TLDAG.Core.Collections
             return hash;
         }
 
+        protected virtual int SearchValue(T value) => Search(values, value, 0, values.Length, compare);
+        protected virtual bool EqualValues(T a, T b) => compare(a, b) == 0;
+
         protected abstract int GetHashCode(T value);
-        protected abstract int Compare(T v1, T v2);
-        protected abstract int GetInsertPos(T value);
     }
 
     public partial class IntSet : ImmutableSet<int>
     {
-        public IntSet(IEnumerable<int> values) : base(UniqueInts(values)) { }
+        public IntSet(IEnumerable<int> values) : base(IntCompare, UniqueInts(values)) { }
         public IntSet(IEnumerable<int> values, int value) : this(values.Append(value)) { }
         public IntSet(IEnumerable<int> v1, IEnumerable<int> v2) : this(v1.Concat(v2)) { }
 
         public override int GetHashCode() => throw NotYetImplemented();
         public override bool Equals(object? obj) => throw NotYetImplemented();
 
+        protected override int SearchValue(int value) => Search(values, value, 0, values.Length);
+        protected override bool EqualValues(int a, int b) => a == b;
+
         protected override int GetHashCode(int value) => value;
-        protected override int Compare(int v1, int v2) => v1 < v2 ? -1 : (v1 > v2 ? 1 : 0);
-        protected override int GetInsertPos(int value) => Search(values, value, 0, values.Length);
 
         public static readonly IntSet Empty = new(Array.Empty<int>());
     }
 
     public partial class CharSet : ImmutableSet<char>
     {
-        public CharSet(IEnumerable<char> values) : base(UniqueChars(values)) { }
+        public CharSet(IEnumerable<char> values) : base(CharCompare, UniqueChars(values)) { }
         public CharSet(IEnumerable<char> values, char value) : this(values.Append(value)) { }
         public CharSet(IEnumerable<char> v1, IEnumerable<char> v2) : this(v1.Concat(v2)) { }
 
         public override int GetHashCode() => throw NotYetImplemented();
         public override bool Equals(object? obj) => throw NotYetImplemented();
 
+        protected override int SearchValue(char value) => Search(values, value, 0, values.Length);
+        protected override bool EqualValues(char a, char b) => a == b;
+
         protected override int GetHashCode(char value) => value;
-        protected override int Compare(char v1, char v2) => v1 < v2 ? -1 : (v1 > v2 ? 1 : 0);
-        protected override int GetInsertPos(char value) => Search(values, value, 0, values.Length);
 
         public static readonly CharSet Empty = new(Array.Empty<char>());
     }
 
     public partial class ValueSet<T> : ImmutableSet<T> where T : notnull
     {
-        private readonly Compare<T> compare;
+        public ValueSet(IComparer<T> comparer, IEnumerable<T> values)
+            : this(comparer.ToCompare(), values) { }
 
-        public ValueSet(IEnumerable<T> values, IComparer<T> comparer)
-            : this(values, comparer.ToCompare()) { }
-
-        public ValueSet(IEnumerable<T> values, Compare<T> compare)
-            : base(UniqueValues(values, compare)) { this.compare = compare; }
+        public ValueSet(Compare<T> compare, IEnumerable<T> values)
+            : base(compare, UniqueValues(values, compare)) { }
 
         protected override int GetHashCode(T value) => value.GetHashCode();
-        protected override int Compare(T v1, T v2) => compare(v1, v2);
-        protected override int GetInsertPos(T value) => Search(values, value, 0, values.Length, compare);
 
         public static ValueSet<U> Empty<U>(IComparer<U> comparer) where U : notnull
             => throw NotYetImplemented();
-        public static ValueSet<U> Empty<U>(Func<U, U, int> compare) where U : notnull
+
+        public static ValueSet<U> Empty<U>(Compare<U> compare) where U : notnull
             => throw NotYetImplemented();
     }
 
     public partial class StringSet : ValueSet<string>
     {
         public StringSet(IEnumerable<string> values, IComparer<string>? comparer = null)
-            : base(values, comparer ?? OrdinalStringComparer) { }
+            : base(comparer ?? OrdinalStringComparer, values) { }
 
         public StringSet(IEnumerable<string> values, Compare<string> compare)
-            : base(values, compare) { }
+            : base(compare, values) { }
 
         public override int GetHashCode() => throw NotYetImplemented();
         public override bool Equals(object? obj) => throw NotYetImplemented();
@@ -118,7 +121,7 @@ namespace TLDAG.Core.Collections
 
     public partial class SmartSet<T> : ValueSet<T> where T : notnull, IComparable<T>
     {
-        public SmartSet(IEnumerable<T> values) : base(values, GetCompare<T>()) { }
+        public SmartSet(IEnumerable<T> values) : base(GetCompare<T>(), values) { }
 
         public override int GetHashCode() => throw NotYetImplemented();
         public override bool Equals(object? obj) => throw NotYetImplemented();
