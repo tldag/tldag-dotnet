@@ -5,6 +5,7 @@ using TLDAG.Core.Algorithms;
 using static TLDAG.Core.Algorithms.Arrays;
 using static TLDAG.Core.Algorithms.BinarySearch;
 using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Algorithms.Algorithms;
 
 namespace TLDAG.Core.Collections
 {
@@ -102,7 +103,7 @@ namespace TLDAG.Core.Collections
     public class SmartMap<K, V> : Map<K, V>
         where K : notnull, IEquatable<K>, IComparable<K>
     {
-        private static readonly Compare<K> compare = (a, b) => a.CompareTo(b);
+        private static readonly Compare<K> compare = GetCompare<K>();
         private static readonly EqualKeys equalKeys = (a, b) => a.Equals(b);
         private static readonly SearchKey searchKey = (keys, key, count) => Search(keys, key, 0, count, compare);
 

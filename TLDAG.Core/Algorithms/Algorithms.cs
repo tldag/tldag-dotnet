@@ -11,5 +11,8 @@ namespace TLDAG.Core.Algorithms
 
         public static Compare<T> ToCompare<T>(this IComparer<T> comparer)
             => (a, b) => comparer.Compare(a, b);
+
+        public static Compare<T> GetCompare<T>() where T : notnull, IComparable<T>
+            => (a, b) => a.CompareTo(b);
     }
 }

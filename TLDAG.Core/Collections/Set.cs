@@ -115,4 +115,14 @@ namespace TLDAG.Core.Collections
         public static StringSet Empty(IComparer<string>? comparer = null) => new(Array.Empty<string>(), comparer);
         public static StringSet Empty(Compare<string> compare) => new(Array.Empty<string>(), compare);
     }
+
+    public partial class SmartSet<T> : ValueSet<T> where T : notnull, IComparable<T>
+    {
+        public SmartSet(IEnumerable<T> values) : base(values, GetCompare<T>()) { }
+
+        public override int GetHashCode() => throw NotYetImplemented();
+        public override bool Equals(object? obj) => throw NotYetImplemented();
+
+        public static SmartSet<U> Empty<U>() where U : notnull, IComparable<U> => new(Array.Empty<U>());
+    }
 }
