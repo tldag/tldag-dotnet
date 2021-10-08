@@ -23,6 +23,7 @@
     # NestedModules = @()
     FunctionsToExport = @()
     CmdletsToExport = @(
+        "New-Password",
         "New-Solution"
     )
     VariablesToExport = @()
@@ -43,6 +44,7 @@
             ExternalModuleDependencies = @()
             ReleaseNotes = '
 0.1.0
+- Added command New-Password
 - Added command New-Solution
 '
         }

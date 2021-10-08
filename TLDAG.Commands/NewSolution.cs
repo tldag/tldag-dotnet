@@ -33,7 +33,10 @@ namespace TLDAG.Commands
                 CreateNewSolutionFile(file);
             }
 
-            WriteObject(file);
+            WriteObject(new FileInfo(file.FullName));
         }
+
+        protected override void Begin() { }
+        protected override void End() { }
     }
 }

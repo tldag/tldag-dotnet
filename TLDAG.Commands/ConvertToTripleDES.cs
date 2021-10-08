@@ -19,6 +19,9 @@ namespace TLDAG.Commands
         [Parameter(Mandatory = false)]
         public string Extension { get; set; } = ".enc";
 
+        protected override void Begin() { }
+        protected override void End() { }
+
         protected override void Process()
         {
             throw NotYetImplemented(nameof(ProcessRecord));

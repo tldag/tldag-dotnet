@@ -11,6 +11,9 @@ namespace TLDAG.Commands
         [Parameter(Mandatory = false, ValueFromPipeline = true, Position = 0)]
         public int Length { get; set; } = 24;
 
+        protected override void Begin() { }
+        protected override void End() { }
+
         protected override void Process()
         {
             WriteObject(Passwords.NewPassword(Length));
