@@ -1,7 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Sdk.props" Pack="true" PackagePath="/" />
+    <None Include="Sdk.targets" Pack="true" PackagePath="/" />
+  </ItemGroup>
 
 </Project>

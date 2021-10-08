@@ -8,6 +8,7 @@ namespace TLDAG.Core.Tests.Code
     [TestClass]
     public class GrammarScannerTests
     {
+#if DEBUG
         [TestMethod]
         public void TestDevScanner()
         {
@@ -19,5 +20,6 @@ namespace TLDAG.Core.Tests.Code
             Assert.AreEqual(EndOfFileName, enumerator.Current.Name);
             Assert.IsFalse(enumerator.MoveNext());
         }
+#endif
     }
 }

@@ -6,9 +6,12 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{56FBC6D8-C3AB-4467-8196-D52E7EA508E8}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		eng\Build-TldagDotnet.ps1 = eng\Build-TldagDotnet.ps1
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		global.json = global.json
 		NuGet.Config = NuGet.Config
+		setup.ps1 = setup.ps1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Libraries.Core", "TLDAG.Libraries.Core\TLDAG.Libraries.Core.csproj", "{941E0A90-AA9C-43EA-B92C-465E568FA1D6}"
@@ -29,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Build.Tests", "TLDAG.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Sdk", "TLDAG.Sdk\TLDAG.Sdk.csproj", "{7C9321E2-0C9E-4977-8E67-143C656CC488}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLDAG.Sdk.Tests", "TLDAG.Sdk.Tests\TLDAG.Sdk.Tests.csproj", "{F94E9280-9EA8-45DB-82E0-64E3845B075A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Sdk.Tests", "TLDAG.Sdk.Tests\TLDAG.Sdk.Tests.csproj", "{F94E9280-9EA8-45DB-82E0-64E3845B075A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
