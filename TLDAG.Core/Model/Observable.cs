@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace TLDAG.Core
+namespace TLDAG.Core.Model
 {
     public class Observable : INotifyPropertyChanging, INotifyPropertyChanged
     {
