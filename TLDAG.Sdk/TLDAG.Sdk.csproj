@@ -2,11 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="Sdk.props" Pack="true" PackagePath="/" />
     <None Include="Sdk.targets" Pack="true" PackagePath="/" />
+    <None Include="sdk/Clean.targets" Pack="true" PackagePath="/sdk/" />
   </ItemGroup>
 
 </Project>

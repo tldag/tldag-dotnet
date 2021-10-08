@@ -1,5 +1,5 @@
 ﻿@{
-    RootModule = 'lib/net5.0/TLDAG.PS.dll'
+    RootModule = 'lib/net5.0/TLDAG.Commands.dll'
     ModuleVersion = '0.1.0'
     # CompatiblePSEditions = @()
     GUID = 'B0EAFE79-4DCC-4464-BE7B-B8B47A03E123'

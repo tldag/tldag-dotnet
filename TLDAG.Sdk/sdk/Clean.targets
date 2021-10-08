@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <Target Name="DeleteBinAndObj" BeforeTargets="Clean,Rebuild">
+    
+    <PropertyGroup>
+      <_DeleteBinAndOutBin>$([MSBuild]::NormalizeDirectory( $(MSBuildProjectDirectory), 'bin' ))</_DeleteBinAndOutBin>
+      <_DeleteBinAndOutObj>$([MSBuild]::NormalizeDirectory( $(MSBuildProjectDirectory), 'obj' ))</_DeleteBinAndOutObj>
+    </PropertyGroup>
+
+    <RemoveDir Directories="$(_DeleteBinAndOutBin)" />
+    <RemoveDir Directories="$(_DeleteBinAndOutObj)" />
+
+  </Target>
+  
+</Project>

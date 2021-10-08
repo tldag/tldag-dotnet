@@ -1,10 +1,16 @@
 <Project>
 
-  <Target Name="CreatePackageOutputPath" BeforeTargets="BeforeResolveReferences">
+  <Import Project="TLDAG.Sdk/sdk/Clean.targets" />
+
+  <Target Name="CreateRepositoryDirectory" BeforeTargets="BeforeResolveReferences">
+    <MakeDir Directories="$(RepositoryPath)" />
+  </Target>
+
+  <Target Name="CreatePackageOutputDirectory" BeforeTargets="BeforeResolveReferences">
     <MakeDir Directories="$(PackageOutputPath)" />
   </Target>
   
-  <Target Name="CreateModuleOutputPath" BeforeTargets="BeforeResolveReferences">
+  <Target Name="CreateModuleOutputDirectory" BeforeTargets="BeforeResolveReferences">
     <MakeDir Directories="$(ModuleOutputPath)" />
   </Target>
   
