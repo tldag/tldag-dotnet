@@ -11,7 +11,7 @@ namespace TLDAG.Commands.Tests
         protected override Type CommandType => typeof(NewPassword);
 
         [TestMethod]
-        public void MyTestMethod()
+        public void TestNewPassword()
         {
             string password = Invoke<string>("New-Password");
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using static TLDAG.Core.Algorithms.Conversion;
+using static TLDAG.Core.Primitives;
 using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.IO

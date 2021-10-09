@@ -1,20 +1,20 @@
-﻿using System.Management.Automation;
+﻿using System.IO;
+using System.Management.Automation;
 using TLDAG.Automation;
+using TLDAG.Core.Cryptography;
 using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Commands
 {
-    [Cmdlet(VerbsData.ConvertTo, "TripleDESEncryted")]
-    public class ConvertToTripleDESEncryted : Command
+    [Cmdlet(VerbsData.ConvertTo, "TripleDESEncrypted")]
+    [OutputType(typeof(FileInfo))]
+    public class ConvertToTripleDESEncrypted : Command
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
         public string Path { get; set; } = "";
 
         [Parameter(Mandatory = true, ValueFromPipeline = false, Position = 1)]
         public string Password { get; set; } = "";
-
-        [Parameter(Mandatory = false, Position = 2)]
-        public string Output { get; set; } = "";
 
         [Parameter(Mandatory = false)]
         public string Extension { get; set; } = ".enc";
@@ -24,7 +24,12 @@ namespace TLDAG.Commands
 
         protected override void Process()
         {
-            throw NotYetImplemented();
+            byte[] plainBytes = File.ReadAllBytes(Path);
+            byte[] encrypted = TripleDES.Encrypt(plainBytes, Password);
+            string outputPath = Path + Extension;
+
+            File.WriteAllBytes(outputPath, encrypted);
+            WriteObject(new FileInfo(outputPath));
         }
     }
 }

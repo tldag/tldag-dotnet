@@ -14,10 +14,20 @@ namespace TLDAG.Automation
         protected Shell Shell => shell ??= new(CommandType);
 
         protected T Invoke<T>(string script) => GetResults<T>(script).Value;
+        protected void Invoke(string script) { GetResults(script); }
 
         protected CommandResults<T> GetResults<T>(string script, bool throwOnError = true)
         {
             CommandResults<T> results = Shell.Invoke<T>(script);
+
+            if (throwOnError) results.ThrowExceptions();
+
+            return results;
+        }
+
+        protected CommandResults GetResults(string script, bool throwOnError = true)
+        {
+            CommandResults results = Shell.Invoke(script);
 
             if (throwOnError) results.ThrowExceptions();
 

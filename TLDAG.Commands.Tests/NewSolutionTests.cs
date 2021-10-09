@@ -15,7 +15,7 @@ namespace TLDAG.Commands.Tests
         protected override Type CommandType => typeof(NewSolution);
 
         [TestMethod]
-        public void MyTestMethod()
+        public void TestNewSolution()
         {
             FileInfo expected = new("NewSolutionTests.sln");
 

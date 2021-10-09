@@ -55,7 +55,7 @@ namespace TLDAG.Core.Algorithms
 
         public static void Replace<T>(T[] dest, int destOffset, T[] src, int srcOffset, int count)
         {
-            throw NotYetImplemented();
+            for (int i = 0; i < count; ++i) dest[destOffset++] = src[srcOffset++];
         }
     }
 }

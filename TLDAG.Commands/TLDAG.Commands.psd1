@@ -23,14 +23,19 @@
     # NestedModules = @()
     FunctionsToExport = @()
     CmdletsToExport = @(
+        "ConvertFrom-HslaToRgba",
         "New-Password",
+        "New-SnkFile",
         "New-Solution"
     )
     VariablesToExport = @()
     AliasesToExport = @()
     # DscResourcesToExport = @()
     # ModuleList = @()
-    # FileList = @()
+    FileList = @(
+        "lib/net5.0/TLDAG.Automation.dll",
+        "lib/net5.0/TLDAG.Core.dll"
+    )
     # HelpInfoURI = ''
     # DefaultCommandPrefix = ''
     PrivateData = @{
@@ -44,7 +49,9 @@
             ExternalModuleDependencies = @()
             ReleaseNotes = '
 0.1.0
+- Added command ConvertFrom-HslaToRgba
 - Added command New-Password
+- Added command New-SnkFile
 - Added command New-Solution
 '
         }

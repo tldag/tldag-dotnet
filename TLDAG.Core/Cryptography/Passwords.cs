@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
 using TLDAG.Core.Collections;
 using static System.Math;
+using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Primitives;
+using static TLDAG.Core.Algorithms.Arrays;
 
 namespace TLDAG.Core.Cryptography
 {
@@ -53,6 +57,24 @@ namespace TLDAG.Core.Cryptography
             }
 
             return hasUpper && hasLower && hasDigit && hasDash;
+        }
+
+        public static byte[] ToKey(string password, int keySize)
+        {
+            if (password.Length == 0) password = "\0";
+
+            byte[] bytes = ToBytes(password.ToCharArray());
+            byte[] hash = SHA512.Create().ComputeHash(bytes);
+            byte[] result = new byte[keySize / 8];
+
+            for (int i = 0; i < result.Length; i += hash.Length)
+            {
+                int count = Min(hash.Length, result.Length - i);
+
+                Replace(result, i, hash, 0, count);
+            }
+
+            return result;
         }
     }
 }
