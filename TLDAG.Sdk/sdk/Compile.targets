@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  
+  <Target Name="WriteCompileList" AfterTargets="Compile">
+
+    <PropertyGroup>
+      <_WriteCompileListFile>$([MSBuild]::NormalizePath( $(MSBuildProjectDirectory), '$(IntermediateOutputPath)', 'Compile.lst' ))</_WriteCompileListFile>
+    </PropertyGroup>
+
+    <WriteLinesToFile File="$(_WriteCompileListFile)" Lines="@(Compile->'%(FullPath)')" Overwrite="true" WriteOnlyWhenDifferent="true" />
+
+  </Target>
+  
+</Project>

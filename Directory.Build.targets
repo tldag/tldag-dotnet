@@ -1,6 +1,7 @@
 <Project>
 
   <Import Project="TLDAG.Sdk/sdk/Clean.targets" />
+  <Import Project="TLDAG.Sdk/sdk/Compile.targets" />
 
   <Target Name="CreateRepositoryDirectory" BeforeTargets="BeforeResolveReferences">
     <MakeDir Directories="$(RepositoryPath)" />
