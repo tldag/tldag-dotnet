@@ -14,5 +14,10 @@ namespace TLDAG.Core
 
         public static FileNotFoundException FileNotFound(string path) => new(null, path);
         public static FileNotFoundException FileNotFound(FileInfo file) => new(null, file.FullName);
+
+        public static ArgumentException InvalidArgument(string paramName, string message) => new(message, paramName);
+
+        public static ArgumentOutOfRangeException OutOfRange(string paramName, object actualValue, string message)
+            => new(paramName, actualValue, message);
     }
 }

@@ -32,7 +32,7 @@ namespace TLDAG.Core.Cryptography
 
             if (password.Length < length) return password;
 
-            for (int i = Randoms.NextInt(0, 16); i < length; i += Randoms.NextInt(0, 16))
+            for (int i = Randoms.NextUShort(1, 16); i < length; i += Randoms.NextUShort(1, 16))
             { password = password.Substring(0, i) + "-" + password.Substring(i); }
 
             return password.Substring(0, length);

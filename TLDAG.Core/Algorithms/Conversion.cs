@@ -1,27 +1,27 @@
-﻿namespace TLDAG.Core.Algorithms
+﻿using System;
+using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Algorithms.Arrays;
+
+namespace TLDAG.Core.Algorithms
 {
     public static class Conversion
     {
-        public static void ToBytes(int value, byte[] dest, int destOffset)
+        public static void UShortToBytes(ushort value, byte[] dest, int offset) => throw NotYetImplemented();
+
+        public static ushort ToUShort(byte[] src, int offset = 0)
         {
-            dest[destOffset++] = (byte)(value >> 24);
-            dest[destOffset++] = (byte)(value >> 16);
-            dest[destOffset++] = (byte)(value >> 8);
-            dest[destOffset] = (byte)value;
+            if (!BitConverter.IsLittleEndian) { src = SubArray(src, 0, sizeof(ushort)); offset = 0; }
+            return BitConverter.ToUInt16(src, offset);
         }
 
-        public static int ToInt(byte[] src, int srcOffset = 0)
+        public static void IntToBytes(int value, byte[] dest, int offset) => throw NotYetImplemented();
+
+        public static int ToInt(byte[] src, int offset = 0) => throw NotYetImplemented();
+
+        public static long ToLong(byte[] src, int offset = 0)
         {
-            int value = 0;
-
-            srcOffset += 3;
-
-            value |= src[srcOffset--];
-            value |= src[srcOffset--] << 8;
-            value |= src[srcOffset--] << 16;
-            value |= src[srcOffset] << 24;
-
-            return value;
+            if (!BitConverter.IsLittleEndian) { src = SubArray(src, 0, sizeof(ushort)); offset = 0; }
+            return BitConverter.ToInt64(src, offset);
         }
     }
 }

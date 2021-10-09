@@ -9,7 +9,8 @@ using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Collections
 {
-    public abstract partial class ImmutableSet<T> where T : notnull
+    public abstract partial class ImmutableSet<T> : IComparable<ImmutableSet<T>>, IEquatable<ImmutableSet<T>>
+        where T : notnull
     {
         protected readonly Compare<T> compare;
 
@@ -17,9 +18,13 @@ namespace TLDAG.Core.Collections
         private int? hashCode;
 
         public ImmutableSet(Compare<T> compare, T[] values) { this.compare = compare; this.values = values; }
+        public ImmutableSet(Compare<T> compare, T value) { this.compare = compare; this.values = new T[] { value }; }
 
         public bool Contains(T value)
         {
+            if (values.Length == 0) return false;
+            if (values.Length == 1) return EqualValues(values[0], value);
+
             int insertPos = SearchValue(value);
 
             return insertPos != values.Length && EqualValues(values[insertPos], value);
@@ -33,6 +38,16 @@ namespace TLDAG.Core.Collections
 
         public override int GetHashCode() => hashCode ??= ComputeHashCode();
         public override bool Equals(object? obj) => throw NotYetImplemented();
+
+        public int CompareTo(ImmutableSet<T>? other)
+        {
+            throw NotYetImplemented();
+        }
+
+        public bool Equals(ImmutableSet<T>? other)
+        {
+            throw NotYetImplemented();
+        }
 
         private int ComputeHashCode()
         {
@@ -51,6 +66,7 @@ namespace TLDAG.Core.Collections
         protected virtual bool EqualValues(T a, T b) => compare(a, b) == 0;
 
         protected abstract int GetHashCode(T value);
+
     }
 
     public partial class IntSet : ImmutableSet<int>
@@ -58,6 +74,7 @@ namespace TLDAG.Core.Collections
         public IntSet(IEnumerable<int> values) : base(IntCompare, UniqueInts(values)) { }
         public IntSet(IEnumerable<int> values, int value) : this(values.Append(value)) { }
         public IntSet(IEnumerable<int> v1, IEnumerable<int> v2) : this(v1.Concat(v2)) { }
+        public IntSet(int value) : base(IntCompare, value) { }
 
         public override int GetHashCode() => throw NotYetImplemented();
         public override bool Equals(object? obj) => throw NotYetImplemented();
@@ -75,6 +92,7 @@ namespace TLDAG.Core.Collections
         public CharSet(IEnumerable<char> values) : base(CharCompare, UniqueChars(values)) { }
         public CharSet(IEnumerable<char> values, char value) : this(values.Append(value)) { }
         public CharSet(IEnumerable<char> v1, IEnumerable<char> v2) : this(v1.Concat(v2)) { }
+        public CharSet(char value) : base(CharCompare, value) { }
 
         public override int GetHashCode() => throw NotYetImplemented();
         public override bool Equals(object? obj) => throw NotYetImplemented();
@@ -95,6 +113,12 @@ namespace TLDAG.Core.Collections
         public ValueSet(Compare<T> compare, IEnumerable<T> values)
             : base(compare, UniqueValues(values, compare)) { }
 
+        public ValueSet(IComparer<T> comparer, T value)
+            : this(comparer.ToCompare(), value) { }
+
+        public ValueSet(Compare<T> compare, T value)
+            : base(compare, value) { }
+
         protected override int GetHashCode(T value) => value.GetHashCode();
 
         public static ValueSet<U> Empty<U>(IComparer<U> comparer) where U : notnull
@@ -112,6 +136,12 @@ namespace TLDAG.Core.Collections
         public StringSet(IEnumerable<string> values, Compare<string> compare)
             : base(compare, values) { }
 
+        public StringSet(string value, IComparer<string>? comparer = null)
+            : base(comparer ?? OrdinalStringComparer, value) { }
+
+        public StringSet(string value, Compare<string> compare)
+            : base(compare, value) { }
+
         public override int GetHashCode() => throw NotYetImplemented();
         public override bool Equals(object? obj) => throw NotYetImplemented();
 
@@ -122,6 +152,7 @@ namespace TLDAG.Core.Collections
     public partial class SmartSet<T> : ValueSet<T> where T : notnull, IComparable<T>
     {
         public SmartSet(IEnumerable<T> values) : base(GetCompare<T>(), values) { }
+        public SmartSet(T value) : base(GetCompare<T>(), value) { }
 
         public override int GetHashCode() => throw NotYetImplemented();
         public override bool Equals(object? obj) => throw NotYetImplemented();

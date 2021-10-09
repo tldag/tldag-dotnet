@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TLDAG.Core.Collections;
 using static TLDAG.Core.Code.Constants;
 using static TLDAG.Core.Exceptions;
@@ -8,16 +9,16 @@ namespace TLDAG.Core.Code
 {
     public class ParseElement : IEquatable<ParseElement>, IComparable<ParseElement>
     {
-        public readonly ParseProductionNode Production;
+        public readonly int Production;
         public readonly int Position;
-        public readonly ParseTerminalNode Terminal;
+        public readonly int Terminal;
 
         private int? hash = null;
 
-        public ParseElement(ParseProductionNode production, int position, ParseTerminalNode terminal)
+        public ParseElement(int production, int position, int terminal)
             { Production = production; Position = position; Terminal = terminal; }
 
-        private int ComputeHashCode() => Production.Id << 21 + Position << 16 + Terminal.Id;
+        private int ComputeHashCode() => Production << 21 + Position << 16 + Terminal;
         public override int GetHashCode() => hash ??= ComputeHashCode();
         public override bool Equals(object? obj) => EqualsTo(obj as ParseElement);
         public bool Equals(ParseElement? other) => EqualsTo(other);
@@ -25,7 +26,7 @@ namespace TLDAG.Core.Code
         private bool EqualsTo(ParseElement? other)
         {
             if (other is null) return false;
-            if (Production.Id != other.Production.Id) return false;
+            if (Production != other.Production) return false;
             if (Position != other.Position) return false;
             return true;
         }
@@ -34,6 +35,34 @@ namespace TLDAG.Core.Code
         {
             throw NotYetImplemented();
         }
+
+        public static ParseElement Start(ParseProductionNode root)
+        {
+            ParseNodes children = root.Children;
+
+            if (children.Count != 2) throw OutOfRange(nameof(root), children.Count, "Root must have 2 children.");
+
+            if (children[1] is not ParseTerminalNode terminal)
+                throw InvalidArgument(nameof(root), "Root's right child must be terminal.");
+
+            return new(root.Id, 0, terminal.Id);
+        }
+    }
+
+    public class ParseElements : SmartSet<ParseElement>
+    {
+        public ParseElements(IEnumerable<ParseElement> elements) : base(elements) { }
+        public ParseElements(ParseElement element) : base(element) { }
+    }
+
+    public class ParseElementsCollector
+    {
+        private readonly SortedSet<ParseElement> elements = new();
+
+        public ParseElement[] Current => elements.ToArray();
+
+        public bool Add(ParseElement element) { throw NotYetImplemented(); }
+        public ParseElements Build() { throw NotYetImplemented(); }
     }
 
     public class ParseInitTerminals : IParseNodeVisitor
@@ -84,66 +113,15 @@ namespace TLDAG.Core.Code
         }
     }
 
-    public class ParseComputeFirst : IParseNodeVisitor
-    {
-        private readonly int EmptyId = ParseTerminalNode.EmptyId;
-        private bool modified;
-
-        public void Visit(ParseNode node)
-        {
-            if (node is ParseTerminalNode terminalNode) VisitTerminal(terminalNode);
-            else if (node is ParseProductionNode productionNode) VisitProduction(productionNode);
-            else if (node is ParseChooseNode chooseNode) VisitChooseNode(chooseNode);
-        }
-
-        private void VisitTerminal(ParseTerminalNode node)
-        {
-            AddToFirst(node, node.Id);
-        }
-
-        private void VisitProduction(ParseProductionNode node)
-        {
-            if (node.Count == 0) { AddToFirst(node, EmptyId); return; }
-
-            IReadOnlyList<ParseNode> children = node.Children;
-
-            AddToFirst(node, children[0].First);
-
-            for (int i = 1, n = node.Count; i < n; ++i)
-            {
-                if (!children[i - 1].First.Contains(EmptyId)) return;
-                AddToFirst(node, children[i].First);
-            }
-
-            AddToFirst(node, EmptyId);
-        }
-
-        private void VisitChooseNode(ParseChooseNode node)
-        {
-            throw NotYetImplemented();
-        }
-
-        private void AddToFirst(ParseNode node, int id) { if (node.AddToFirst(id)) modified = true; }
-        private void AddToFirst(ParseNode node, IntSet ids) { if (node.AddToFirst(ids)) modified = true; }
-
-        public static void Compute(ParseNode root)
-        {
-            ParseComputeFirst visitor = new();
-
-            do
-            {
-                visitor.modified = false;
-                root.VisitDepthFirst(visitor);
-            }
-            while (visitor.modified);
-        }
-    }
-
     public class ParseCompiler
     {
-        private readonly ParseNode root;
+        private readonly ParseProductionNode root;
         private readonly IntMap<ParseTerminalNode> terminals;
         private readonly IntMap<ParseProductionNode> productions;
+
+        private readonly int[] terminalIds;
+
+        private readonly SmartMap<ParseNodes, IntSet> firsts = new();
 
         public ParseCompiler(ParseNode root)
         {
@@ -151,22 +129,85 @@ namespace TLDAG.Core.Code
 
             terminals = ParseInitTerminals.Init(this.root);
             productions = ParseInitProductions.Init(this.root);
+
+            terminalIds = terminals.Keys.ToArray();
         }
 
         private static ParseProductionNode Extend(ParseNode root)
         {
             ParseNode[] children = { root, ParseTerminalNode.EndOfFile };
 
-            return new(ExtendedGrammarRootName, children);
+            return new(ExtendedGrammarRootName, new(children));
         }
 
         public static ParseCompiler Create(ParseNode root) => new(root);
 
         public ParseData Compile()
         {
-            ParseComputeFirst.Compute(root);
+            SortedSet<ParseElements> elementSets = ElementSets();
 
             throw NotYetImplemented();
+        }
+
+        private IntSet First(ParseNodes nodes)
+        {
+            throw NotYetImplemented();
+        }
+
+        private ParseElements Hull(ParseElements elements)
+        {
+            ParseElementsCollector collector = new();
+            bool modified;
+
+            do
+            {
+                ParseElement[] current = collector.Current;
+
+                modified = false;
+
+                throw NotYetImplemented();
+            }
+            while (modified);
+
+            return collector.Build();
+        }
+
+        private ParseElements Transition(ParseElements elements, int terminalId)
+        {
+            throw NotYetImplemented();
+        }
+
+        private SortedSet<ParseElements> ElementSets()
+        {
+            SortedSet<ParseElements> elementSets = new();
+            
+            bool modified;
+
+            elementSets.Add(Hull(new(ParseElement.Start(root))));
+
+            do
+            {
+                ParseElements[] current = elementSets.ToArray();
+
+                modified = false;
+
+                foreach (ParseElements elements in current)
+                {
+                    foreach (int terminalId in terminalIds)
+                    {
+                        ParseElements transition = Transition(elements, terminalId);
+
+                        if (transition.Count > 0 && !elementSets.Contains(transition))
+                        {
+                            elementSets.Add(transition);
+                            modified = true;
+                        }
+                    }
+                }
+            }
+            while (modified);
+
+            return elementSets;
         }
     }
 }

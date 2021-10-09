@@ -17,7 +17,7 @@ namespace TLDAG.Core.IO
 
         internal void WriteCount(int count)
         {
-            ToBytes(count, smallBuffer, 0);
+            IntToBytes(count, smallBuffer, 0);
             stream.Write(smallBuffer, 0, sizeof(int));
         }
 

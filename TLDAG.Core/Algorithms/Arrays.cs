@@ -18,6 +18,11 @@ namespace TLDAG.Core.Algorithms
             return copy;
         }
 
+        public static T[] SubArray<T>(T[] src, int offset, int count)
+        {
+            throw NotYetImplemented();
+        }
+
         public static void Move<T>(T[] values, int srcPos, int dstPos, int count)
         {
             if (srcPos == dstPos || count == 0) return;
@@ -46,6 +51,11 @@ namespace TLDAG.Core.Algorithms
             Array.Copy(values, result, copyCount);
 
             return result;
+        }
+
+        public static void Replace<T>(T[] dest, int destOffset, T[] src, int srcOffset, int count)
+        {
+            throw NotYetImplemented();
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TLDAG.Core.Collections;
 using static TLDAG.Core.Code.Constants;
 using static TLDAG.Core.Exceptions;
@@ -11,28 +13,54 @@ namespace TLDAG.Core.Code
         public void Visit(ParseNode node);
     }
 
-    public class ParseNode
+    public abstract class ParseNode : IEquatable<ParseNode>, IComparable<ParseNode>
     {
         public int Id { get; internal set; }
-        private IntSet first = IntSet.Empty;
-        public IntSet First => first;
 
         public ParseNode(int id) { Id = id; }
 
-        public bool AddToFirst(int id) { if (first.Contains(id)) return false; first += id; return true; }
-        public bool AddToFirst(IntSet ids) { if (first.ContainsAll(ids)) return false; first += ids; return true; }
+        public override bool Equals(object? obj) => throw NotYetImplemented();
+        public bool Equals(ParseNode? other) => throw NotYetImplemented();
+        public override int GetHashCode() => throw NotYetImplemented();
+        public int CompareTo(ParseNode? other) => throw NotYetImplemented();
 
         public virtual V VisitDepthFirst<V>(V visitor) where V : IParseNodeVisitor => Visit(visitor);
         public virtual V VisitPreOrder<V>(V visitor) where V : IParseNodeVisitor => Visit(visitor);
         protected virtual V Visit<V>(V visitor) where V : IParseNodeVisitor { visitor.Visit(this); return visitor; }
+
     }
 
-    public class ParseTerminalNode : ParseNode
+    public class ParseNodes : IReadOnlyList<ParseNode>, IEquatable<ParseNodes>, IComparable<ParseNodes>
+    {
+        private List<ParseNode> nodes;
+
+        public int Count => nodes.Count;
+
+        public ParseNodes(IEnumerable<ParseNode> nodes) { this.nodes = nodes.ToList(); }
+
+        public override bool Equals(object? obj) => throw NotYetImplemented();
+        public bool Equals(ParseNodes? other) => throw NotYetImplemented();
+        public override int GetHashCode() => throw NotYetImplemented();
+        public int CompareTo(ParseNodes? other) => throw NotYetImplemented();
+
+        public ParseNode this[int index] => nodes[index];
+        public IEnumerator<ParseNode> GetEnumerator() => nodes.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => nodes.GetEnumerator();
+
+        public ParseNodes SubNodes(int start) => throw NotYetImplemented();
+    }
+
+    public class ParseTerminalNode : ParseNode, IEquatable<ParseTerminalNode>, IComparable<ParseTerminalNode>
     {
         public readonly string Name;
 
         public ParseTerminalNode(string name) : this(0, name) { }
         private ParseTerminalNode(int id, string name) : base(id) { Name = name; }
+
+        public override bool Equals(object? obj) => throw NotYetImplemented();
+        public bool Equals(ParseTerminalNode? other) => throw NotYetImplemented();
+        public override int GetHashCode() => throw NotYetImplemented();
+        public int CompareTo(ParseTerminalNode? other) => throw NotYetImplemented();
 
         public const int EndOfFileId = 1;
         public const int EmptyId = 2;
@@ -42,30 +70,44 @@ namespace TLDAG.Core.Code
         public static readonly ParseTerminalNode Empty = new(EmptyId, EmptyNodeName);
     }
 
-    public class ParseProductionNode : ParseNode
+    public class ParseProductionNode : ParseNode, IEquatable<ParseProductionNode>, IComparable<ParseProductionNode>
     {
         public readonly string Name;
-        private readonly ParseNode[] children;
-        public IReadOnlyList<ParseNode> Children => children;
-        public int Count => children.Length;
+        public ParseNodes Children;
+        public int Count => Children.Count;
 
-        public ParseProductionNode(string name, ParseNode[] children) : base(0) { Name = name; this.children = children; }
+        public ParseProductionNode(string name, ParseNodes children) : base(0) { Name = name; Children = children; }
+
+        public override bool Equals(object? obj) => throw NotYetImplemented();
+        public bool Equals(ParseProductionNode? other) => throw NotYetImplemented();
+        public override int GetHashCode() => throw NotYetImplemented();
+        public int CompareTo(ParseProductionNode? other) => throw NotYetImplemented();
 
         public override V VisitDepthFirst<V>(V visitor)
         {
-            foreach (ParseNode node in children) node.VisitDepthFirst(visitor);
-            return base.Visit(visitor);
+            foreach (ParseNode node in Children) node.VisitDepthFirst(visitor);
+            return Visit(visitor);
         }
 
-        public override V VisitPreOrder<V>(V visitor) { throw NotYetImplemented(); }
+        public override V VisitPreOrder<V>(V visitor)
+        {
+            Visit(visitor);
+            foreach (ParseNode node in Children) node.VisitPreOrder(visitor);
+            return visitor;
+        }
     }
 
-    public class ParseChooseNode : ParseNode
+    public class ParseChooseNode : ParseNode, IEquatable<ParseChooseNode>, IComparable<ParseChooseNode>
     {
         public readonly ParseNode Left;
         public readonly ParseNode Right;
 
         public ParseChooseNode(ParseNode left, ParseNode right) : base(0) { Left = left; Right = right; }
+
+        public override bool Equals(object? obj) => throw NotYetImplemented();
+        public bool Equals(ParseChooseNode? other) => throw NotYetImplemented();
+        public override int GetHashCode() => throw NotYetImplemented();
+        public int CompareTo(ParseChooseNode? other) => throw NotYetImplemented();
 
         public override V VisitDepthFirst<V>(V visitor) { throw NotYetImplemented(); }
         public override V VisitPreOrder<V>(V visitor) { throw NotYetImplemented(); }
@@ -122,7 +164,7 @@ namespace TLDAG.Core.Code
 
             for (int i = count - 1; i >= 0; --i) children[i] = stack.Pop();
 
-            ParseProductionNode production = new(name, children);
+            ParseProductionNode production = new(name, new(children));
 
             stack.Push(production); Add(production); return this;
         }
