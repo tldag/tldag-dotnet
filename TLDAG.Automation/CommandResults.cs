@@ -29,9 +29,10 @@ namespace TLDAG.Automation
             exceptions = GetExceptions(shell);
         }
 
-        public void ThrowExceptions()
+        public virtual CommandResults ThrowExceptions(bool throwOnError)
         {
-            if (exceptions.Count > 0) throw exceptions[0];
+            if (throwOnError && exceptions.Count > 0) throw exceptions[0];
+            return this;
         }
 
         private static List<Exception> GetExceptions(PowerShell shell)
@@ -46,5 +47,8 @@ namespace TLDAG.Automation
         public T Value => Values.First();
 
         public CommandResults(PowerShell shell, Collection<T> values) : base(shell) { this.values = new(values); }
+
+        public override CommandResults<T> ThrowExceptions(bool throwOnError)
+        { base.ThrowExceptions(throwOnError); return this; }
     }
 }

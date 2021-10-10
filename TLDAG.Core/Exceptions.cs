@@ -7,6 +7,9 @@ namespace TLDAG.Core
 {
     public static class Exceptions
     {
+        public static Exception InnerMost(this Exception exception)
+            => exception.InnerException?.InnerMost() ?? exception;
+
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static NotImplementedException NotYetImplemented() => new(new StackFrame(1, true).ToString());
 

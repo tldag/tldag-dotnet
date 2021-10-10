@@ -13,25 +13,13 @@ namespace TLDAG.Automation
 {
     public class Shell
     {
-        private PowerShell shell;
+        private readonly PowerShell shell;
         private readonly HashSet<FileInfo> imported = new();
 
-        public Shell()
-        {
-            shell = PowerShell.Create();
-        }
+        public Shell() { shell = PowerShell.Create(); }
+        public Shell(Type commandType) : this() { ImportModule(commandType); }
 
-        public Shell(Type commandType)
-        {
-            shell = PowerShell.Create();
-            ImportModule(commandType);
-        }
-
-        public void Clear()
-        {
-            shell.Commands.Clear();
-            shell.Streams.ClearStreams();
-        }
+        public void Clear() { shell.Commands.Clear(); shell.Streams.ClearStreams(); }
 
         public CommandResults Invoke(string script)
             { Clear(); shell.AddScript(script); return new(shell, shell.Invoke()); }
@@ -44,10 +32,7 @@ namespace TLDAG.Automation
         public void ImportModule(FileInfo file)
         {
             if (imported.Contains(file)) return;
-
-            CommandResults results = Invoke($"Import-Module '{file.FullName}'");
-
-            results.ThrowExceptions();
+            Invoke($"Import-Module '{file.FullName}'").ThrowExceptions(true);
             imported.Add(file);
         }
     }

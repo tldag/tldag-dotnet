@@ -17,21 +17,9 @@ namespace TLDAG.Automation
         protected void Invoke(string script) { GetResults(script); }
 
         protected CommandResults<T> GetResults<T>(string script, bool throwOnError = true)
-        {
-            CommandResults<T> results = Shell.Invoke<T>(script);
-
-            if (throwOnError) results.ThrowExceptions();
-
-            return results;
-        }
+            => Shell.Invoke<T>(script).ThrowExceptions(throwOnError);
 
         protected CommandResults GetResults(string script, bool throwOnError = true)
-        {
-            CommandResults results = Shell.Invoke(script);
-
-            if (throwOnError) results.ThrowExceptions();
-
-            return results;
-        }
+            => Shell.Invoke(script).ThrowExceptions(throwOnError);
     }
 }
