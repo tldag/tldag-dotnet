@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using TLDAG.Core.Collections;
 using static TLDAG.Core.Exceptions;
 using static TLDAG.Core.Strings;
@@ -21,6 +16,6 @@ namespace TLDAG.Core.IO
             => HasExtension(file, new StringSet(extensions, FileNameCompare));
 
         public static bool HasExtension(this FileInfo file, StringSet extensions)
-            => extensions.Contains(file.Extension);
+            => extensions.Contains(file.Extension) || extensions.Contains("");
     }
 }

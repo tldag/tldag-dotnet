@@ -8,5 +8,11 @@ namespace TLDAG.Core.Reflection
 {
     public class Executable
     {
+        public readonly string Path;
+
+        public Executable(string path)
+        {
+            Path = path;
+        }
     }
 }
