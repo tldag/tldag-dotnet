@@ -35,10 +35,25 @@ namespace TLDAG.Core.Code
             private int ComputeHashCode() => Production << 21 + Position << 16 + Terminal;
         }
 
+        protected class GetProductionsComputer : IParseNodeVisitor
+        {
+            public void Visit(ParseNode node)
+            {
+                throw NotYetImplemented();
+            }
+
+            protected static List<ParseProductionNode> Compute(ParseElement element)
+            {
+                throw NotYetImplemented();
+            }
+        }
+
         public readonly ParseProductionNode Production;
         public int Position => Key.Position;
         public readonly ParseTerminalNode Terminal;
         public readonly ElementKey Key;
+
+        public IReadOnlyList<ParseProductionNode> Productions => throw NotYetImplemented();
 
         public ParseElement(ParseProductionNode production, int position, ParseTerminalNode terminal)
             { Production = production; Terminal = terminal; Key = new(production, position, terminal); }
@@ -180,6 +195,14 @@ namespace TLDAG.Core.Code
                 ParseElement[] current = collector.Current;
 
                 modified = false;
+
+                foreach (ParseElement element in current)
+                {
+                    foreach (ParseProductionNode production in element.Productions)
+                    {
+
+                    }
+                }
 
                 throw NotYetImplemented();
             }
