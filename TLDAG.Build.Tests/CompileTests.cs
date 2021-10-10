@@ -13,7 +13,7 @@ namespace TLDAG.Build.Tests
         public void TestParse()
         {
             Compile
-                .GetCompileFiles(GetListFile())
+                .GetCSharpFiles(GetListFile())
                 .Select(file => File.ReadAllText(file.FullName))
                 .Select(text => CSharpSyntaxTree.ParseText(text))
                 .Select(tree => tree.GetCompilationUnitRoot())

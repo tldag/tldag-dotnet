@@ -6,6 +6,8 @@ using static TLDAG.Core.Algorithms.Algorithms;
 using static TLDAG.Core.Algorithms.BinarySearch;
 using static TLDAG.Core.Algorithms.Unique;
 using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Primitives;
+using static TLDAG.Core.Delegates;
 
 namespace TLDAG.Core.Collections
 {

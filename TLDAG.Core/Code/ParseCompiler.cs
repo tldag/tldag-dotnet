@@ -49,10 +49,12 @@ namespace TLDAG.Core.Code
         }
     }
 
-    public class ParseElements : SmartSet<ParseElement>
+    public class ParseElements : SmartSet<ParseElement>, IEquatable<ParseElements>
     {
         public ParseElements(IEnumerable<ParseElement> elements) : base(elements) { }
         public ParseElements(ParseElement element) : base(element) { }
+
+        public bool Equals(ParseElements? other) => throw NotYetImplemented();
     }
 
     public class ParseElementsCollector
@@ -121,6 +123,7 @@ namespace TLDAG.Core.Code
 
         private readonly int[] terminalIds;
 
+        private readonly SmartMap<ParseElements, ParseElements> hulls = new();
         private readonly SmartMap<ParseNodes, IntSet> firsts = new();
 
         public ParseCompiler(ParseNode root)
@@ -156,6 +159,10 @@ namespace TLDAG.Core.Code
 
         private ParseElements Hull(ParseElements elements)
         {
+            ParseElements? hull = hulls[elements];
+
+            if (hull is not null) return hull;
+
             ParseElementsCollector collector = new();
             bool modified;
 
