@@ -19,8 +19,8 @@ namespace TLDAG.Core.Collections
         protected readonly T[] values;
         private int? hashCode;
 
-        public ImmutableSet(Compare<T> compare, T[] values) { this.compare = compare; this.values = values; }
-        public ImmutableSet(Compare<T> compare, T value) { this.compare = compare; this.values = new T[] { value }; }
+        protected ImmutableSet(Compare<T> compare, T[] values) { this.compare = compare; this.values = values; }
+        protected ImmutableSet(Compare<T> compare, T value) { this.compare = compare; this.values = new T[] { value }; }
 
         public bool Contains(T value)
         {
@@ -74,6 +74,7 @@ namespace TLDAG.Core.Collections
     public partial class IntSet : ImmutableSet<int>
     {
         public IntSet(IEnumerable<int> values) : base(IntCompare, UniqueInts(values)) { }
+        public IntSet(params int[] values) : base(IntCompare, UniqueInts(values)) { }
         public IntSet(IEnumerable<int> values, int value) : this(values.Append(value)) { }
         public IntSet(IEnumerable<int> v1, IEnumerable<int> v2) : this(v1.Concat(v2)) { }
         public IntSet(int value) : base(IntCompare, value) { }
@@ -86,12 +87,13 @@ namespace TLDAG.Core.Collections
 
         protected override int GetHashCode(int value) => value;
 
-        public static readonly IntSet Empty = new(Array.Empty<int>());
+        public static readonly IntSet Empty = new();
     }
 
     public partial class CharSet : ImmutableSet<char>
     {
         public CharSet(IEnumerable<char> values) : base(CharCompare, UniqueChars(values)) { }
+        public CharSet(params char[] values) : base(CharCompare, UniqueChars(values)) { }
         public CharSet(IEnumerable<char> values, char value) : this(values.Append(value)) { }
         public CharSet(IEnumerable<char> v1, IEnumerable<char> v2) : this(v1.Concat(v2)) { }
         public CharSet(char value) : base(CharCompare, value) { }
@@ -104,7 +106,7 @@ namespace TLDAG.Core.Collections
 
         protected override int GetHashCode(char value) => value;
 
-        public static readonly CharSet Empty = new(Array.Empty<char>());
+        public static readonly CharSet Empty = new();
     }
 
     public partial class ValueSet<T> : ImmutableSet<T> where T : notnull
@@ -115,19 +117,34 @@ namespace TLDAG.Core.Collections
         public ValueSet(Compare<T> compare, IEnumerable<T> values)
             : base(compare, UniqueValues(values, compare)) { }
 
+        public ValueSet(IComparer<T> comparer, IEnumerable<T> values, T value)
+            : this(comparer.ToCompare(), values, value) { }
+
+        public ValueSet(Compare<T> compare, IEnumerable<T> values, T value)
+            : this(compare, values.Append(value)) { }
+
+        public ValueSet(IComparer<T> comparer, params T[] values)
+            : this(comparer.ToCompare(), values) { }
+
+        public ValueSet(Compare<T> compare, params T[] values)
+            : base(compare, UniqueValues(values, compare)) { }
+
         public ValueSet(IComparer<T> comparer, T value)
             : this(comparer.ToCompare(), value) { }
 
         public ValueSet(Compare<T> compare, T value)
             : base(compare, value) { }
 
+        public override int GetHashCode() => throw NotYetImplemented();
+        public override bool Equals(object? obj) => throw NotYetImplemented();
+
         protected override int GetHashCode(T value) => value.GetHashCode();
 
         public static ValueSet<U> Empty<U>(IComparer<U> comparer) where U : notnull
-            => throw NotYetImplemented();
+            => new(comparer);
 
         public static ValueSet<U> Empty<U>(Compare<U> compare) where U : notnull
-            => throw NotYetImplemented();
+            => new(compare);
     }
 
     public partial class StringSet : ValueSet<string>
@@ -138,27 +155,46 @@ namespace TLDAG.Core.Collections
         public StringSet(IEnumerable<string> values, Compare<string> compare)
             : base(compare, values) { }
 
+        public StringSet(IEnumerable<string> values, string value, IComparer<string>? comparer = null)
+            : this(values.Append(value), comparer) { }
+
+        public StringSet(IEnumerable<string> values, string value, Compare<string> compare)
+            : this(values.Append(value), compare) { }
+
         public StringSet(string value, IComparer<string>? comparer = null)
             : base(comparer ?? OrdinalStringComparer, value) { }
 
         public StringSet(string value, Compare<string> compare)
             : base(compare, value) { }
 
+        public StringSet(IComparer<string> comparer, params string[] values)
+            : base(comparer, values) { }
+
+        public StringSet(Compare<string> compare, params string[] values)
+            : base(compare, values) { }
+
+        public StringSet(params string[] values)
+            : this(OrdinalStringComparer, values) { }
+
         public override int GetHashCode() => throw NotYetImplemented();
         public override bool Equals(object? obj) => throw NotYetImplemented();
 
-        public static StringSet Empty(IComparer<string>? comparer = null) => new(Array.Empty<string>(), comparer);
-        public static StringSet Empty(Compare<string> compare) => new(Array.Empty<string>(), compare);
+        public static readonly StringSet OrdinalEmpty = new(OrdinalStringComparer);
+
+        public static StringSet Empty(IComparer<string>? comparer = null) => comparer == null ? OrdinalEmpty : new(comparer);
+        public static StringSet Empty(Compare<string> compare) => new(compare);
     }
 
     public partial class SmartSet<T> : ValueSet<T> where T : notnull, IComparable<T>
     {
         public SmartSet(IEnumerable<T> values) : base(GetCompare<T>(), values) { }
+        public SmartSet(IEnumerable<T> values, T value) : this(values.Append(value)) { }
         public SmartSet(T value) : base(GetCompare<T>(), value) { }
+        public SmartSet(params T[] values) : base(GetCompare<T>(), values) { }
 
         public override int GetHashCode() => throw NotYetImplemented();
         public override bool Equals(object? obj) => throw NotYetImplemented();
 
-        public static SmartSet<U> Empty<U>() where U : notnull, IComparable<U> => new(Array.Empty<U>());
+        public static SmartSet<U> Empty<U>() where U : notnull, IComparable<U> => new();
     }
 }
