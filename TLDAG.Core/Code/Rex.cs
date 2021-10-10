@@ -6,134 +6,27 @@ using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Code
 {
-    public interface IRexNodeVisitor
+    public partial class Rex
     {
-        public void Visit(RexNode node);
-    }
+        public interface INode { }
 
-    public abstract class RexNode
-    {
-        public bool Nullable = false;
-        public IntSet Firstpos = IntSet.Empty;
-        public IntSet Lastpos = IntSet.Empty;
-
-        public virtual V VisitDepthFirst<V>(V visitor) where V : IRexNodeVisitor => Visit(visitor);
-        public virtual V VisitPreOrder<V>(V visitor) where V : IRexNodeVisitor  => Visit(visitor);
-        protected virtual V Visit<V>(V visitor) where V : IRexNodeVisitor { visitor.Visit(this); return visitor; }
-
-        public abstract RexNode Clone();
-    }
-
-    public abstract class RexLeafNode : RexNode
-    {
-        public int Id = 0;
-        public IntSet Followpos = IntSet.Empty;
-    }
-
-    public class RexAcceptNode : RexLeafNode
-    {
-        public readonly string Name;
-
-        public RexAcceptNode(string name) { Name = name; }
-
-        public override RexNode Clone() { throw new NotSupportedException(); }
-    }
-
-    public class RexEmptyNode : RexLeafNode
-    {
-        public override RexNode Clone() => new RexEmptyNode();
-    }
-
-    public class RexSymbolNode : RexLeafNode
-    {
-        public readonly char Value;
-
-        public RexSymbolNode(char value) { Value = value; }
-
-        public override RexNode Clone() => new RexSymbolNode(Value);
-    }
-
-    public class RexNotNode : RexNode
-    {
-        public override RexNode Clone() => throw NotYetImplemented();
-    }
-
-    public abstract class RexBinaryNode : RexNode
-    {
-        public RexNode Left;
-        public RexNode Right;
-
-        public RexBinaryNode(RexNode left, RexNode right) { Left = left; Right = right; }
-
-        public override V VisitDepthFirst<V>(V visitor)
-            { Left.VisitDepthFirst(visitor); Right.VisitDepthFirst(visitor); return Visit(visitor); }
-
-        public override V VisitPreOrder<V>(V visitor)
-            { Visit(visitor); Left.VisitPreOrder(visitor); Right.VisitPreOrder(visitor); return visitor; }
-    }
-
-    public class RexChooseNode : RexBinaryNode
-    {
-        public RexChooseNode(RexNode left, RexNode right) : base(left, right) { }
-
-        public override RexNode Clone() => new RexChooseNode(Left.Clone(), Right.Clone());
-    }
-
-    public class RexConcatNode : RexBinaryNode
-    {
-        public RexConcatNode(RexNode left, RexNode right) : base(left, right) { }
-
-        public override RexNode Clone() => new RexConcatNode(Left.Clone(), Right.Clone());
-    }
-
-    public class RexKleeneNode : RexNode
-    {
-        public RexNode Child;
-
-        public RexKleeneNode(RexNode child) { Child = child; }
-
-        public override V VisitDepthFirst<V>(V visitor)
-            { Child.VisitDepthFirst(visitor); return Visit(visitor); }
-
-        public override V VisitPreOrder<V>(V visitor)
-            { Visit(visitor); Child.VisitPreOrder(visitor); return visitor; }
-
-        public override RexNode Clone() => new RexKleeneNode(Child.Clone());
+        public static INode Empty() => new EmptyNode();
     }
 
     public class RexBuilder
     {
-        private readonly Stack<RexNode> stack = new();
-        private readonly HashSet<string> names = new(ReservedTokenNames, StringComparer.Ordinal);
+        private Rex.Builder builder = new();
 
-        public RexBuilder Accept(string name)
-        {
-            if (names.Contains(name)) throw new ArgumentException("Duplicate name");
-            if (!TokenNameRegex.IsMatch(name)) throw new ArgumentException("Illegal name");
+        public RexBuilder Accept(string name) { builder.Accept(name); return this; }
+        public RexBuilder Empty() { builder.Empty(); return this; }
+        public RexBuilder Symbol(char value) { builder.Symbol(value); return this; }
+        public RexBuilder Range(char start, char end) { builder.Range(start, end); return this; }
+        public RexBuilder Not(IEnumerable<char> values) { builder.Not(values); return this; }
+        public RexBuilder Choose() { builder.Choose(); return this; }
+        public RexBuilder Concat() { builder.Concat(); return this; }
+        public RexBuilder Kleene() { builder.Kleene(); return this; }
 
-            names.Add(name); stack.Push(new RexAcceptNode(name)); return this;
-        }
-
-        public RexBuilder Empty() { stack.Push(new RexEmptyNode()); return this; }
-        public RexBuilder Symbol(char value) { stack.Push(new RexSymbolNode(value)); return this; }
-        public RexBuilder Range(char start, char end) { throw NotYetImplemented(); }
-        public RexBuilder Not(IEnumerable<char> values) { throw NotYetImplemented(); }
-
-        public RexBuilder Choose()
-        { RexNode right = stack.Pop(); RexNode left = stack.Pop(); stack.Push(new RexChooseNode(left, right)); return this; }
-
-        public RexBuilder Concat()
-        { RexNode right = stack.Pop(); RexNode left = stack.Pop(); stack.Push(new RexConcatNode(left, right)); return this; }
-
-        public RexBuilder Kleene() { stack.Push(new RexKleeneNode(stack.Pop())); return this; }
-
-        public RexNode Build()
-        {
-            if (stack.Count == 0) return new RexEmptyNode();
-            if (stack.Count > 1) throw new InvalidOperationException();
-
-            return stack.Pop();
-        }
+        public Rex.INode Build() { return builder.Build(); }
 
         public RexBuilder A(string name) => Accept(name);
         public RexBuilder E() => Empty();
