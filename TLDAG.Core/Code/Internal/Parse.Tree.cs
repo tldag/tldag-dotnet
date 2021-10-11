@@ -71,8 +71,8 @@ namespace TLDAG.Core.Code.Internal
             public override int GetHashCode() => throw NotYetImplemented();
             public int CompareTo(Terminal? other) => throw NotYetImplemented();
 
-            public override V VisitDepthFirst<V>(V visitor) { throw NotYetImplemented(); }
-            public override V VisitPreOrder<V>(V visitor) { throw NotYetImplemented(); }
+            public override V VisitDepthFirst<V>(V visitor) { return Visit(visitor); }
+            public override V VisitPreOrder<V>(V visitor) { return Visit(visitor); }
         }
 
         internal class Production : Node, Code.Parse.IProduction, IEquatable<Production>, IComparable<Production>

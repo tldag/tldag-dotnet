@@ -43,21 +43,32 @@ namespace TLDAG.Core.Code
 
     public class ParserBuilder
     {
+        private readonly Internal.Parse.Builder builder;
+
         public ParserBuilder(IEnumerable<string> tokenNames)
         {
-            throw NotYetImplemented();
+            builder = new(tokenNames);
         }
 
-        public ParserBuilder P(string name, int count) => throw NotYetImplemented();
+        public ParserBuilder Production(string name, int count) { builder.Production(name, count); return this; }
 
-        public Parse.IProduction Build() => throw NotYetImplemented();
+        public ParserBuilder P(string name, int count) => Production(name, count);
+
+        public Parse.IProduction Build() => builder.Build();
     }
 
     public class ParserCompiler
     {
-        public static ParserCompiler Create(Parse.INode root) => throw NotYetImplemented();
+        private readonly Internal.Parse.Compiler compiler;
 
-        public Parse.IData Compile() => throw NotYetImplemented();
+        public ParserCompiler(Parse.INode root)
+        {
+            compiler = new(root);
+        }
+
+        public static ParserCompiler Create(Parse.INode root) => new(root);
+
+        public Parse.IData Compile() => compiler.Compile();
     }
 
     public class Parser

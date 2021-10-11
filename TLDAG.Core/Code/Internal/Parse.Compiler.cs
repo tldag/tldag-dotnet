@@ -44,14 +44,21 @@ namespace TLDAG.Core.Code.Internal
             {
                 public override void Visit(Code.Parse.INode node) => throw NotYetImplemented();
 
-                protected static List<Production> Get(Element element) => throw NotYetImplemented();
+                public static Production[] Get(Element element)
+                {
+                    if (element.Position == element.Production.Count) return Array.Empty<Production>();
+
+                    throw NotYetImplemented();
+                }
             }
 
             public readonly Production Production;
             public int Position => Key.Position;
             public readonly Terminal Terminal;
             public readonly ElementKey Key;
-            public IReadOnlyList<Production> Productions => throw NotYetImplemented();
+
+            private Production[]? productions = null;
+            public IEnumerable<Production> Productions => productions ??= GetProductions.Get(this);
 
             public Element(Production production, int position, Terminal terminal)
             { Production = production; Terminal = terminal; Key = new(production, position, terminal); }
@@ -88,7 +95,12 @@ namespace TLDAG.Core.Code.Internal
 
         internal class ElementCollector
         {
-            private readonly SortedSet<Element> elements = new();
+            private readonly SortedSet<Element> elements;
+
+            public ElementCollector(Elements elements)
+            {
+                this.elements = new(elements);
+            }
 
             public Element[] Current => elements.ToArray();
             public bool Add(Element element) { throw NotYetImplemented(); }
@@ -177,7 +189,7 @@ namespace TLDAG.Core.Code.Internal
 
             private Elements ComputeHull(Elements elements)
             {
-                ElementCollector collector = new();
+                ElementCollector collector = new(elements);
                 bool modified;
 
                 do
