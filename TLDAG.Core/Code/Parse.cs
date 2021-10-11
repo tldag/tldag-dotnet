@@ -113,7 +113,7 @@ namespace TLDAG.Core.Code
         public override V VisitPreOrder<V>(V visitor) { throw NotYetImplemented(); }
     }
 
-    public class ProductionBuilder
+    internal class ProductionBuilder
     {
         private readonly StringSet terminalNames;
         private readonly SmartMap<string, ParseTerminalNode> terminals = new();
@@ -121,12 +121,12 @@ namespace TLDAG.Core.Code
 
         private readonly Stack<ParseNode> stack = new();
 
-        public ProductionBuilder(RexData rex)
+        public ProductionBuilder(IEnumerable<string> tokenNames)
         {
-            terminalNames = rex.Names;
+            terminalNames = new(tokenNames);
         }
 
-        public static ProductionBuilder Create(RexData rex) => new(rex);
+        public static ProductionBuilder Create(IEnumerable<string> tokenNames) => new(tokenNames);
 
         public ParseProductionNode Build()
         {

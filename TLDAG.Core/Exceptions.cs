@@ -13,6 +13,9 @@ namespace TLDAG.Core
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static NotImplementedException NotYetImplemented() => new(new StackFrame(1, true).ToString());
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static NotSupportedException NotSupported() => new(new StackFrame(1, true).ToString());
+
         public static ObjectDisposedException ObjectDisposed(string? name = null) => new(name);
 
         public static FileNotFoundException FileNotFound(string path) => new(null, path);

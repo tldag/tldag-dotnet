@@ -1,21 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using TLDAG.Core.Collections;
-using static TLDAG.Core.Code.Constants;
+﻿using System.Collections.Generic;
+using System.IO;
 using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Code
 {
-    public partial class Rex
+    public static class Rex
     {
-        public interface INode { }
+        public interface INode
+        {
+            public V VisitDepthFirst<V>(V visitor) where V : IVisitor;
+            public V VisitPreOrder<V>(V visitor) where V : IVisitor;
+        }
 
-        public static INode Empty() => new EmptyNode();
+        public static INode Empty() => new Internal.Rex.EmptyNode();
+
+        public interface IVisitor
+        {
+            public void Visit(INode node);
+        }
+
+        public interface IData
+        {
+            void Save(Stream stream);
+            byte[] Save(bool compress);
+        }
+
+        public static IData Load(Stream stream) => throw NotYetImplemented();
+        public static IData Load(byte[] bytes, bool compressed) => throw NotYetImplemented();
     }
 
     public class RexBuilder
     {
-        private Rex.Builder builder = new();
+        private Internal.Rex.Builder builder = new();
 
         public RexBuilder Accept(string name) { builder.Accept(name); return this; }
         public RexBuilder Empty() { builder.Empty(); return this; }
@@ -36,44 +52,5 @@ namespace TLDAG.Core.Code
         public RexBuilder CH() => Choose();
         public RexBuilder CN() => Concat();
         public RexBuilder K() => Kleene();
-    }
-
-    public partial class RexTransitions
-    {
-        private readonly int width;
-        private readonly int[][] transitions;
-
-        internal RexTransitions(int width, int[][] transitions) { this.width = width; this.transitions = transitions; }
-    }
-
-    public partial class RexAccepts
-    {
-        private readonly IntMap<string> map;
-
-        public StringSet Values => new(map.Values);
-
-        public RexAccepts(IntMap<string> map) { this.map = map; }
-
-        public string? this[int state] { get => map[state]; }
-    }
-
-    public partial class RexData
-    {
-        public readonly RexAccepts Accepts;
-        public readonly int StartState;
-
-        public StringSet Names => Accepts.Values;
-
-        public RexData(RexAccepts accepts, int startState)
-        {
-            Accepts = accepts;
-            StartState = startState;
-        }
-
-        protected RexData(RexData rex)
-        {
-            Accepts = rex.Accepts;
-            StartState = rex.StartState;
-        }
     }
 }

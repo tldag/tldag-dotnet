@@ -13,7 +13,7 @@ namespace TLDAG.Core.Tests.Code
         public void TestDevScanner()
         {
             Scanner scanner = Grammar.CreateDevScanner("");
-            IEnumerator<Token> enumerator = scanner.GetEnumerator();
+            IEnumerator<Scan.Token> enumerator = scanner.GetEnumerator();
 
             Assert.IsTrue(enumerator.MoveNext());
             Assert.IsTrue(enumerator.Current.IsEndOfFile);

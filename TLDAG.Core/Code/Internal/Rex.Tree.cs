@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TLDAG.Core.Collections;
-using static TLDAG.Core.Code.Constants;
 using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Code.Constants;
+using System;
 
-namespace TLDAG.Core.Code
+namespace TLDAG.Core.Code.Internal
 {
-    public partial class Rex
+    internal static partial class Rex
     {
-        internal interface IVisitor { void Visit(Node node); }
-
-        internal abstract class Node : INode
+        internal abstract class Node : Code.Rex.INode
         {
             public bool Nullable = false;
             public IntSet Firstpos = IntSet.Empty;
             public IntSet Lastpos = IntSet.Empty;
 
-            public virtual V VisitDepthFirst<V>(V visitor) where V : IVisitor => Visit(visitor);
-            public virtual V VisitPreOrder<V>(V visitor) where V : IVisitor => Visit(visitor);
-            protected virtual V Visit<V>(V visitor) where V : IVisitor { visitor.Visit(this); return visitor; }
+            public virtual V VisitDepthFirst<V>(V visitor) where V : Code.Rex.IVisitor => Visit(visitor);
+            public virtual V VisitPreOrder<V>(V visitor) where V : Code.Rex.IVisitor => Visit(visitor);
+            protected virtual V Visit<V>(V visitor) where V : Code.Rex.IVisitor { visitor.Visit(this); return visitor; }
 
             public abstract Node Clone();
         }
@@ -35,7 +33,7 @@ namespace TLDAG.Core.Code
 
             public AcceptNode(string name) { Name = name; }
 
-            public override Node Clone() { throw new NotSupportedException(); }
+            public override Node Clone() { throw NotSupported(); }
         }
 
         internal class EmptyNode : LeafNode
