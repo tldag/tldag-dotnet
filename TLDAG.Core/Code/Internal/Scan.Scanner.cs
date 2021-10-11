@@ -9,16 +9,19 @@ namespace TLDAG.Core.Code.Internal
     {
         internal class Scanner : IEnumerable<Code.Scan.Token>
         {
-            internal Lines Source;
+            private IEnumerable<Character> source;
 
-            public IEnumerator<Code.Scan.Token> GetEnumerator() => new Enumerator(this);
-            IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
+            public Scanner(IEnumerable<Character> source) { this.source = source; }
+            public Scanner(string source) : this(Lines.Create(source)) { }
+
+            public IEnumerator<Code.Scan.Token> GetEnumerator() => new Enumerator(source);
+            IEnumerator IEnumerable.GetEnumerator() => new Enumerator(source);
         }
 
         internal class Enumerator : IEnumerator<Code.Scan.Token>
         {
-            private readonly Scanner scanner;
-            private IEnumerator<Character> input;
+            private readonly IEnumerable<Character> characters;
+            private IEnumerator<Character> enumerator;
             private Code.Scan.Position position = Code.Scan.Position.Start;
             private bool done;
 
@@ -26,22 +29,22 @@ namespace TLDAG.Core.Code.Internal
             public Code.Scan.Token Current => current ?? throw new InvalidOperationException();
             object IEnumerator.Current => current ?? throw new InvalidOperationException();
 
-            public Enumerator(Scanner scanner)
+            public Enumerator(IEnumerable<Character> characters)
             {
-                this.scanner = scanner;
+                this.characters = characters;
 
-                input = scanner.Source.GetEnumerator();
+                enumerator = characters.GetEnumerator();
                 done = false;
             }
 
             public void Dispose() { GC.SuppressFinalize(this); }
-            public void Reset() { input = scanner.Source.GetEnumerator(); done = false; }
+            public void Reset() { enumerator = characters.GetEnumerator(); done = false; }
             public bool MoveNext() => (current = NextToken()) != null;
 
             private Code.Scan.Token? NextToken()
             {
                 if (done) return null;
-                if (!input.MoveNext()) { done = true; return Code.Scan.Token.EndOfFile(position); }
+                if (!enumerator.MoveNext()) { done = true; return Code.Scan.Token.EndOfFile(position); }
 
                 throw NotYetImplemented();
             }

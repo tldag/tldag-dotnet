@@ -23,7 +23,7 @@ namespace TLDAG.Libraries.Core.Tests.Code
         [TestMethod]
         public void TestGrammarDevCompiler()
         {
-            ParseCompiler compiler = Grammar.CreateDevCompiler();
+            ParserCompiler compiler = Grammar.CreateDevCompiler();
 
             compiler.Compile();
         }

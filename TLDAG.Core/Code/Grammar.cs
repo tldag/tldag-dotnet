@@ -7,12 +7,12 @@ namespace TLDAG.Core.Code
     {
         public static Scanner CreateScanner(string text) => throw NotYetImplemented();
         public static Parser CreateParser(string text) => throw NotYetImplemented();
-        public static ParseCompiler CreateCompiler() => throw NotYetImplemented();
+        public static ParserCompiler CreateCompiler() => throw NotYetImplemented();
 
 #if DEBUG
-        public static Scanner CreateDevScanner(string text) => new();
+        public static Scanner CreateDevScanner(string text) => new(text);
         public static Parser CreateDevParser(string text) => throw NotYetImplemented();
-        public static ParseCompiler CreateDevCompiler() => ParseCompiler.Create(GrammarDocument);
+        public static ParserCompiler CreateDevCompiler() => ParserCompiler.Create(GrammarDocument);
 #endif
     }
 }

@@ -34,7 +34,7 @@ namespace TLDAG.Core.Code
             { throw NotYetImplemented(); }
             // { Save(compiler.Compile(text), dest); }
 
-        protected virtual void Save(ParseData data, FileInfo dest)
+        protected virtual void Save(Parse.IData data, FileInfo dest)
         {
             throw NotYetImplemented();
         }

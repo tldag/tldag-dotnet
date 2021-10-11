@@ -4,9 +4,9 @@ namespace TLDAG.Core.Code
 {
     public static partial class Grammar
     {
-        private static readonly ProductionBuilder pbuilder = ProductionBuilder.Create(GrammarRexNames);
+        private static readonly ParserBuilder pbuilder = new(GrammarRexNames);
 
-        public static readonly ParseProductionNode GrammarDocument
+        public static readonly Parse.IProduction GrammarDocument
             = pbuilder.P("grammar", 0).Build();
     }
 }

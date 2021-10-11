@@ -38,7 +38,11 @@ namespace TLDAG.Core.Code
 
     public class Scanner : IEnumerable<Scan.Token>
     {
-        public IEnumerator<Scan.Token> GetEnumerator() => throw NotYetImplemented();
-        IEnumerator IEnumerable.GetEnumerator() => throw NotYetImplemented();
+        private Internal.Scan.Scanner scanner;
+
+        public Scanner(string source) { scanner = new(source); }
+
+        public IEnumerator<Scan.Token> GetEnumerator() => scanner.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => scanner.GetEnumerator();
     }
 }
