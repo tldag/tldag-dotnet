@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Management.Automation" Version="7.1.4" />
+    <PackageReference Include="System.Management.Automation" Version="$(SystemManagementAutomationVersion)" />
     <ProjectReference Include="$(TldagCore)" />
     <ProjectReference Include="$(TldagAutomation)" />
   </ItemGroup>

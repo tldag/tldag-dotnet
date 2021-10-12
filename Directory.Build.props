@@ -29,9 +29,20 @@
 
   <PropertyGroup>
     <CoverletCollectorVersion>3.1.0</CoverletCollectorVersion>
+    <LibGit2SharpNativeBinariesVersion>[2.0.314]</LibGit2SharpNativeBinariesVersion>
+    <MicrosoftCodeAnalysisCSharpVersion>4.0.0-4.final</MicrosoftCodeAnalysisCSharpVersion>
+    <MicrosoftCodeAnalysisCSharpWorkspacesVersion>4.0.0-4.final</MicrosoftCodeAnalysisCSharpWorkspacesVersion>
     <MicrosoftNetTestSdkVersion>16.11.0</MicrosoftNetTestSdkVersion>
+    <MicrosoftPowerShellCommandsDiagnosticsVersion>7.1.4</MicrosoftPowerShellCommandsDiagnosticsVersion>
+    <MicrosoftPowerShellCommandsManagementVersion>7.1.4</MicrosoftPowerShellCommandsManagementVersion>
+    <MicrosoftPowerShellCommandsUtilityVersion>7.1.4</MicrosoftPowerShellCommandsUtilityVersion>
+    <MicrosoftPowerShellConsoleHostVersion>7.1.4</MicrosoftPowerShellConsoleHostVersion>
+    <MicrosoftWSManManagementVersion>7.1.4</MicrosoftWSManManagementVersion>
     <MSTestTestAdapterVersion>2.2.7</MSTestTestAdapterVersion>
     <MSTestTestFrameworkVersion>2.2.7</MSTestTestFrameworkVersion>
+    <NuGetPackagingVersion>5.11.0</NuGetPackagingVersion>
+    <NuGetProtocolVersion>5.11.0</NuGetProtocolVersion>
+    <SystemManagementAutomationVersion>7.1.4</SystemManagementAutomationVersion>
   </PropertyGroup>
   
 </Project>

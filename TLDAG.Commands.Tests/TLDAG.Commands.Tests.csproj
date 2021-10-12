@@ -10,11 +10,11 @@
     <PackageReference Include="MSTest.TestAdapter" Version="$(MSTestTestAdapterVersion)" />
     <PackageReference Include="MSTest.TestFramework" Version="$(MSTestTestFrameworkVersion)" />
     <PackageReference Include="coverlet.collector" Version="$(CoverletCollectorVersion)" />
-    <PackageReference Include="Microsoft.PowerShell.Commands.Diagnostics" Version="7.1.4" />
-    <PackageReference Include="Microsoft.PowerShell.ConsoleHost" Version="7.1.4" />
-    <PackageReference Include="Microsoft.PowerShell.Commands.Utility" Version="7.1.4" />
-    <PackageReference Include="Microsoft.PowerShell.Commands.Management" Version="7.1.4" />
-    <PackageReference Include="Microsoft.WSMan.Management" Version="7.1.4" />
+    <PackageReference Include="Microsoft.PowerShell.Commands.Diagnostics" Version="$(MicrosoftPowerShellCommandsDiagnosticsVersion)" />
+    <PackageReference Include="Microsoft.PowerShell.Commands.Management" Version="$(MicrosoftPowerShellCommandsManagementVersion)" />
+    <PackageReference Include="Microsoft.PowerShell.Commands.Utility" Version="$(MicrosoftPowerShellCommandsUtilityVersion)" />
+    <PackageReference Include="Microsoft.PowerShell.ConsoleHost" Version="$(MicrosoftPowerShellConsoleHostVersion)" />
+    <PackageReference Include="Microsoft.WSMan.Management" Version="$(MicrosoftWSManManagementVersion)" />
     <ProjectReference Include="$(TldagCommands)" />
   </ItemGroup>
 

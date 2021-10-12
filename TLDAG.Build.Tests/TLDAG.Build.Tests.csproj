@@ -14,8 +14,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <!--<PackageReference Include="LibGit2Sharp.NativeBinaries" Version="[2.0.314]" PrivateAssets="none" />-->
-    <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="$(LibGit2SharpNativeBinariesVersion)" PrivateAssets="none" />
   </ItemGroup>
 
 </Project>
