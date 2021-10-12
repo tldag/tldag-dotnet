@@ -92,52 +92,16 @@ namespace TLDAG.Core.Code.Internal
             }
         }
 
-        internal class InitTree : Visitor
+        internal class InitLeafs : Visitor
         {
             private uint nextId = 1;
 
             protected override void VisitNode(Node node)
             {
-                if (node is LeafNode leafNode) InitLeaf(leafNode);
-                if (node is AcceptNode acceptNode) InitAccept(acceptNode);
-                if (node is EmptyNode emptyNode) InitEmpty(emptyNode);
-                if (node is SymbolNode symbolNode) InitSymbol(symbolNode);
-                if (node is ChooseNode chooseNode) InitChoose(chooseNode);
-                if (node is ConcatNode concatNode) InitConcat(concatNode);
-                if (node is KleeneNode kleeneNode) InitKleene(kleeneNode);
-                if (node is NotNode) throw new NotSupportedException();
+                if (node is LeafNode leafNode) leafNode.Id = nextId++;
             }
 
-            private void InitLeaf(LeafNode leafNode) { leafNode.Id = nextId++; }
-
-            private void InitAccept(AcceptNode acceptNode)
-            {
-                throw NotYetImplemented();
-            }
-
-            private void InitEmpty(EmptyNode emptyNode) { emptyNode.Nullable = true; }
-
-            private void InitSymbol(SymbolNode symbolNode)
-            {
-                throw NotYetImplemented();
-            }
-
-            private void InitChoose(ChooseNode chooseNode)
-            {
-                throw NotYetImplemented();
-            }
-
-            private void InitConcat(ConcatNode concatNode)
-            {
-                throw NotYetImplemented();
-            }
-
-            private void InitKleene(KleeneNode kleeneNode)
-            {
-                throw NotYetImplemented();
-            }
-
-            public static void Init(Node root) { root.VisitDepthFirst(new InitTree()); }
+            public static void Init(Node root) { root.VisitDepthFirst(new InitLeafs()); }
         }
 
         internal class State
@@ -175,7 +139,7 @@ namespace TLDAG.Core.Code.Internal
 
                 root = ExpandTree.Expand(root, alphabet);
 
-                InitTree.Init(root);
+                InitLeafs.Init(root);
             }
 
             public static Compiler Create(Code.Rex.INode root) => new(root);
