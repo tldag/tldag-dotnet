@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project>
 
   <PropertyGroup>
@@ -24,6 +25,13 @@
     <TldagSdk>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Sdk', 'TLDAG.Sdk.csproj' ))</TldagSdk>
     <TldagLibrariesCodeGen>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Libraries.CodeGen', 'TLDAG.Libraries.CodeGen.csproj' ))</TldagLibrariesCodeGen>
     <TldagLibrariesCore>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Libraries.Core', 'TLDAG.Libraries.Core.csproj' ))</TldagLibrariesCore>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CoverletCollectorVersion>3.1.0</CoverletCollectorVersion>
+    <MicrosoftNetTestSdkVersion>16.11.0</MicrosoftNetTestSdkVersion>
+    <MSTestTestAdapterVersion>2.2.7</MSTestTestAdapterVersion>
+    <MSTestTestFrameworkVersion>2.2.7</MSTestTestFrameworkVersion>
   </PropertyGroup>
   
 </Project>

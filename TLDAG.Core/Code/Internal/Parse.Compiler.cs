@@ -40,15 +40,27 @@ namespace TLDAG.Core.Code.Internal
                 private int ComputeHashCode() => Production << 21 + Position << 16 + Terminal;
             }
 
-            internal class GetProductions : Visitor
+            internal class GetProductions
             {
-                public override void Visit(Code.Parse.INode node) => throw NotYetImplemented();
-
-                public static Production[] Get(Element element)
+                private static void Visit(Node node, SortedSet<Production> productions)
                 {
-                    if (element.Position == element.Production.Count) return Array.Empty<Production>();
+                    if (node is Terminal) return;
+                    else if (node is Production production) productions.Add(production);
+                    else if (node is Choose choose) { Visit(choose.Left, productions); Visit(choose.Right, productions); }
+                }
 
-                    throw NotYetImplemented();
+                public static IEnumerable<Production> Get(Element element)
+                {
+                    Production production = element.Production;
+                    if (element.Position == production.Count) return Array.Empty<Production>();
+
+                    Node node = production.children[element.Position];
+                    if (node is Terminal) return Array.Empty<Production>();
+
+                    SortedSet<Production> productions = new();
+                    Visit(node, productions);
+
+                    return productions;
                 }
             }
 
@@ -57,7 +69,7 @@ namespace TLDAG.Core.Code.Internal
             public readonly Terminal Terminal;
             public readonly ElementKey Key;
 
-            private Production[]? productions = null;
+            private IEnumerable<Production>? productions = null;
             public IEnumerable<Production> Productions => productions ??= GetProductions.Get(this);
 
             public Element(Production production, int position, Terminal terminal)
@@ -68,6 +80,11 @@ namespace TLDAG.Core.Code.Internal
             public bool Equals(Element? other) => EqualsTo(other);
             private bool EqualsTo(Element? other) => Key.EqualsTo(other?.Key);
             public int CompareTo(Element? other) => Key.CompareTo(other?.Key);
+
+            public IEnumerable<Nodes> Follow(Production production, Terminal terminal)
+            {
+                throw NotYetImplemented();
+            }
 
             public static Element Start(Production root)
             {
@@ -202,11 +219,19 @@ namespace TLDAG.Core.Code.Internal
                     {
                         foreach (Production production in element.Productions)
                         {
+                            foreach (Nodes follow in element.Follow(production, element.Terminal))
+                            {
+                                foreach (int terminalId in GetFirst(follow))
+                                {
+                                    Terminal terminal = terminals[terminalId] ?? throw NotSupported();
+                                    Element candidate = new(production, 0, terminal);
 
+                                    if (collector.Add(candidate)) modified = true;
+                                }
+                            }
                         }
                     }
 
-                    throw NotYetImplemented();
                 }
                 while (modified);
 
