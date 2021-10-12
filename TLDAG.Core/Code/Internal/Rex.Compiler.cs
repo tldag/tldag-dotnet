@@ -94,7 +94,7 @@ namespace TLDAG.Core.Code.Internal
 
         internal class InitTree : Visitor
         {
-            private int nextId = 1;
+            private uint nextId = 1;
 
             protected override void VisitNode(Node node)
             {
@@ -163,7 +163,7 @@ namespace TLDAG.Core.Code.Internal
 
             private readonly Node root;
 
-            private readonly SmartMap<IntSet, State> states = new();
+            private readonly SmartMap<UIntSet, State> states = new();
             private readonly Queue<State> unmarked = new();
 
             public Compiler(Code.Rex.INode input)
@@ -193,7 +193,7 @@ namespace TLDAG.Core.Code.Internal
 
             private void CreateStates()
             {
-                AddState(IntSet.Empty, false);
+                AddState(UIntSet.Empty, false);
                 AddState(root.Firstpos);
 
                 while (unmarked.Count > 0) ProcessState(unmarked.Dequeue());
@@ -204,7 +204,7 @@ namespace TLDAG.Core.Code.Internal
                 throw NotYetImplemented();
             }
 
-            private State AddState(IntSet positions, bool asUnmarked = true)
+            private State AddState(UIntSet positions, bool asUnmarked = true)
             {
                 State? state = states[positions];
 
@@ -220,7 +220,7 @@ namespace TLDAG.Core.Code.Internal
                 return state;
             }
 
-            private string? GetAccept(IntSet positions)
+            private string? GetAccept(UIntSet positions)
             {
                 if (positions.Count == 0) return "";
 

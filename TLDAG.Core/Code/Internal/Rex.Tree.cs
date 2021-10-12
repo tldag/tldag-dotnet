@@ -11,8 +11,8 @@ namespace TLDAG.Core.Code.Internal
         internal abstract class Node : Code.Rex.INode
         {
             public bool Nullable = false;
-            public IntSet Firstpos = IntSet.Empty;
-            public IntSet Lastpos = IntSet.Empty;
+            public UIntSet Firstpos = UIntSet.Empty;
+            public UIntSet Lastpos = UIntSet.Empty;
 
             public virtual V VisitDepthFirst<V>(V visitor) where V : Code.Rex.IVisitor => Visit(visitor);
             public virtual V VisitPreOrder<V>(V visitor) where V : Code.Rex.IVisitor => Visit(visitor);
@@ -23,8 +23,8 @@ namespace TLDAG.Core.Code.Internal
 
         internal abstract class LeafNode : Node
         {
-            public int Id = 0;
-            public IntSet Followpos = IntSet.Empty;
+            public uint Id = 0;
+            public UIntSet Followpos = UIntSet.Empty;
         }
 
         internal class AcceptNode : LeafNode
