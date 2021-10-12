@@ -18,6 +18,7 @@ namespace TLDAG.Core.Code.Internal
         internal abstract class Node : Code.Parse.INode, IEquatable<Node>, IComparable<Node>
         {
             public uint Id { get; internal set; }
+            public abstract bool Nullable { get; }
             public abstract UIntSet First { get; }
 
             public Node(uint id) { Id = id; }
@@ -38,6 +39,7 @@ namespace TLDAG.Core.Code.Internal
 
             public int Count => nodes.Count;
             
+            public bool Nullable => throw NotYetImplemented();
             public UIntSet First => throw NotYetImplemented();
 
             public Nodes(IEnumerable<Node> nodes) { this.nodes = nodes.ToList(); }
@@ -66,6 +68,9 @@ namespace TLDAG.Core.Code.Internal
 
             public string Name { get; }
 
+            private bool? nullable = null;
+            public override bool Nullable => nullable ??= ComputeNullable();
+
             private UIntSet? first = null;
             public override UIntSet First => first ??= ComputeFirst();
 
@@ -80,6 +85,7 @@ namespace TLDAG.Core.Code.Internal
             public override V VisitDepthFirst<V>(V visitor) { return Visit(visitor); }
             public override V VisitPreOrder<V>(V visitor) { return Visit(visitor); }
 
+            private bool ComputeNullable() => throw NotYetImplemented();
             private UIntSet ComputeFirst() => throw NotYetImplemented();
         }
 
@@ -89,6 +95,7 @@ namespace TLDAG.Core.Code.Internal
             public IEnumerable<Code.Parse.INode> Children => children;
             public int Count => children.Count;
 
+            public override bool Nullable => children.Nullable;
             public override UIntSet First => children.First;
 
             internal readonly Nodes children;
@@ -119,6 +126,9 @@ namespace TLDAG.Core.Code.Internal
             public readonly Node Left;
             public readonly Node Right;
 
+            private bool? nullable = null;
+            public override bool Nullable => nullable ??= ComputeNullable();
+
             private UIntSet? first = null;
             public override UIntSet First => first ??= ComputeFirst();
 
@@ -132,6 +142,7 @@ namespace TLDAG.Core.Code.Internal
             public override V VisitDepthFirst<V>(V visitor) { throw NotYetImplemented(); }
             public override V VisitPreOrder<V>(V visitor) { throw NotYetImplemented(); }
 
+            private bool ComputeNullable() => throw NotYetImplemented();
             private UIntSet ComputeFirst() => throw NotYetImplemented();
         }
 
