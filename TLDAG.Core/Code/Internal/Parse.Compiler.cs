@@ -9,23 +9,23 @@ namespace TLDAG.Core.Code.Internal
 {
     internal static partial class Parse
     {
-        internal class ProductionMap : IntMap<Production> { }
-        internal class TerminalMap : IntMap<Terminal> { }
+        internal class ProductionMap : UIntMap<Production> { }
+        internal class TerminalMap : UIntMap<Terminal> { }
         internal class ElementMap : SmartMap<Element.ElementKey, Element> { }
         internal class Hulls : SmartMap<Elements, Elements> { }
-        internal class Firsts : SmartMap<Nodes, IntSet> { }
+        internal class Firsts : SmartMap<Nodes, UIntSet> { }
 
         internal class Element : IEquatable<Element>, IComparable<Element>
         {
             internal class ElementKey : IEquatable<ElementKey>, IComparable<ElementKey>
             {
-                public readonly int Production;
+                public readonly uint Production;
                 public readonly int Position;
-                public readonly int Terminal;
+                public readonly uint Terminal;
 
                 private int? hash = null;
 
-                public ElementKey(int production, int position, int terminal)
+                public ElementKey(uint production, int position, uint terminal)
                 { Production = production; Position = position; Terminal = terminal; }
 
                 internal ElementKey(Production production, int position, Terminal terminal)
@@ -37,7 +37,8 @@ namespace TLDAG.Core.Code.Internal
                 public override int GetHashCode() => hash ??= ComputeHashCode();
                 public int CompareTo(ElementKey? other) => throw NotYetImplemented();
 
-                private int ComputeHashCode() => Production << 21 + Position << 16 + Terminal;
+                private int ComputeHashCode()
+                    => Production.GetHashCode() << 21 + Position << 16 + Terminal.GetHashCode();
             }
 
             internal class GetProductions
@@ -126,7 +127,7 @@ namespace TLDAG.Core.Code.Internal
 
         internal class InitTerminals : Visitor
         {
-            private int nextId = Terminal.NextId;
+            private uint nextId = Terminal.NextId;
             private readonly TerminalMap terminals = new();
 
             public override void Visit(Code.Parse.INode node)
@@ -149,7 +150,7 @@ namespace TLDAG.Core.Code.Internal
         internal class InitProductions : Visitor
         {
             private readonly ProductionMap productions = new();
-            private int nextId = 1;
+            private uint nextId = 1;
 
             public override void Visit(Code.Parse.INode node)
             {
@@ -174,7 +175,7 @@ namespace TLDAG.Core.Code.Internal
             private readonly TerminalMap terminals;
             private readonly ProductionMap productions;
 
-            private IntSet terminalIds;
+            private UIntSet terminalIds;
 
             private readonly ElementMap elements = new();
             private readonly Hulls hulls = new();
@@ -221,7 +222,7 @@ namespace TLDAG.Core.Code.Internal
                         {
                             foreach (Nodes follow in element.Follow(production, element.Terminal))
                             {
-                                foreach (int terminalId in GetFirst(follow))
+                                foreach (uint terminalId in GetFirst(follow))
                                 {
                                     Terminal terminal = terminals[terminalId] ?? throw NotSupported();
                                     Element candidate = new(production, 0, terminal);
@@ -238,9 +239,9 @@ namespace TLDAG.Core.Code.Internal
                 return collector.Build();
             }
 
-            private IntSet GetFirst(Nodes nodes) => firsts[nodes] ??= ComputeFirst(nodes);
+            private UIntSet GetFirst(Nodes nodes) => firsts[nodes] ??= ComputeFirst(nodes);
 
-            private IntSet ComputeFirst(Nodes nodes) { throw NotYetImplemented(); }
+            private UIntSet ComputeFirst(Nodes nodes) { throw NotYetImplemented(); }
 
             private SortedSet<Elements> CreateElementSets()
             {

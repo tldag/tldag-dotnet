@@ -17,9 +17,9 @@ namespace TLDAG.Core.Code.Internal
 
         internal abstract class Node : Code.Parse.INode, IEquatable<Node>, IComparable<Node>
         {
-            public int Id { get; internal set; }
+            public uint Id { get; internal set; }
 
-            public Node(int id) { Id = id; }
+            public Node(uint id) { Id = id; }
 
             public abstract V VisitDepthFirst<V>(V visitor) where V : Code.Parse.IVisitor;
             public abstract V VisitPreOrder<V>(V visitor) where V : Code.Parse.IVisitor;
@@ -54,9 +54,9 @@ namespace TLDAG.Core.Code.Internal
 
         internal class Terminal : Node, Code.Parse.ITerminal, IEquatable<Terminal>, IComparable<Terminal>
         {
-            public const int EndOfFileId = 1;
-            public const int EmptyId = 2;
-            public const int NextId = 3;
+            public const uint EndOfFileId = 1;
+            public const uint EmptyId = 2;
+            public const uint NextId = 3;
 
             public static readonly Terminal EndOfFile = new(EndOfFileId, EndOfFileName);
             public static readonly Terminal Empty = new(EmptyId, EmptyNodeName);
@@ -64,7 +64,7 @@ namespace TLDAG.Core.Code.Internal
             public string Name { get; }
 
             public Terminal(string name) : this(0, name) { }
-            private Terminal(int id, string name) : base(id) { Name = name; }
+            private Terminal(uint id, string name) : base(id) { Name = name; }
 
             public override bool Equals(object? obj) => throw NotYetImplemented();
             public bool Equals(Terminal? other) => throw NotYetImplemented();

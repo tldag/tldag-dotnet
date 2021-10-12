@@ -13,7 +13,7 @@ namespace TLDAG.Core.Code
 
         public interface INode
         {
-            public int Id { get; }
+            public uint Id { get; }
 
             public V VisitDepthFirst<V>(V visitor) where V : IVisitor;
             public V VisitPreOrder<V>(V visitor) where V : IVisitor;
