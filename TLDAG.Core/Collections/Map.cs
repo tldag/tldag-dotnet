@@ -96,4 +96,12 @@ namespace TLDAG.Core.Collections
         protected override int SearchKey(int key) => Search(keys, key, 0, count);
         protected override bool EqualKeys(int a, int b) => a == b;
     }
+
+    public class UIntMap<V> : Map<uint, V>
+    {
+        public UIntMap() : base(UIntCompare) { }
+
+        protected override int SearchKey(uint key) => Search(keys, key, 0, count);
+        protected override bool EqualKeys(uint a, uint b) => a == b;
+    }
 }
