@@ -18,6 +18,7 @@ namespace TLDAG.Core.Code.Internal
         internal abstract class Node : Code.Parse.INode, IEquatable<Node>, IComparable<Node>
         {
             public uint Id { get; internal set; }
+            public abstract UIntSet First { get; }
 
             public Node(uint id) { Id = id; }
 
@@ -36,6 +37,8 @@ namespace TLDAG.Core.Code.Internal
             private readonly List<Node> nodes;
 
             public int Count => nodes.Count;
+            
+            public UIntSet First => throw NotYetImplemented();
 
             public Nodes(IEnumerable<Node> nodes) { this.nodes = nodes.ToList(); }
 
@@ -63,6 +66,9 @@ namespace TLDAG.Core.Code.Internal
 
             public string Name { get; }
 
+            private UIntSet? first = null;
+            public override UIntSet First => first ??= ComputeFirst();
+
             public Terminal(string name) : this(0, name) { }
             private Terminal(uint id, string name) : base(id) { Name = name; }
 
@@ -73,6 +79,8 @@ namespace TLDAG.Core.Code.Internal
 
             public override V VisitDepthFirst<V>(V visitor) { return Visit(visitor); }
             public override V VisitPreOrder<V>(V visitor) { return Visit(visitor); }
+
+            private UIntSet ComputeFirst() => throw NotYetImplemented();
         }
 
         internal class Production : Node, Code.Parse.IProduction, IEquatable<Production>, IComparable<Production>
@@ -80,6 +88,8 @@ namespace TLDAG.Core.Code.Internal
             public string Name { get; }
             public IEnumerable<Code.Parse.INode> Children => children;
             public int Count => children.Count;
+
+            public override UIntSet First => children.First;
 
             internal readonly Nodes children;
 
@@ -109,6 +119,9 @@ namespace TLDAG.Core.Code.Internal
             public readonly Node Left;
             public readonly Node Right;
 
+            private UIntSet? first = null;
+            public override UIntSet First => first ??= ComputeFirst();
+
             public Choose(Node left, Node right) : base(0) { Left = left; Right = right; }
 
             public override bool Equals(object? obj) => throw NotYetImplemented();
@@ -118,6 +131,8 @@ namespace TLDAG.Core.Code.Internal
 
             public override V VisitDepthFirst<V>(V visitor) { throw NotYetImplemented(); }
             public override V VisitPreOrder<V>(V visitor) { throw NotYetImplemented(); }
+
+            private UIntSet ComputeFirst() => throw NotYetImplemented();
         }
 
         internal class Builder
