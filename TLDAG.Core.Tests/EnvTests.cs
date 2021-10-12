@@ -16,7 +16,7 @@ namespace TLDAG.Core.Tests
         [TestMethod]
         public void TestPath()
         {
-            if (!Env.IsWindows) return;
+            if (!Platform.IsWindows) return;
 
             DirectoryInfo dir = new(@"C:\Program Files\dotnet\");
 

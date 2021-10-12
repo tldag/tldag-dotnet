@@ -9,7 +9,7 @@ namespace TLDAG.Core.Reflection
     public static class Executables
     {
         private static readonly StringSet ExecutableExtensions
-            = Env.IsWindows ? new(".exe", Strings.CompareOrdinalIgnoreCase) : new("");
+            = Platform.IsWindows ? new(".exe", Strings.CompareOrdinalIgnoreCase) : new("");
 
         public static Executable Find(string name)
         {

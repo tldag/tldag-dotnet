@@ -7,7 +7,7 @@ namespace TLDAG.Core.IO
 {
     public static class Files
     {
-        public static readonly Compare<string> FileNameCompare = Env.IsWindows ? CompareOrdinalIgnoreCase : CompareOrdinal;
+        public static readonly Compare<string> FileNameCompare = Platform.IsWindows ? CompareOrdinalIgnoreCase : CompareOrdinal;
 
         public static FileInfo Existing(string path) => File.Exists(path) ? new(path) : throw FileNotFound(path);
         public static FileInfo Existing(FileInfo file) => file.Exists ? file : throw FileNotFound(file);
