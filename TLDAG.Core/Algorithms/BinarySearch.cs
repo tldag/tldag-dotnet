@@ -11,6 +11,9 @@ namespace TLDAG.Core.Algorithms
         public static int Search(int[] values, int value)
             { throw NotYetImplemented(); }
 
+        public static int Search(uint[] values, int value)
+            { throw NotYetImplemented(); }
+
         public static int Search(char[] values, char value)
             { throw NotYetImplemented(); }
 
@@ -29,6 +32,23 @@ namespace TLDAG.Core.Algorithms
             {
                 int middle = (first + last) >> 1;
                 int candidate = values[middle];
+                int result = value < candidate ? -1 : (value > candidate ? 1 : 0);
+
+                if (result == 0) return middle;
+
+                if (result < 0) last = middle;
+                else first = middle + 1;
+            }
+
+            return first;
+        }
+
+        public static int Search(uint[] values, uint value, int first, int last)
+        {
+            while (first < last)
+            {
+                int middle = (first + last) >> 1;
+                uint candidate = values[middle];
                 int result = value < candidate ? -1 : (value > candidate ? 1 : 0);
 
                 if (result == 0) return middle;

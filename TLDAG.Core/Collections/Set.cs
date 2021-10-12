@@ -90,6 +90,25 @@ namespace TLDAG.Core.Collections
         public static readonly IntSet Empty = new();
     }
 
+    public partial class UIntSet : ImmutableSet<uint>
+    {
+        public UIntSet(IEnumerable<uint> values) : base(UIntCompare, UniqueUInts(values)) { }
+        public UIntSet(params uint[] values) : base(UIntCompare, UniqueUInts(values)) { }
+        public UIntSet(IEnumerable<uint> values, uint value) : this(values.Append(value)) { }
+        public UIntSet(IEnumerable<uint> v1, IEnumerable<uint> v2) : this(v1.Concat(v2)) { }
+        public UIntSet(uint value) : base(UIntCompare, value) { }
+
+        public override int GetHashCode() => throw NotYetImplemented();
+        public override bool Equals(object? obj) => throw NotYetImplemented();
+
+        protected override int SearchValue(uint value) => Search(values, value, 0, values.Length);
+        protected override bool EqualValues(uint a, uint b) => a == b;
+
+        protected override int GetHashCode(uint value) => value.GetHashCode();
+
+        public static readonly UIntSet Empty = new();
+    }
+
     public partial class CharSet : ImmutableSet<char>
     {
         public CharSet(IEnumerable<char> values) : base(CharCompare, UniqueChars(values)) { }

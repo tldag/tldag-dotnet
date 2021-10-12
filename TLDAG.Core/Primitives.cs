@@ -7,6 +7,7 @@ namespace TLDAG.Core
     public static class Primitives
     {
         public static readonly Compare<int> IntCompare = (a, b) => a < b ? -1 : (a > b ? 1 : 0);
+        public static readonly Compare<uint> UIntCompare = (a, b) => a < b ? -1 : (a > b ? 1 : 0);
         public static readonly Compare<char> CharCompare = (a, b) => a < b ? -1 : (a > b ? 1 : 0);
 
         public static void UShortToBytes(ushort value, byte[] dest, int offset) => throw NotYetImplemented();
