@@ -7,10 +7,37 @@ using static TLDAG.Core.Algorithms.BinarySearch;
 using static TLDAG.Core.Exceptions;
 using static TLDAG.Core.Delegates;
 using static TLDAG.Core.Primitives;
+using System.Collections;
 
 namespace TLDAG.Core.Collections
 {
-    public class Map<K, V>
+    public class MapEnumerator<K, V> : IEnumerator<KeyValuePair<K, V>>
+        where K : notnull
+    {
+        public KeyValuePair<K, V> Current => GetCurrent();
+        object IEnumerator.Current => GetCurrent();
+
+        private int count;
+        private List<K> keys;
+        private List<V> values;
+        private int index;
+
+        public MapEnumerator(IEnumerable<K> keys, IEnumerable<V> values)
+        {
+            count = Math.Min(keys.Count(), values.Count());
+            this.keys = new(keys.Take(count));
+            this.values = new(values.Take(count));
+            index = -1;
+        }
+
+        public void Dispose() { GC.SuppressFinalize(this); }
+        public void Reset() { index = -1; }
+        public bool MoveNext() { if (index < count) ++index; return index < count; }
+
+        private KeyValuePair<K, V> GetCurrent() => new(keys[index], values[index]);
+    }
+
+    public class Map<K, V> : IEnumerable<KeyValuePair<K, V>>
         where K : notnull
     {
         protected readonly Compare<K> compare;
@@ -40,6 +67,9 @@ namespace TLDAG.Core.Collections
             throw NotYetImplemented();
         }
 
+        public IEnumerator<KeyValuePair<K, V>> GetEnumerator() => new MapEnumerator<K, V>(Keys, Values);
+        IEnumerator IEnumerable.GetEnumerator() => new MapEnumerator<K, V>(Keys, Values);
+
         private V? InsertValue(K key, V value)
         {
             int pos = SearchKey(key);
@@ -49,10 +79,7 @@ namespace TLDAG.Core.Collections
             return InsertValueAt(pos, key, value);
         }
 
-        private V ReplaceValueAt(int pos, V value)
-        {
-            throw NotYetImplemented();
-        }
+        private V ReplaceValueAt(int pos, V value) { V old = values[pos]; values[pos] = value; return old; }
 
         private V? InsertValueAt(int pos, K key, V value)
         {

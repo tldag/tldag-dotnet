@@ -9,38 +9,48 @@ namespace TLDAG.Core.Code.Internal
 {
     internal static partial class Parse
     {
-        internal class ProductionMap : UIntMap<Production> { }
         internal class TerminalMap : UIntMap<Terminal> { }
-        internal class ElementMap : SmartMap<Element.ElementKey, Element> { }
+        internal class ProductionMap : UIntMap<Production> { }
+        internal class ElementMap : SmartMap<ElementKey, Element> { }
         internal class Hulls : SmartMap<Elements, Elements> { }
         internal class Firsts : SmartMap<Nodes, UIntSet> { }
 
+        internal class TerminalDict : DenseImmUIntDict<Terminal>
+        {
+            public TerminalDict(IEnumerable<KeyValuePair<uint, Terminal>> keyValuePairs) : base(keyValuePairs) { }
+        }
+
+        internal class ProductionDict : DenseImmUIntDict<Production>
+        {
+            public ProductionDict(IEnumerable<KeyValuePair<uint, Production>> keyValuePairs) : base(keyValuePairs) { }
+        }
+
+        internal class ElementKey : IEquatable<ElementKey>, IComparable<ElementKey>
+        {
+            public readonly uint Production;
+            public readonly int Position;
+            public readonly uint Terminal;
+
+            private int? hash = null;
+
+            public ElementKey(uint production, int position, uint terminal)
+            { Production = production; Position = position; Terminal = terminal; }
+
+            internal ElementKey(Production production, int position, Terminal terminal)
+                : this(production.Id, position, terminal.Id) { }
+
+            public override bool Equals(object? obj) => EqualsTo(obj as ElementKey);
+            public bool Equals(ElementKey? other) => EqualsTo(other);
+            public bool EqualsTo(ElementKey? other) => throw NotYetImplemented();
+            public override int GetHashCode() => hash ??= ComputeHashCode();
+            public int CompareTo(ElementKey? other) => throw NotYetImplemented();
+
+            private int ComputeHashCode()
+                => Production.GetHashCode() << 21 + Position << 16 + Terminal.GetHashCode();
+        }
+
         internal class Element : IEquatable<Element>, IComparable<Element>
         {
-            internal class ElementKey : IEquatable<ElementKey>, IComparable<ElementKey>
-            {
-                public readonly uint Production;
-                public readonly int Position;
-                public readonly uint Terminal;
-
-                private int? hash = null;
-
-                public ElementKey(uint production, int position, uint terminal)
-                { Production = production; Position = position; Terminal = terminal; }
-
-                internal ElementKey(Production production, int position, Terminal terminal)
-                    : this(production.Id, position, terminal.Id) { }
-
-                public override bool Equals(object? obj) => EqualsTo(obj as ElementKey);
-                public bool Equals(ElementKey? other) => EqualsTo(other);
-                public bool EqualsTo(ElementKey? other) => throw NotYetImplemented();
-                public override int GetHashCode() => hash ??= ComputeHashCode();
-                public int CompareTo(ElementKey? other) => throw NotYetImplemented();
-
-                private int ComputeHashCode()
-                    => Production.GetHashCode() << 21 + Position << 16 + Terminal.GetHashCode();
-            }
-
             internal class GetProductions
             {
                 private static void Visit(Node node, SortedSet<Production> productions)
@@ -139,11 +149,15 @@ namespace TLDAG.Core.Code.Internal
                 }
             }
 
-            public static TerminalMap Init(Node root)
+            public static TerminalDict Init(Node root)
             {
                 InitTerminals visitor = new();
                 root.VisitDepthFirst(visitor);
-                return visitor.terminals;
+
+                visitor.terminals[Terminal.EndOfFile.Id] = Terminal.EndOfFile;
+                visitor.terminals[Terminal.Empty.Id] = Terminal.Empty;
+
+                return new(visitor.terminals);
             }
         }
 
@@ -161,19 +175,19 @@ namespace TLDAG.Core.Code.Internal
                 }
             }
 
-            public static ProductionMap Init(Node root)
+            public static ProductionDict Init(Node root)
             {
                 InitProductions visitor = new();
                 root.VisitPreOrder(visitor);
-                return visitor.productions;
+                return new(visitor.productions);
             }
         }
 
         internal class Compiler
         {
             private readonly Production root;
-            private readonly TerminalMap terminals;
-            private readonly ProductionMap productions;
+            private readonly TerminalDict terminals;
+            private readonly ProductionDict productions;
 
             private UIntSet terminalIds;
 

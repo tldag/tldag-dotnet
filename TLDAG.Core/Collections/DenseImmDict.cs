@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Collections
@@ -9,9 +10,21 @@ namespace TLDAG.Core.Collections
     public class DenseImmUIntDict<V> : IReadOnlyDictionary<uint, V>, IEquatable<DenseImmUIntDict<V>>
     {
         public V this[uint key] => throw NotYetImplemented();
-        public IEnumerable<uint> Keys => throw NotYetImplemented();
+
+        private List<uint>? keys = null;
+        public IEnumerable<uint> Keys => keys ??= ComputeKeys();
+
         public IEnumerable<V> Values => throw NotYetImplemented();
         public int Count => throw NotYetImplemented();
+
+        private V[] values;
+
+        public DenseImmUIntDict(IEnumerable<KeyValuePair<uint, V>> keyValuePairs)
+        {
+            values = new V[Size(keyValuePairs)];
+
+            Fill(keyValuePairs, values);
+        }
 
         public bool ContainsKey(uint key)
         {
@@ -50,6 +63,38 @@ namespace TLDAG.Core.Collections
         public bool Equals(DenseImmUIntDict<V>? other)
         {
             throw NotYetImplemented();
+        }
+
+        private List<uint> ComputeKeys()
+        {
+            List<uint> result = new();
+
+            for (int i = 0, n = values.Length; i < n; ++i)
+            {
+                if (values[i] is not null) result.Add((uint)i);
+            }
+
+            return result;
+        }
+
+        private static int Size(IEnumerable<KeyValuePair<uint, V>> keyValuePairs)
+        {
+            if (keyValuePairs.Count() == 0) return 0;
+
+            uint max = keyValuePairs.Max(kvp => kvp.Key);
+
+            if (max >= int.MaxValue)
+                throw OutOfRange("keyValuePairs", max, $"must not exceed {int.MaxValue - 1}");
+
+            return (int)(max + 1);
+        }
+
+        private static void Fill(IEnumerable<KeyValuePair<uint, V>> keyValuePairs, V[] values)
+        {
+            foreach (KeyValuePair<uint, V> kvp in keyValuePairs)
+            {
+                values[kvp.Key] = kvp.Value;
+            }
         }
     }
 }
