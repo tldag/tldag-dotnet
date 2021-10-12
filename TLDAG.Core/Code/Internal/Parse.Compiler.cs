@@ -15,7 +15,7 @@ namespace TLDAG.Core.Code.Internal
             private readonly TerminalDict terminals;
             private readonly ProductionDict productions;
 
-            private UIntSet terminalIds;
+            private readonly UIntSet terminalIds;
 
             private readonly ElementMap elements = new();
             private readonly Hulls hulls = new();
@@ -32,7 +32,7 @@ namespace TLDAG.Core.Code.Internal
 
             private static Production Extend(Code.Parse.INode node)
             {
-                Node root = node as Node ?? throw InvalidArgument(nameof(node), $"{node.GetType()} not supported.");
+                Node root = Contract.As<Node>(node, nameof(node));
                 return new(ExtendedGrammarRootName, new(new Node[] { root, Terminal.EndOfFile }));
             }
             
@@ -120,7 +120,6 @@ namespace TLDAG.Core.Code.Internal
             {
                 throw NotYetImplemented();
             }
-
         }
     }
 }
