@@ -24,6 +24,8 @@
     FunctionsToExport = @()
     CmdletsToExport = @(
         "ConvertFrom-HslaToRgba",
+        "ConvertFrom-TripleDESEncrypted",
+        "ConvertTo-TripleDESEncrypted",
         "New-Password",
         "New-SnkFile",
         "New-Solution"
