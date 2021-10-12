@@ -1,16 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
-  <Target Name="DeleteBinAndObj" BeforeTargets="Clean;Rebuild">
-    
+  <Target Name="DeleteObjDirectory" BeforeTargets="Clean;Rebuild" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
+
     <PropertyGroup>
-      <_DeleteBinAndOutBin>$([MSBuild]::NormalizeDirectory( $(MSBuildProjectDirectory), 'bin' ))</_DeleteBinAndOutBin>
-      <_DeleteBinAndOutObj>$([MSBuild]::NormalizeDirectory( $(MSBuildProjectDirectory), 'obj' ))</_DeleteBinAndOutObj>
+      <_DeleteObjDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildProjectDirectory), 'obj' ))</_DeleteObjDirectory>
     </PropertyGroup>
 
-    <RemoveDir Directories="$(_DeleteBinAndOutBin)" />
-    <RemoveDir Directories="$(_DeleteBinAndOutObj)" />
+    <RemoveDir Directories="$(_DeleteObjDirectory)" />
+    
+  </Target>
 
+  <Target Name="DeleteBinDirectory" BeforeTargets="Clean;Rebuild">
+
+    <PropertyGroup>
+      <_DeleteBinDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildProjectDirectory), 'bin' ))</_DeleteBinDirectory>
+    </PropertyGroup>
+
+    <RemoveDir Directories="$(_DeleteBinDirectory)" />
+    
   </Target>
   
 </Project>
