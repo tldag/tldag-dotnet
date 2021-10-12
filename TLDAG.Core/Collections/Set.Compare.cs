@@ -13,6 +13,15 @@ namespace TLDAG.Core.Collections
             => CompareTo(other) == 0;
     }
 
+    public partial class UIntSet : IEquatable<UIntSet>, IComparable<UIntSet>
+    {
+        public int CompareTo(UIntSet? other)
+            => other is null ? 1 : Comparing.Compare(values, other.values);
+
+        public bool Equals(UIntSet? other)
+            => CompareTo(other) == 0;
+    }
+
     public partial class CharSet : IEquatable<CharSet>, IComparable<CharSet>
     {
         public int CompareTo(CharSet? other)

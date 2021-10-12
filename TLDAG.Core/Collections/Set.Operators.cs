@@ -16,6 +16,20 @@ namespace TLDAG.Core.Collections
         public static IntSet operator -(IntSet a, int b) => throw NotYetImplemented();
     }
 
+    public partial class UIntSet
+    {
+        public static bool operator ==(UIntSet a, UIntSet b) => throw NotYetImplemented();
+        public static bool operator !=(UIntSet a, UIntSet b) => throw NotYetImplemented();
+        public static bool operator <(UIntSet a, UIntSet b) => throw NotYetImplemented();
+        public static bool operator >(UIntSet a, UIntSet b) => throw NotYetImplemented();
+
+        public static UIntSet operator +(UIntSet a, UIntSet b) => new(a, b);
+        public static UIntSet operator +(UIntSet a, uint b) => new(a, b);
+        public static UIntSet operator +(uint a, UIntSet b) => new(b, a);
+        public static UIntSet operator -(UIntSet a, UIntSet b) => throw NotYetImplemented();
+        public static UIntSet operator -(UIntSet a, uint b) => throw NotYetImplemented();
+    }
+
     public partial class CharSet
     {
         public static bool operator ==(CharSet a, CharSet b) => throw NotYetImplemented();
