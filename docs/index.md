@@ -14,4 +14,5 @@
 - [PackageManagement](investigation/package-management.md)
 - [Where are NuGet.Config](investigation/where-are-nuget-configs.md)
 - [Microsoft.PackageManagement](investigation/microsoft-package-management.md)
+- [NuGet Libraries](investigation/nuget.md)
 

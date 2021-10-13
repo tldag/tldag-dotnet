@@ -2,11 +2,16 @@
 
 modules/
 packages/
+repository/
 TestResults/
 
-TLDAG.Libraries.Core/
-TLDAG.Libraries.Core.Tests/
-TLDAG.Libraries.NuGet.Tests/
-TLDAG.Libs.PS.Tests/
-TLDAG.PS/
-
+TLDAG.Automation/
+TLDAG.Automation.Tests/
+TLDAG.Build/
+TLDAG.Build.Tests/
+TLDAG.Commands/
+TLDAG.Commands.Tests/
+TLDAG.Core/
+TLDAG.Core.Tests/
+TLDAG.Sdk/
+TLDAG.Sdk.Tests/
