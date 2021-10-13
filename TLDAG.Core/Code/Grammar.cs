@@ -10,7 +10,7 @@ namespace TLDAG.Core.Code
         public static ParserCompiler CreateCompiler() => throw NotYetImplemented();
 
 #if DEBUG
-        public static Scanner CreateDevScanner(string text) => new(text);
+        public static Scanner CreateDevScanner(string text) => throw NotYetImplemented();
         public static Parser CreateDevParser(string text) => throw NotYetImplemented();
         public static ParserCompiler CreateDevCompiler() => ParserCompiler.Create(GrammarDocument);
 #endif

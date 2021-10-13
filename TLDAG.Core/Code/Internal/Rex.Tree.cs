@@ -23,8 +23,6 @@ namespace TLDAG.Core.Code.Internal
             public virtual V VisitPreOrder<V>(V visitor) where V : Code.Rex.IVisitor => Visit(visitor);
             protected virtual V Visit<V>(V visitor) where V : Code.Rex.IVisitor { visitor.Visit(this); return visitor; }
 
-            public abstract Node Clone();
-
             protected abstract bool ComputeNullable();
             protected abstract UIntSet ComputeFirstpos();
             protected abstract UIntSet ComputeLastpos();
@@ -32,49 +30,42 @@ namespace TLDAG.Core.Code.Internal
 
         internal abstract class LeafNode : Node
         {
-            public uint Id = 0;
+            public readonly uint Id;
             public UIntSet Followpos = UIntSet.Empty;
+
+            protected LeafNode(uint id) { Id = id; }
+
+            protected override UIntSet ComputeFirstpos() => new(Id);
+            protected override UIntSet ComputeLastpos() => new(Id);
         }
 
         internal class AcceptNode : LeafNode
         {
             public readonly string Name;
 
-            public AcceptNode(string name) { Name = name; }
+            public AcceptNode(uint id, string name) : base(id) { Name = name; }
 
-            public override Node Clone() { throw NotSupported(); }
-
-            protected override bool ComputeNullable() => throw NotYetImplemented();
-            protected override UIntSet ComputeFirstpos() => throw NotYetImplemented();
-            protected override UIntSet ComputeLastpos() => throw NotYetImplemented();
+            protected override bool ComputeNullable() => false;
         }
 
         internal class EmptyNode : LeafNode
         {
-            public override Node Clone() => new EmptyNode();
+            public EmptyNode(uint id) : base(id) { }
 
-            protected override bool ComputeNullable() => throw NotYetImplemented();
-            protected override UIntSet ComputeFirstpos() => throw NotYetImplemented();
-            protected override UIntSet ComputeLastpos() => throw NotYetImplemented();
+            protected override bool ComputeNullable() => true;
         }
 
         internal class SymbolNode : LeafNode
         {
             public readonly char Value;
 
-            public SymbolNode(char value) { Value = value; }
+            public SymbolNode(uint id, char value) : base(id) { Value = value; }
 
-            public override Node Clone() => new SymbolNode(Value);
-
-            protected override bool ComputeNullable() => throw NotYetImplemented();
-            protected override UIntSet ComputeFirstpos() => throw NotYetImplemented();
-            protected override UIntSet ComputeLastpos() => throw NotYetImplemented();
+            protected override bool ComputeNullable() => false;
         }
 
         internal class NotNode : Node
         {
-            public override Node Clone() => throw NotYetImplemented();
-
             protected override bool ComputeNullable() => throw NotYetImplemented();
             protected override UIntSet ComputeFirstpos() => throw NotYetImplemented();
             protected override UIntSet ComputeLastpos() => throw NotYetImplemented();
@@ -98,22 +89,18 @@ namespace TLDAG.Core.Code.Internal
         {
             public ChooseNode(Node left, Node right) : base(left, right) { }
 
-            public override Node Clone() => new ChooseNode(Left.Clone(), Right.Clone());
-
-            protected override bool ComputeNullable() => throw NotYetImplemented();
-            protected override UIntSet ComputeFirstpos() => throw NotYetImplemented();
-            protected override UIntSet ComputeLastpos() => throw NotYetImplemented();
+            protected override bool ComputeNullable() => Left.Nullable || Right.Nullable;
+            protected override UIntSet ComputeFirstpos() => Left.Firstpos + Right.Firstpos;
+            protected override UIntSet ComputeLastpos() => Left.Lastpos + Right.Lastpos;
         }
 
         internal class ConcatNode : BinaryNode
         {
             public ConcatNode(Node left, Node right) : base(left, right) { }
 
-            public override Node Clone() => new ConcatNode(Left.Clone(), Right.Clone());
-
-            protected override bool ComputeNullable() => throw NotYetImplemented();
-            protected override UIntSet ComputeFirstpos() => throw NotYetImplemented();
-            protected override UIntSet ComputeLastpos() => throw NotYetImplemented();
+            protected override bool ComputeNullable() => Left.Nullable && Right.Nullable;
+            protected override UIntSet ComputeFirstpos() => Left.Nullable ? (Left.Firstpos + Right.Firstpos) : Left.Firstpos;
+            protected override UIntSet ComputeLastpos() => Right.Nullable ? (Left.Lastpos + Right.Lastpos) : Right.Lastpos;
         }
 
         internal class KleeneNode : Node
@@ -128,11 +115,9 @@ namespace TLDAG.Core.Code.Internal
             public override V VisitPreOrder<V>(V visitor)
             { Visit(visitor); Child.VisitPreOrder(visitor); return visitor; }
 
-            public override Node Clone() => new KleeneNode(Child.Clone());
-
-            protected override bool ComputeNullable() => throw NotYetImplemented();
-            protected override UIntSet ComputeFirstpos() => throw NotYetImplemented();
-            protected override UIntSet ComputeLastpos() => throw NotYetImplemented();
+            protected override bool ComputeNullable() => true;
+            protected override UIntSet ComputeFirstpos() => Child.Firstpos;
+            protected override UIntSet ComputeLastpos() => Child.Lastpos;
         }
 
         internal class Builder
@@ -140,16 +125,23 @@ namespace TLDAG.Core.Code.Internal
             private readonly Stack<Node> stack = new();
             private readonly HashSet<string> names = new(ReservedTokenNames, StringComparer.Ordinal);
 
+            private uint nextId;
+
+            public Builder()
+            {
+                throw NotYetImplemented();
+            }
+
             public void Accept(string name)
             {
                 if (names.Contains(name)) throw new ArgumentException("Duplicate name");
                 if (!TokenNameRegex.IsMatch(name)) throw new ArgumentException("Illegal name");
 
-                names.Add(name); stack.Push(new AcceptNode(name));
+                names.Add(name); stack.Push(new AcceptNode(nextId++, name));
             }
 
-            public void Empty() { stack.Push(new EmptyNode()); }
-            public void Symbol(char value) { stack.Push(new SymbolNode(value)); }
+            public void Empty() { stack.Push(new EmptyNode(nextId++)); }
+            public void Symbol(char value) { stack.Push(new SymbolNode(nextId++, value)); }
             public void Range(char start, char end) { throw NotYetImplemented(); }
             public void Not(IEnumerable<char> values) { throw NotYetImplemented(); }
             public void Choose() { Node right = stack.Pop(); Node left = stack.Pop(); stack.Push(new ChooseNode(left, right)); }
@@ -158,8 +150,8 @@ namespace TLDAG.Core.Code.Internal
 
             public Node Build()
             {
-                if (stack.Count == 0) return new EmptyNode();
                 if (stack.Count > 1) throw new InvalidOperationException();
+                if (stack.Count == 0) Empty();
 
                 return stack.Pop();
             }

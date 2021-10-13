@@ -3,39 +3,67 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Code.Scan;
 
 namespace TLDAG.Core.Code.Internal
 {
     internal static partial class Scan
     {
-        internal class Character { }
+        internal class Character
+        {
+            public Position Position { get; }
+            public char Value { get; }
+
+            public Character(Position position, char value)
+            { Position = position; Value = value; }
+        }
 
         internal class Line : IEnumerable<Character>
         {
-            public int Number { get; internal set; }
-            public bool Last { get; internal set; }
+            public int Number { get; }
+            public bool Last { get; }
 
-            internal Line(string source) { }
+            private readonly char[] characters;
 
-            public IEnumerator<Character> GetEnumerator() => new LineEnumerator();
-            IEnumerator IEnumerable.GetEnumerator() => new LineEnumerator();
+            internal Line(int number, bool last, string source)
+            { Number = number; Last = last; characters = source.ToCharArray(); }
+
+            public IEnumerator<Character> GetEnumerator() => new LineEnumerator(Number, Last, characters);
+            IEnumerator IEnumerable.GetEnumerator() => new LineEnumerator(Number, Last, characters);
         }
 
         internal class LineEnumerator : IEnumerator<Character>
         {
-            public Character Current => throw NotYetImplemented();
-            object IEnumerator.Current => throw NotYetImplemented();
+            private Character? current = null;
+            public Character Current => current ?? throw new InvalidOperationException();
+            object IEnumerator.Current => current ?? throw new InvalidOperationException();
+
+            private readonly int line;
+            private readonly bool last;
+            private readonly char[] characters;
+            private int index = 0;
+
+            public LineEnumerator(int line, bool last, char[] characters)
+            {
+                this.line = line;
+                this.last = last;
+                this.characters = characters;
+            }
 
             public void Dispose() { GC.SuppressFinalize(this); }
-
-            public void Reset()
-            {
-                throw NotYetImplemented();
-            }
+            public void Reset() { index = 0; current = null; }
 
             public bool MoveNext()
             {
-                throw NotYetImplemented();
+                if (index > characters.Length) return false;
+                if (index == characters.Length && last) return false;
+
+                Position position = new(line, index + 1);
+
+                if (index == characters.Length) { current = new(position, '\n'); }
+                else { current = new(position, characters[index]); }
+
+                ++index; return true;
             }
         }
 
@@ -46,13 +74,9 @@ namespace TLDAG.Core.Code.Internal
             private Lines(IEnumerable<Line> source)
             {
                 lines = source.ToArray();
-
-                for (int i = 0, n = lines.Length; i < n; ++i) lines[i].Number = i + 1;
-                if (lines.Length > 0) lines[lines.Length - 1].Last = true;
             }
 
-            public static Lines Create(string source)
-                => new(StringLines.Create(source).Select(line => new Line(line)));
+            public static Lines Create(string source) => throw NotYetImplemented();
 
             public IEnumerator<Character> GetEnumerator() => new LinesEnumerator(lines);
             IEnumerator IEnumerable.GetEnumerator() => new LinesEnumerator(lines);

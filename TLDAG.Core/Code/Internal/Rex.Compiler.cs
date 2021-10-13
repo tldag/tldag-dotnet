@@ -4,14 +4,17 @@ using System.Linq;
 using TLDAG.Core.Algorithms;
 using TLDAG.Core.Collections;
 using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Code.Rex;
 
 namespace TLDAG.Core.Code.Internal
 {
     internal static partial class Rex
     {
-        internal abstract class Visitor : Code.Rex.IVisitor
+        public class Leafs : UIntMap<LeafNode> { }
+
+        internal abstract class Visitor : IVisitor
         {
-            public void Visit(Code.Rex.INode node)
+            public void Visit(INode node)
             {
                 throw NotYetImplemented();
             }
@@ -22,12 +25,12 @@ namespace TLDAG.Core.Code.Internal
         internal class TransitionsBuilder
         {
             private readonly int width;
-            private readonly List<int[]> list = new();
+            private readonly List<uint[]> list = new();
 
             public TransitionsBuilder(int width) { this.width = width; }
             public static TransitionsBuilder Create(int width) => new(width);
 
-            public TransitionsBuilder Add(int[] transitions)
+            public TransitionsBuilder Add(uint[] transitions)
             {
                 if (transitions.Length != width) throw new ArgumentException();
                 list.Add(transitions); return this;
@@ -46,13 +49,29 @@ namespace TLDAG.Core.Code.Internal
                 else if (node is NotNode notNode) throw NotYetImplemented();
             }
 
-            public static Alphabet Compute(Node root)
+            public static Alphabet Collect(Node root)
             {
                 GetAlphabet visitor = new();
 
                 root.VisitDepthFirst(visitor);
 
                 return new(visitor.symbols);
+            }
+        }
+
+        internal class GetLeafs
+        {
+            public static Leafs Collect(Node root)
+            {
+                throw NotYetImplemented();
+            }
+        }
+
+        internal class GetAccepts
+        {
+            public static UIntMap<string> Collect(Node root)
+            {
+                throw NotYetImplemented();
             }
         }
 
@@ -92,32 +111,32 @@ namespace TLDAG.Core.Code.Internal
             }
         }
 
-        internal class InitLeafs : Visitor
-        {
-            private uint nextId = 1;
-
-            protected override void VisitNode(Node node)
-            {
-                if (node is LeafNode leafNode) leafNode.Id = nextId++;
-            }
-
-            public static void Init(Node root) { root.VisitDepthFirst(new InitLeafs()); }
-        }
-
         internal class State
         {
-            public readonly int Id;
+            public readonly uint Id;
+            public readonly UIntSet Positions;
             public readonly string? Accept;
-            private readonly int[] transitions;
+            private readonly uint[] transitions;
 
-            public int[] Transitions => Arrays.Copy(transitions);
+            public uint[] Transitions => Arrays.Copy(transitions);
 
-            public State(int id, string? accept, int width)
+            public State(uint id, UIntSet positions, string? accept, int width)
             {
                 Id = id;
+                Positions = positions;
                 Accept = accept;
-                transitions = new int[width];
+                transitions = new uint[width];
             }
+
+            public void SetTransition(uint symbol, uint state)
+            {
+                throw NotYetImplemented();
+            }
+        }
+
+        internal class States : SmartMap<UIntSet, State>
+        {
+            public uint NextId => throw NotYetImplemented();
         }
 
         internal class Compiler
@@ -126,33 +145,35 @@ namespace TLDAG.Core.Code.Internal
             private readonly int width;
 
             private readonly Node root;
+            private readonly Leafs leafs;
+            private readonly UIntMap<string> accepts;
 
-            private readonly SmartMap<UIntSet, State> states = new();
+            private readonly States states = new();
             private readonly Queue<State> unmarked = new();
 
-            public Compiler(Code.Rex.INode input)
+            public Compiler(INode input)
             {
                 root = input as Node ?? throw new NotSupportedException();
 
-                alphabet = GetAlphabet.Compute(root);
+                alphabet = GetAlphabet.Collect(root);
                 width = alphabet.Count;
 
                 root = ExpandTree.Expand(root, alphabet);
-
-                InitLeafs.Init(root);
+                leafs = GetLeafs.Collect(root);
+                accepts = GetAccepts.Collect(root);
             }
 
-            public static Compiler Create(Code.Rex.INode root) => new(root);
-            public static Code.Rex.IData Compile(Code.Rex.INode root) => Create(root).Compile();
+            public static Compiler Create(INode root) => new(root);
+            public static IData Compile(INode root) => Create(root).Compile();
 
-            public Code.Rex.IData Compile()
+            public Data Compile()
             {
                 CreateStates();
 
                 Transitions transitions = CreateTransitions();
                 Accepts accepts = CreateAccepts();
 
-                return new Data(accepts, 1);
+                return new Data(alphabet, transitions, accepts, 1);
             }
 
             private void CreateStates()
@@ -160,12 +181,27 @@ namespace TLDAG.Core.Code.Internal
                 AddState(UIntSet.Empty, false);
                 AddState(root.Firstpos);
 
-                while (unmarked.Count > 0) ProcessState(unmarked.Dequeue());
+               while (unmarked.Count > 0) { ProcessState(unmarked.Dequeue()); }
             }
 
             private void ProcessState(State state)
+                { foreach (uint symbol in alphabet) { ProcessStateSymbol(state, symbol); } }
+
+            private void ProcessStateSymbol(State state, uint symbol)
             {
-                throw NotYetImplemented();
+                if (symbol == 0) return;
+
+                UIntSet positions = UIntSet.Empty;
+
+                foreach (uint position in state.Positions)
+                {
+                    if (leafs[position] is SymbolNode symbolNode)
+                    {
+                        positions += alphabet[symbolNode.Value];
+                    }
+                }
+
+                state.SetTransition(symbol, AddState(positions, true).Id);
             }
 
             private State AddState(UIntSet positions, bool asUnmarked = true)
@@ -176,7 +212,7 @@ namespace TLDAG.Core.Code.Internal
                 {
                     string? accept = GetAccept(positions);
 
-                    state = new(states.Count, accept, width);
+                    state = new(states.NextId, positions, accept, width);
                     states[positions] = state;
                     if (asUnmarked) unmarked.Enqueue(state);
                 }
@@ -188,9 +224,10 @@ namespace TLDAG.Core.Code.Internal
             {
                 if (positions.Count == 0) return "";
 
-                foreach (int position in positions)
+                foreach (uint position in positions)
                 {
-                    throw NotYetImplemented();
+                    string? accept = accepts[position];
+                    if (accept is not null) return accepts[position];
                 }
 
                 return null;
@@ -209,7 +246,7 @@ namespace TLDAG.Core.Code.Internal
 
             private Accepts CreateAccepts()
             {
-                IntMap<string> accepts = new();
+                UIntMap<string> accepts = new();
 
                 foreach (State state in states.Values)
                 {

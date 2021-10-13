@@ -119,6 +119,7 @@ namespace TLDAG.Core.Collections
     public class IntMap<V> : Map<int, V>
     {
         public IntMap() : base(IntCompare) { }
+        public IntMap(IEnumerable<KeyValuePair<int, V>> values) : base(IntCompare) { throw NotYetImplemented(); }
 
         protected override int SearchKey(int key) => Search(keys, key, 0, count);
         protected override bool EqualKeys(int a, int b) => a == b;
@@ -127,6 +128,7 @@ namespace TLDAG.Core.Collections
     public class UIntMap<V> : Map<uint, V>
     {
         public UIntMap() : base(UIntCompare) { }
+        public UIntMap(IEnumerable<KeyValuePair<uint, V>> values) : base(UIntCompare) { throw NotYetImplemented(); }
 
         protected override int SearchKey(uint key) => Search(keys, key, 0, count);
         protected override bool EqualKeys(uint a, uint b) => a == b;

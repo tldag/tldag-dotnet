@@ -13,5 +13,11 @@ namespace TLDAG.Core
 
             return result;
         }
+
+        public static T Min<T>(T value, T min, string name) where T : IComparable<T>
+        {
+            if (value.CompareTo(min) < 0) throw new ArgumentOutOfRangeException(name, $"must be at least {min}");
+            return value;
+        }
     }
 }

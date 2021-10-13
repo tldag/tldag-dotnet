@@ -9,37 +9,47 @@ namespace TLDAG.Core.Code.Internal
         internal class Transitions
         {
             private readonly int width;
-            private readonly int[][] transitions;
+            private readonly uint[][] transitions;
 
-            internal Transitions(int width, int[][] transitions) { this.width = width; this.transitions = transitions; }
+            internal Transitions(int width, uint[][] transitions)
+                { this.width = width; this.transitions = transitions; }
+
+            public uint this[uint state, uint symbol] => throw NotYetImplemented();
         }
 
         internal class Accepts
         {
-            private readonly IntMap<string> map;
+            private readonly UIntMap<string> map;
 
+            public UIntSet Keys => new(map.Keys);
             public StringSet Values => new(map.Values);
 
-            public Accepts(IntMap<string> map) { this.map = map; }
+            public Accepts(UIntMap<string> map) { this.map = new(map); }
 
-            public string? this[int state] { get => map[state]; }
+            public string? this[uint state] { get => map[state]; }
         }
 
         internal class Data : Code.Rex.IData
         {
+            public readonly Alphabet Alphabet;
+            public readonly Transitions Transitions;
             public readonly Accepts Accepts;
             public readonly int StartState;
 
             public StringSet Names => Accepts.Values;
 
-            public Data(Internal.Rex.Accepts accepts, int startState)
+            public Data(Alphabet alphabet, Transitions transitions, Accepts accepts, int startState)
             {
+                Alphabet = alphabet;
+                Transitions = transitions;
                 Accepts = accepts;
                 StartState = startState;
             }
 
             protected Data(Data rex)
             {
+                Alphabet = rex.Alphabet;
+                Transitions = rex.Transitions;
                 Accepts = rex.Accepts;
                 StartState = rex.StartState;
             }

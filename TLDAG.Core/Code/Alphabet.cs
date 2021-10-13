@@ -6,15 +6,15 @@ using static TLDAG.Core.Code.Constants;
 
 namespace TLDAG.Core.Code
 {
-    public partial class Alphabet : IEnumerable<int>
+    public partial class Alphabet : IEnumerable<uint>
     {
-        public const int OtherClass = 0;
-        public const int EndOfFileClass = 1;
+        public const uint OtherClass = 0;
+        public const uint EndOfFileClass = 1;
 
         public readonly CharSet Symbols;
 
-        private readonly int[] map;
-        private readonly IntSet classes;
+        private readonly uint[] map;
+        private readonly UIntSet classes;
 
         public readonly int Count;
 
@@ -22,9 +22,9 @@ namespace TLDAG.Core.Code
         {
             Symbols = new(symbols);
 
-            int nextId = 2;
+            uint nextId = 2;
 
-            map = new int[65536];
+            map = new uint[65536];
             foreach (char c in Symbols) map[c] = nextId++;
             map[EndOfFileChar] = EndOfFileClass;
 
@@ -32,9 +32,9 @@ namespace TLDAG.Core.Code
             Count = classes.Count;
         }
 
-        public int this[char key] => map[key];
+        public uint this[char key] => map[key];
 
-        public IEnumerator<int> GetEnumerator() => classes.GetEnumerator();
+        public IEnumerator<uint> GetEnumerator() => classes.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => classes.GetEnumerator();
     }
 }

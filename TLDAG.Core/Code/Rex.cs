@@ -12,8 +12,6 @@ namespace TLDAG.Core.Code
             public V VisitPreOrder<V>(V visitor) where V : IVisitor;
         }
 
-        public static INode Empty() => new Internal.Rex.EmptyNode();
-
         public interface IVisitor
         {
             public void Visit(INode node);

@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using static TLDAG.Core.Code.Constants;
-using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Code
 {
@@ -12,7 +11,11 @@ namespace TLDAG.Core.Code
             public readonly int Line;
             public readonly int Column;
 
-            private Position(int line, int column) { Line = line; Column = column; }
+            public Position(int line, int column)
+            {
+                Line = Contract.Min(line, 1, nameof(line));
+                Column = Contract.Min(column, 1, nameof(column));
+            }
 
             public Position NextColumn => new(Line, Column + 1);
             public Position NextLine => new(Line + 1, 1);
@@ -40,7 +43,7 @@ namespace TLDAG.Core.Code
     {
         private Internal.Scan.Scanner scanner;
 
-        public Scanner(string source) { scanner = new(source); }
+        public Scanner(Rex.IData data, string source) { scanner = new(data, source); }
 
         public IEnumerator<Scan.Token> GetEnumerator() => scanner.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => scanner.GetEnumerator();

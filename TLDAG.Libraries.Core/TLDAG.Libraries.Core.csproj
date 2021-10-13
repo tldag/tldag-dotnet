@@ -6,18 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\CGR.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CGR.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\CGR.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>CGR.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Folder Include="Code\" />
   </ItemGroup>
 
 </Project>
