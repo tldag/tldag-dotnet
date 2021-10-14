@@ -4,7 +4,7 @@
   <Target Name="DeleteObjDirectory" BeforeTargets="Clean;Rebuild" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
 
     <PropertyGroup>
-      <_DeleteObjDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildProjectDirectory), 'obj' ))</_DeleteObjDirectory>
+      <_DeleteObjDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildProjectDirectory), $(BaseIntermediateOutputPath) ))</_DeleteObjDirectory>
     </PropertyGroup>
 
     <RemoveDir Directories="$(_DeleteObjDirectory)" />
@@ -14,7 +14,7 @@
   <Target Name="DeleteBinDirectory" BeforeTargets="Clean;Rebuild">
 
     <PropertyGroup>
-      <_DeleteBinDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildProjectDirectory), 'bin' ))</_DeleteBinDirectory>
+      <_DeleteBinDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildProjectDirectory), $(BaseOutputPath) ))</_DeleteBinDirectory>
     </PropertyGroup>
 
     <RemoveDir Directories="$(_DeleteBinDirectory)" />
