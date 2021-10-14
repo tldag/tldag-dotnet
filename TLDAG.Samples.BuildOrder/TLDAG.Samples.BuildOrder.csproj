@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <Target Name="_TLDAG_Before_ResolveReferences" BeforeTargets="ResolveReferences">
+    <Message Text="Before: ResolveReferences ($(TargetFramework))" Importance="high"/>
+  </Target>
+  <Target Name="_TLDAG_After_ResolveReferences" AfterTargets="ResolveReferences">
+    <Message Text="After: ResolveReferences ($(TargetFramework))" Importance="high"/>
+  </Target>
+
+  <Target Name="_TLDAG_Before_Compile" BeforeTargets="Compile">
+    <Message Text="Before: Compile ($(TargetFramework))" Importance="high"/>
+  </Target>
+  <Target Name="_TLDAG_After_Compile" AfterTargets="Compile">
+    <Message Text="After: Compile ($(TargetFramework))" Importance="high"/>
+  </Target>
+
+  <Target Name="_TLDAG_Before_Build" BeforeTargets="Build">
+    <Message Text="Before: Build ($(TargetFramework))" Importance="high"/>
+  </Target>
+  <Target Name="_TLDAG_After_Build" AfterTargets="Build">
+    <Message Text="After: Build ($(TargetFramework))" Importance="high"/>
+  </Target>
+
+  <Target Name="_TLDAG_Before_BeforePack" BeforeTargets="BeforePack">
+    <Message Text="Before: BeforePack ($(TargetFramework))" Importance="high"/>
+  </Target>
+  <Target Name="_TLDAG_After_BeforePack" AfterTargets="BeforePack">
+    <Message Text="After: BeforePack ($(TargetFramework))" Importance="high"/>
+  </Target>
+
+  <Target Name="_TLDAG_Before_GenerateNuspec" BeforeTargets="GenerateNuspec">
+    <Message Text="Before: GenerateNuspec ($(TargetFramework))" Importance="high"/>
+  </Target>
+  <Target Name="_TLDAG_After_GenerateNuspec" AfterTargets="GenerateNuspec">
+    <Message Text="After: GenerateNuspec ($(TargetFramework))" Importance="high"/>
+  </Target>
+
+  <Target Name="_TLDAG_Before_Pack" BeforeTargets="Pack">
+    <Message Text="Before: Pack ($(TargetFramework))" Importance="high"/>
+  </Target>
+  <Target Name="_TLDAG_After_Pack" AfterTargets="Pack">
+    <Message Text="After: Pack ($(TargetFramework))" Importance="high"/>
+    <Message Text="NuGetPackOutput = '@(NuGetPackOutput->'%(FullPath)')'" Importance="high"/>
+    <Message Text="PackageOutputAbsolutePath = '$(PackageOutputAbsolutePath)'" Importance="high"/>
+  </Target>
+
+</Project>
