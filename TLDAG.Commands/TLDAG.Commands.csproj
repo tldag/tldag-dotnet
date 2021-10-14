@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net5.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="TLDAG.Commands.psd1" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="TLDAG.Commands.psd1" Pack="true" PackagePath="/" />
   </ItemGroup>
 
   <ItemGroup>
