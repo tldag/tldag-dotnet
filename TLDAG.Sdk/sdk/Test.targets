@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
-  <Target Name="AddSolutionNameAttribute" BeforeTargets="Compile">
-    <Message Text="IsTestProject = '$(IsTestProject)'" Importance="high" />
-    <Message Text="SolutionDir = '$(SolutionDir)'" Importance="high" />
-    <Message Text="RootNamespace = '$(RootNamespace)'" Importance="high" />
-  </Target>
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>SolutionFileName</_Parameter1>
+      <_Parameter2>$(SolutionFileName)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
   
 </Project>
