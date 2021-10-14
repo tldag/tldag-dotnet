@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <Target Name="AddSolutionNameAttribute" BeforeTargets="Compile">
+    <Message Text="IsTestProject = '$(IsTestProject)'" Importance="high" />
+    <Message Text="SolutionDir = '$(SolutionDir)'" Importance="high" />
+    <Message Text="RootNamespace = '$(RootNamespace)'" Importance="high" />
+  </Target>
+  
+</Project>

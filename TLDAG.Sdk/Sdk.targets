@@ -3,5 +3,6 @@
 
   <Import Project="$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'sdk', 'Clean.targets' ))"/>
   <Import Project="$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'sdk', 'Compile.targets' ))"/>
+  <Import Project="$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'sdk', 'Test.targets' ))"/>
 
 </Project>
