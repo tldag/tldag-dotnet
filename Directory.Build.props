@@ -4,7 +4,6 @@
   <PropertyGroup>
     <RepositoryPath>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'repository' ))</RepositoryPath>
     <PackageOutputPath>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'packages' ))</PackageOutputPath>
-    <ModuleOutputPath>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'modules' ))</ModuleOutputPath>
   </PropertyGroup>
 
   <PropertyGroup>

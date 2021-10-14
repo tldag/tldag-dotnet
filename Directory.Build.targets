@@ -13,8 +13,4 @@
     <MakeDir Directories="$(PackageOutputPath)" />
   </Target>
   
-  <Target Name="CreateModuleOutputDirectory" BeforeTargets="BeforeResolveReferences">
-    <MakeDir Directories="$(ModuleOutputPath)" />
-  </Target>
-  
 </Project>
