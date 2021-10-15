@@ -35,7 +35,17 @@ namespace TLDAG.Core.IO
 
         public static void Clear(this DirectoryInfo root)
         {
-            throw NotYetImplemented();
+            foreach(DirectoryInfo directory in root.EnumerateDirectories())
+            {
+                if (Directory.Exists(directory.FullName))
+                    directory.Delete(true);
+            }
+
+            foreach (FileInfo file in root.EnumerateFiles())
+            {
+                if (File.Exists(file.FullName))
+                    file.Delete();
+            }
         }
     }
 }
