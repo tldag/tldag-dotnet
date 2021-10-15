@@ -17,6 +17,11 @@ namespace TLDAG.Core
                 return result;
             }
 
+            public static void Condition(bool value, string paramName, string message)
+            {
+                if (!value) throw InvalidArgument(paramName, message);
+            }
+
             public static T Min<T>(T value, T min, string paramName) where T : IComparable<T>
             {
                 if (value.CompareTo(min) < 0)

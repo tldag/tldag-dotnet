@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using TLDAG.Core.Collections;
 using static TLDAG.Core.Exceptions;
 using static TLDAG.Core.Strings;
@@ -26,5 +27,7 @@ namespace TLDAG.Core.IO
 
         public static byte[] ReadAllBytes(this FileInfo file) => File.ReadAllBytes(file.FullName);
         public static void WriteAllBytes(this FileInfo file, byte[] bytes) { File.WriteAllBytes(file.FullName, bytes); }
+
+        public static Uri ToUri(this FileInfo file) => new(file.FullName);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using static System.IO.SearchOption;
 using static TLDAG.Core.Exceptions;
@@ -47,5 +48,8 @@ namespace TLDAG.Core.IO
                     file.Delete();
             }
         }
+
+        public static Uri ToUri(this DirectoryInfo directory)
+            => new(directory.FullName + "/");
     }
 }
