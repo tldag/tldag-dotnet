@@ -6,6 +6,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
+using TLDAG.Test;
 
 namespace TLDAG.Automation.Tests
 {

@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.ObjectModel;
-using TLDAG.Automation;
+using TLDAG.Test;
 
 namespace TLDAG.Commands.Tests
 {

@@ -1,11 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TLDAG.Automation;
 using TLDAG.Core.Drawing;
+using TLDAG.Test;
 
 namespace TLDAG.Commands.Tests
 {

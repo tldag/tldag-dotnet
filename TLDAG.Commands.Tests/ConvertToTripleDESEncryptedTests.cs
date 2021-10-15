@@ -1,12 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TLDAG.Automation;
 using TLDAG.Core.Cryptography;
+using TLDAG.Test;
 using static TLDAG.Core.Algorithms.Comparing;
 
 namespace TLDAG.Commands.Tests
