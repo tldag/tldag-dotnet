@@ -5,7 +5,7 @@ using static TLDAG.Core.Strings;
 
 namespace TLDAG.Core.IO
 {
-    public static class Files
+    public static partial class Files
     {
         public static readonly Compare<string> FileNameCompare = Platform.IsWindows ? CompareOrdinalIgnoreCase : CompareOrdinal;
 
