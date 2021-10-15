@@ -18,7 +18,7 @@ namespace TLDAG.Core.IO
         public static DirectoryInfo GetDirectoryOfFileAbove(string startDirectory, string fileName)
             => GetDirectoryOfFileAbove(new DirectoryInfo(startDirectory), fileName);
 
-        public static DirectoryInfo GetDirectoryOfFileAbove(DirectoryInfo startDirectory, string fileName)
+        public static DirectoryInfo GetDirectoryOfFileAbove(this DirectoryInfo startDirectory, string fileName)
         {
             DirectoryInfo? directory = startDirectory;
 
@@ -31,6 +31,11 @@ namespace TLDAG.Core.IO
             }
 
             throw FileNotFound(fileName);
+        }
+
+        public static void Clear(this DirectoryInfo root)
+        {
+            throw NotYetImplemented();
         }
     }
 }
