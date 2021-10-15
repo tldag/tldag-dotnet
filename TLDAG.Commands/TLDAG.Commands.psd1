@@ -1,5 +1,5 @@
 ﻿@{
-    RootModule = 'lib/net5.0/TLDAG.Commands.dll'
+    RootModule = 'TLDAG.Commands.dll'
     ModuleVersion = '0.0.3'
     # CompatiblePSEditions = @()
     GUID = 'B0EAFE79-4DCC-4464-BE7B-B8B47A03E123'
@@ -35,8 +35,8 @@
     # DscResourcesToExport = @()
     # ModuleList = @()
     FileList = @(
-        "lib/net5.0/TLDAG.Automation.dll",
-        "lib/net5.0/TLDAG.Core.dll"
+        "TLDAG.Automation.dll",
+        "TLDAG.Core.dll"
     )
     # HelpInfoURI = ''
     # DefaultCommandPrefix = ''
