@@ -25,5 +25,19 @@ namespace TLDAG.Core
                 return value;
             }
         }
+
+        public static class State
+        {
+            public static void Condition(bool value, string message)
+            {
+                if (!value) throw InvalidState(message);
+            }
+
+            public static T NotNull<T>(T? value, string message)
+            {
+                if (value is null) throw InvalidState(message);
+                return value;
+            }
+        }
     }
 }
