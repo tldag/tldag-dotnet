@@ -33,8 +33,11 @@ namespace TLDAG.Test
             Type methodType = Contract.State.NotNull(method.DeclaringType, "Not called from test method");
             string name = methodType.FullName + "." + method.Name;
             string path = TestOutputDirectory.CombineDirectory(name).FullName;
+            DirectoryInfo directory = Directory.CreateDirectory(path);
 
-            return Directory.CreateDirectory(path);
+            if (clear) directory.Clear();
+
+            return directory;
         }
 
         private string GetSolutionName()
@@ -50,7 +53,7 @@ namespace TLDAG.Test
         }
 
         private DirectoryInfo GetSolutionDirectory()
-            => Directories.GetDirectoryOfFileAbove(Env.CurrentDirectory, SolutionName);
+            => Env.CurrentDirectory.GetDirectoryOfFileAbove(SolutionName);
 
         private DirectoryInfo CreateTestOutputDirectory()
             => Directory.CreateDirectory(SolutionDirectory.CombineDirectory("TestOutput").FullName);
