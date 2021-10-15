@@ -4,7 +4,7 @@ using TLDAG.Core.Code;
 using static TLDAG.Core.Exceptions;
 using static TLDAG.Core.IO.Directories;
 
-namespace TLDAG.Libraries.Core.Tests.Code
+namespace TLDAG.Core.Tests.Code
 {
     [TestClass]
     public class GrammarCompilerTests
@@ -43,7 +43,7 @@ namespace TLDAG.Libraries.Core.Tests.Code
         {
             FileInfo assembly = new(typeof(GrammarCompilerTests).Assembly.Location);
             DirectoryInfo start = assembly.Directory ?? throw FileNotFound(assembly);
-            DirectoryInfo root = GetDirectoryOfFileAbove(start, "tldag-dotnet.sln");
+            DirectoryInfo root = start.GetDirectoryOfFileAbove("tldag-dotnet.sln"); // TODO
 
             return new(Path.Combine(root.FullName, "TLDAG.Core", "Resources"));
         }
