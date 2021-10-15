@@ -32,7 +32,7 @@ namespace TLDAG.Core.Code.Internal
 
             private static Production Extend(Code.Parse.INode node)
             {
-                Node root = Contract.As<Node>(node, nameof(node));
+                Node root = Contract.Arg.As<Node>(node, nameof(node));
                 return new(ExtendedGrammarRootName, new(new Node[] { root, Terminal.EndOfFile }));
             }
             

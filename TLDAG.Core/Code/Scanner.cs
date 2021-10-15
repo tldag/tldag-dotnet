@@ -13,8 +13,8 @@ namespace TLDAG.Core.Code
 
             public Position(int line, int column)
             {
-                Line = Contract.Min(line, 1, nameof(line));
-                Column = Contract.Min(column, 1, nameof(column));
+                Line = Contract.Arg.Min(line, 1, nameof(line));
+                Column = Contract.Arg.Min(column, 1, nameof(column));
             }
 
             public Position NextColumn => new(Line, Column + 1);
