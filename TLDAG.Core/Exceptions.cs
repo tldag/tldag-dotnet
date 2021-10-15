@@ -29,6 +29,6 @@ namespace TLDAG.Core
         public static ArgumentOutOfRangeException OutOfRange(string paramName, object actualValue, string message)
             => new(paramName, actualValue, message);
 
-        public static InvalidStateExcepion InvalidState(string message) => new(message);
+        public static InvalidStateExcepion InvalidState(string message) => new("Invalid state: " + message);
     }
 }
