@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using TLDAG.Core;
 using TLDAG.Core.Collections;
 using TLDAG.Core.IO;
+using TLDAG.Core.Reflection;
 using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Test
@@ -42,11 +43,7 @@ namespace TLDAG.Test
 
         private string GetSolutionName()
         {
-            IEnumerable<string> names = GetType().Assembly
-                .GetCustomAttributes<AssemblyMetadataAttribute>()
-                .Where(a => a.Key.Equals("SolutionFileName"))
-                .Select(a => a.Value).NotNull();
-
+            IEnumerable<string> names = GetType().Assembly.GetMetadataValues("SolutionFileName");
             Contract.State.Condition(names.Any(), "AssemblyMetadataAttribute with key 'SolutionFileName' not found");
 
             return names.First();
