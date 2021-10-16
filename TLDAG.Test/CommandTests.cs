@@ -1,10 +1,6 @@
 ﻿#if NET5_0_OR_GREATER
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TLDAG.Automation;
 
 namespace TLDAG.Test
