@@ -1,7 +1,9 @@
 ﻿using NuGet.Configuration;
 using System;
 using System.IO;
+using System.Linq;
 using TLDAG.Core;
+using TLDAG.Core.IO;
 using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Build.NuGet
@@ -19,6 +21,9 @@ namespace TLDAG.Build.NuGet
         public const string GlobalPackagesFolderKey = "globalPackagesFolder";
         public const string RepositoryPathKey = "repositoryPath";
 
+        public const string NuGetSourceName = "NuGet";
+        public const string PackagesSourceName = "Packages";
+
         public static ISettings GetSettings(DirectoryInfo directory)
             => Settings.LoadDefaultSettings(directory.FullName);
 
@@ -27,12 +32,29 @@ namespace TLDAG.Build.NuGet
         public static ISettings Initialize(DirectoryInfo root, string? name, string? repository,
             string? packages, bool backup)
         {
-            throw NotYetImplemented();
+            name ??= DefaultSettingsFileName;
+
+            NuGetSettingsBuilder builder = new(root, name, backup);
+
+            builder.ClearSources().ClearFallback().ClearDisabled()
+                .AddNuGetSource(NuGetSourceName);
+
+            if (repository != null)
+                builder.GlobalPackages(repository).Repository(repository);
+
+            if (packages != null)
+                builder.AddSource(PackagesSourceName, root.CombineDirectory(packages));
+
+            return builder.Build();
         }
 
         public static SourceItem[] Sources(ISettings? settings = null)
         {
-            throw NotYetImplemented();
+            settings ??= CurrentSettings;
+
+            return settings.GetSection(SourcesSection).Items
+                .Where(item => item is SourceItem)
+                .Cast<SourceItem>().ToArray();
         }
     }
 }

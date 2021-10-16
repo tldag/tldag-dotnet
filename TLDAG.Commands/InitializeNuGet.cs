@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NuGet.Configuration;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using TLDAG.Automation;
 using TLDAG.Build.NuGet;
 using TLDAG.Core.IO;
+using TLDAG.Core.Net;
 
 namespace TLDAG.Commands
 {
@@ -27,19 +29,37 @@ namespace TLDAG.Commands
         public string Packages { get; set; } = "";
 
         [Parameter()]
-        public SwitchParameter Backup { get; set; } = new(false);
+        public SwitchParameter Backup { get; set; } = false;
+
+        [Parameter()]
+        public SwitchParameter Defaults { get; set; } = false;
 
         protected override void Begin() { }
         protected override void End() { }
 
         protected override void Process()
         {
+            if (Defaults)
+            {
+                Name = NuGets.DefaultSettingsFileName;
+                Repository = "repository";
+                Packages = "packages";
+            }
+
             DirectoryInfo root = Directories.Existing(Path);
             string? repository = string.IsNullOrEmpty(Repository) ? null : Repository;
             string? packages = string.IsNullOrEmpty(Packages) ? null : Packages;
             bool backup = Backup.ToBool();
+            ISettings settings = NuGets.Initialize(root, Name, repository, packages, backup);
 
-            NuGets.Initialize(root, Name, repository, packages, backup);
+            NuGets.Sources(settings)
+                .Select(s => new Uri(s.Value))
+                .Where(u => u.IsFile)
+                .Select(u => u.ToDirectory())
+                .ToList().ForEach(d => d.Create());
+
+            if (repository != null)
+                root.CombineDirectory(repository).Create();
         }
     }
 }
