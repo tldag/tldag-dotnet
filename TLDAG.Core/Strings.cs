@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core
 {
     public static class Strings
     {
+        public static IComparer<string> OrdinalStringComparer => StringComparer.Ordinal;
+        public static IComparer<string> OrdinalIgnoreCaseComparer => StringComparer.OrdinalIgnoreCase;
+
         public static readonly Compare<string> CompareOrdinal
             = Delegates.ToCompare<string>(StringComparer.Ordinal);
 
