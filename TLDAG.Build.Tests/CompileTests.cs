@@ -20,14 +20,6 @@ namespace TLDAG.Build.Tests
                 .ToList();
         }
 
-        [TestMethod]
-        public void TestGetCompileFiles()
-        {
-            FileInfo[] files = Compile.GetCompileFiles(GetListFile()).ToArray();
-
-            Assert.AreEqual(5, files.Length);
-        }
-
 #if DEBUG
         private const string Configuration = "Debug";
 #else
