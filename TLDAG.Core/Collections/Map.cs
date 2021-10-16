@@ -8,6 +8,7 @@ using static TLDAG.Core.Exceptions;
 using static TLDAG.Core.Delegates;
 using static TLDAG.Core.Primitives;
 using System.Collections;
+using static TLDAG.Core.Strings;
 
 namespace TLDAG.Core.Collections
 {
@@ -132,5 +133,11 @@ namespace TLDAG.Core.Collections
 
         protected override int SearchKey(uint key) => Search(keys, key, 0, count);
         protected override bool EqualKeys(uint a, uint b) => a == b;
+    }
+
+    public class StringMap<V> : Map<string, V>
+    {
+        public StringMap(IComparer<string> comparer) : this(comparer.ToCompare()) { }
+        public StringMap(Compare<string>? compare = null) : base(compare ??= CompareOrdinal) { }
     }
 }
