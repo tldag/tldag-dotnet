@@ -8,12 +8,13 @@ namespace TLDAG.Core.IO
 {
     public static class Directories
     {
-        public static void Validate(FileInfo file)
-        {
-            DirectoryInfo? directory = file.Directory;
+        public static DirectoryInfo Existing(string path)
+            => Directory.Exists(path) ? new(path) : throw DirectoryNotFound(path);
 
-            if (directory is null) throw new DirectoryNotFoundException();
-            if (!directory.Exists) throw new DirectoryNotFoundException();
+        public static DirectoryInfo Existing(DirectoryInfo? directory)
+        {
+            if (directory == null) throw DirectoryNotFound("");
+            return directory.Exists ? directory : throw DirectoryNotFound(directory.FullName);
         }
 
         public static DirectoryInfo GetDirectoryOfFileAbove(string startDirectory, string fileName)

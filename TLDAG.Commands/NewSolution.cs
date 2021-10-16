@@ -29,7 +29,6 @@ namespace TLDAG.Commands
 
             if (!file.Exists)
             {
-                Directories.Validate(file);
                 CreateNewSolutionFile(file);
             }
 

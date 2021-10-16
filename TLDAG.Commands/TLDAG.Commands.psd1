@@ -26,6 +26,7 @@
         "ConvertFrom-HslaToRgba",
         "ConvertFrom-TripleDESEncrypted",
         "ConvertTo-TripleDESEncrypted",
+        "Initialize-NuGet",
         "New-Password",
         "New-SnkFile",
         "New-Solution"
@@ -50,8 +51,11 @@
             RequireLicenseAcceptance = $false
             ExternalModuleDependencies = @()
             ReleaseNotes = '
-0.1.0
+0.0.3
 - Added command ConvertFrom-HslaToRgba
+- Added command ConvertFrom-TripleDESEncrypted
+- Added command ConvertTo-TripleDESEncrypted
+- Added command Initialize-NuGet
 - Added command New-Password
 - Added command New-SnkFile
 - Added command New-Solution

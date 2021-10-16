@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using TLDAG.Core;
+using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Build.NuGet
 {
@@ -22,5 +23,16 @@ namespace TLDAG.Build.NuGet
             => Settings.LoadDefaultSettings(directory.FullName);
 
         public static ISettings CurrentSettings => GetSettings(Env.CurrentDirectory);
+
+        public static ISettings Initialize(DirectoryInfo root, string? name, string? repository,
+            string? packages, bool backup)
+        {
+            throw NotYetImplemented();
+        }
+
+        public static SourceItem[] Sources(ISettings? settings = null)
+        {
+            throw NotYetImplemented();
+        }
     }
 }
