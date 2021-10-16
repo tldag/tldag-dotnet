@@ -14,7 +14,7 @@ using TLDAG.Test;
 namespace TLDAG.Build.Tests.NuGet
 {
     [TestClass]
-    public class SettingsBuilderTests : TestsBase
+    public class NuGetSettingsBuilderTests : TestsBase
     {
         [TestMethod]
         public void TestEmpty()
@@ -22,7 +22,7 @@ namespace TLDAG.Build.Tests.NuGet
             DirectoryInfo root = GetTestDirectory(true);
             DirectoryInfo packages = root.CombineDirectory("packages");
 
-            Settings settings = SettingsBuilder.Create(root, false)
+            Settings settings = NuGetSettingsBuilder.Create(root, false)
                 .ClearSources().ClearFallback().ClearDisabled()
                 .GlobalPackages("repository").Repository("repository")
                 .AddNuGetSource("NuGet").AddSource("Packages", packages)

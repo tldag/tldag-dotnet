@@ -11,7 +11,7 @@ using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Build.NuGet
 {
-    public class SettingsBuilder
+    public class NuGetSettingsBuilder
     {
         public static readonly Uri NuGetApiUri = new("https://api.nuget.org/v3/index.json");
 
@@ -28,39 +28,39 @@ namespace TLDAG.Build.NuGet
 
         private readonly List<SourceItem> sources = new();
 
-        public SettingsBuilder(DirectoryInfo root, string name, bool backup)
+        public NuGetSettingsBuilder(DirectoryInfo root, string name, bool backup)
         {
             this.root = root;
             this.name = name;
             this.backup = backup;
         }
 
-        public SettingsBuilder(DirectoryInfo root, bool backup)
+        public NuGetSettingsBuilder(DirectoryInfo root, bool backup)
             : this(root, Settings.DefaultSettingsFileName, backup) { }
 
-        public static SettingsBuilder Create(DirectoryInfo root, string name, bool backup)
+        public static NuGetSettingsBuilder Create(DirectoryInfo root, string name, bool backup)
             => new(root, name, backup);
 
-        public static SettingsBuilder Create(DirectoryInfo root, bool backup)
+        public static NuGetSettingsBuilder Create(DirectoryInfo root, bool backup)
             => new(root, backup);
 
-        public SettingsBuilder GlobalPackages(string directory)
+        public NuGetSettingsBuilder GlobalPackages(string directory)
             { globalPackages = directory; return this; }
 
-        public SettingsBuilder Repository(string directory)
+        public NuGetSettingsBuilder Repository(string directory)
             { repository = directory; return this; }
 
-        public SettingsBuilder ClearSources() { clearSources = true; return this; }
-        public SettingsBuilder ClearFallback() { clearFallback = true; return this; }
-        public SettingsBuilder ClearDisabled() { clearDisabled = true; return this; }
+        public NuGetSettingsBuilder ClearSources() { clearSources = true; return this; }
+        public NuGetSettingsBuilder ClearFallback() { clearFallback = true; return this; }
+        public NuGetSettingsBuilder ClearDisabled() { clearDisabled = true; return this; }
 
-        public SettingsBuilder AddSource(string key, Uri uri, string protocolVersion)
+        public NuGetSettingsBuilder AddSource(string key, Uri uri, string protocolVersion)
             { sources.Add(new(key, uri.AbsoluteUri, protocolVersion)); return this; }
 
-        public SettingsBuilder AddSource(string key, DirectoryInfo directory)
+        public NuGetSettingsBuilder AddSource(string key, DirectoryInfo directory)
             => AddSource(key, directory.ToUri(), "");
 
-        public SettingsBuilder AddNuGetSource(string key) => AddSource(key, NuGetApiUri, "3");
+        public NuGetSettingsBuilder AddNuGetSource(string key) => AddSource(key, NuGetApiUri, "3");
 
         public Settings Build()
         {
