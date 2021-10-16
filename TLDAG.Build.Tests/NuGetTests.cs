@@ -7,15 +7,17 @@ using NuGet.Versioning;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TLDAG.Test;
 
 namespace TLDAG.Build.Tests
 {
     [TestClass]
-    public class NuGetTests
+    public class NuGetTests : TestsBase
     {
         private readonly ILogger logger = NullLogger.Instance;
         private readonly CancellationToken cancel = CancellationToken.None;
