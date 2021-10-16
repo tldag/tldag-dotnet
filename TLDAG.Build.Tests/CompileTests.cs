@@ -25,7 +25,7 @@ namespace TLDAG.Build.Tests
         {
             FileInfo[] files = Compile.GetCompileFiles(GetListFile()).ToArray();
 
-            Assert.AreEqual(4, files.Length);
+            Assert.AreEqual(5, files.Length);
         }
 
 #if DEBUG

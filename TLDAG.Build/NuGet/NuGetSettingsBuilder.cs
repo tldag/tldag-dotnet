@@ -3,18 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TLDAG.Core;
 using TLDAG.Core.IO;
-using static TLDAG.Core.Exceptions;
+using static TLDAG.Build.NuGet.NuGets;
 
 namespace TLDAG.Build.NuGet
 {
     public class NuGetSettingsBuilder
     {
-        public static readonly Uri NuGetApiUri = new("https://api.nuget.org/v3/index.json");
-
         private readonly DirectoryInfo root;
         private readonly string name;
         private readonly bool backup;
@@ -36,7 +31,7 @@ namespace TLDAG.Build.NuGet
         }
 
         public NuGetSettingsBuilder(DirectoryInfo root, bool backup)
-            : this(root, Settings.DefaultSettingsFileName, backup) { }
+            : this(root, DefaultSettingsFileName, backup) { }
 
         public static NuGetSettingsBuilder Create(DirectoryInfo root, string name, bool backup)
             => new(root, name, backup);
@@ -70,7 +65,7 @@ namespace TLDAG.Build.NuGet
 
             Settings settings = new(root.FullName, name);
 
-            ClearSection(settings, "packageSources");
+            ClearSection(settings, SourcesSection);
             InitConfig(settings);
             InitSources(settings);
             InitFallback(settings);
@@ -84,31 +79,31 @@ namespace TLDAG.Build.NuGet
         private void InitConfig(Settings settings)
         {
             if (globalPackages != null)
-                settings.AddOrUpdate("config", new AddItem("globalPackagesFolder", globalPackages));
+                settings.AddOrUpdate(ConfigSection, new AddItem(GlobalPackagesFolderKey, globalPackages));
 
             if (repository != null)
-                settings.AddOrUpdate("config", new AddItem("repositoryPath", repository));
+                settings.AddOrUpdate(ConfigSection, new AddItem(RepositoryPathKey, repository));
         }
 
         private void InitSources(Settings settings)
         {
             if (clearSources)
-                settings.AddOrUpdate("packageSources", new ClearItem());
+                settings.AddOrUpdate(SourcesSection, new ClearItem());
 
             foreach (SourceItem source in sources)
-                settings.AddOrUpdate("packageSources", source);
+                settings.AddOrUpdate(SourcesSection, source);
         }
 
         private void InitFallback(Settings settings)
         {
             if (clearFallback)
-                settings.AddOrUpdate("fallbackPackageFolders", new ClearItem());
+                settings.AddOrUpdate(FallbackSection, new ClearItem());
         }
 
         private void InitDisabled(Settings settings)
         {
             if (clearDisabled)
-                settings.AddOrUpdate("disabledPackageSources", new ClearItem());
+                settings.AddOrUpdate(DisabledSection, new ClearItem());
         }
 
         private static void ClearSection(Settings settings, string name)
