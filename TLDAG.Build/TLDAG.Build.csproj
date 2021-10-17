@@ -17,4 +17,8 @@
     <PackageReference Include="System.Management.Automation" Version="$(SystemManagementAutomationVersion)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="TLDAG.Build.Tests" />
+  </ItemGroup>
+
 </Project>
