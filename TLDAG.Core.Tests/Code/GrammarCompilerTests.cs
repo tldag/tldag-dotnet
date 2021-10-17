@@ -20,7 +20,7 @@ namespace TLDAG.Core.Tests.Code
         }
 
 #if DEBUG
-        [TestMethod]
+        //[TestMethod]
         public void TestGrammarDevCompiler()
         {
             ParserCompiler compiler = Grammar.CreateDevCompiler();
@@ -29,7 +29,7 @@ namespace TLDAG.Core.Tests.Code
         }
 #endif
 
-        [TestMethod]
+        //[TestMethod]
         public void CreateGrammarGz()
         {
             if (dest.Exists) return;

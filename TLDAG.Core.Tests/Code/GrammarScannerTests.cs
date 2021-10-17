@@ -9,7 +9,7 @@ namespace TLDAG.Core.Tests.Code
     public class GrammarScannerTests
     {
 #if DEBUG
-        [TestMethod]
+        //[TestMethod]
         public void TestDevScanner()
         {
             Scanner scanner = Grammar.CreateDevScanner("");
