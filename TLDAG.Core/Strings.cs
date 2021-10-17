@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TLDAG.Core.Internal;
 using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core
@@ -17,5 +18,7 @@ namespace TLDAG.Core
 
         public static bool IsDigit(this char c) => c >= '0' && c <= '9';
         public static bool IsDigits(this string chars) => throw NotYetImplemented();
+
+        public static IEnumerable<string> ToLines(this string text) => new StringToLines(text);
     }
 }
