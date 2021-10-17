@@ -5,13 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using TLDAG.Core;
-using TLDAG.Core.Collections;
 using TLDAG.Core.IO;
 using TLDAG.Core.Reflection;
-using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Test
 {
@@ -25,6 +21,9 @@ namespace TLDAG.Test
 
         private DirectoryInfo? testOutputDirectory = null;
         protected DirectoryInfo TestOutputDirectory=> testOutputDirectory ??= CreateTestOutputDirectory();
+
+        private FileInfo? solutionFile = null;
+        protected FileInfo SolutionFile => solutionFile ??= GetSolutionFile();
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         protected DirectoryInfo GetTestDirectory(bool clear)
@@ -54,5 +53,7 @@ namespace TLDAG.Test
 
         private DirectoryInfo CreateTestOutputDirectory()
             => Directory.CreateDirectory(SolutionDirectory.CombineDirectory("TestOutput").FullName);
+
+        private FileInfo GetSolutionFile() => SolutionDirectory.Combine(SolutionName);
     }
 }
