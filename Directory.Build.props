@@ -2,7 +2,7 @@
 <Project>
 
   <PropertyGroup>
-    <RepositoryPath>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'repository' ))</RepositoryPath>
+    <RepositoryDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'repository' ))</RepositoryDirectory>
     <PackageOutputPath>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'packages' ))</PackageOutputPath>
   </PropertyGroup>
 
@@ -28,6 +28,8 @@
   <PropertyGroup>
     <CoverletCollectorVersion>3.1.0</CoverletCollectorVersion>
     <LibGit2SharpNativeBinariesVersion>[2.0.314]</LibGit2SharpNativeBinariesVersion>
+    <MicrosoftBuildFrameworkVersion>16.11.0</MicrosoftBuildFrameworkVersion>
+    <MicrosoftBuildUtilitiesCoreVersion>16.11.0</MicrosoftBuildUtilitiesCoreVersion>
     <MicrosoftCodeAnalysisCSharpVersion>4.0.0-4.final</MicrosoftCodeAnalysisCSharpVersion>
     <MicrosoftCodeAnalysisCSharpWorkspacesVersion>4.0.0-4.final</MicrosoftCodeAnalysisCSharpWorkspacesVersion>
     <MicrosoftNetTestSdkVersion>16.11.0</MicrosoftNetTestSdkVersion>

@@ -6,7 +6,7 @@
   <Import Project="TLDAG.Sdk/sdk/Test.targets" />
 
   <Target Name="CreateRepositoryDirectory" BeforeTargets="BeforeResolveReferences">
-    <MakeDir Directories="$(RepositoryPath)" />
+    <MakeDir Directories="$(RepositoryDirectory)" />
   </Target>
 
   <Target Name="CreatePackageOutputDirectory" BeforeTargets="BeforeResolveReferences">

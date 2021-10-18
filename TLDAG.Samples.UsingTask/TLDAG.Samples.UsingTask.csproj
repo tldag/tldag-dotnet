@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <Import Project="$([MSBuild]::NormalizePath( $(RepositoryDirectory), 'tldag.tasks', '0.0.3', 'build', 'TLDAG.Tasks.targets' ))"/>
+  
+  <Target Name="SayHello" AfterTargets="Build">
+    <Hello />
+  </Target>
+
+</Project>
