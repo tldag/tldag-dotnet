@@ -10,7 +10,6 @@
     <None Include="Sdk.props" Pack="true" PackagePath="/" />
     <None Include="Sdk.targets" Pack="true" PackagePath="/" />
     <None Include="sdk/Clean.targets" Pack="true" PackagePath="/sdk/" />
-    <None Include="sdk/Compile.targets" Pack="true" PackagePath="/sdk/" />
     <None Include="sdk/Test.targets" Pack="true" PackagePath="/sdk/" />
   </ItemGroup>
 
