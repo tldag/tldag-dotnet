@@ -4,5 +4,24 @@
   <PropertyGroup>
     <TargetFrameworks>net5.0;net472</TargetFrameworks>
   </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TLDAG.Core.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\ExceptionResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExceptionResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\ExceptionResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   
 </Project>
