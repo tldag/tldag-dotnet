@@ -24,5 +24,20 @@
   <ItemGroup>
     <InternalsVisibleTo Include="TLDAG.Build.Tests" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="Resources\ConfigResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ConfigResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\ConfigResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ConfigResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 
 </Project>
