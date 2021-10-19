@@ -25,7 +25,7 @@ namespace TLDAG.Build.DotNet
         public static DotNetInfo Get(DirectoryInfo directory)
         {
             ExecutionResult result = ExecutionBuilder.Create("dotnet")
-                .UseShellExecute(false)
+                .UseShellExecute(false).CreateNoWindow(true)
                 .WorkingDirectory(directory)
                 .AddArgument("--info")
                 .Build().Execute(true);
