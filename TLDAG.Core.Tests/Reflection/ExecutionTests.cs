@@ -11,7 +11,7 @@ namespace TLDAG.Core.Tests.Reflection
         {
             Execution execution = ExecutionBuilder.Create("dotnet")
                 .AddArgument("--info")
-                .WorkingDirectory(Env.CurrentDirectory)
+                .WorkingDirectory(Env.WorkingDirectory)
                 .UseShellExecute(false)
                 .Build();
 
