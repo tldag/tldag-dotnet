@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace TLDAG.Core
+namespace TLDAG.Core.Exceptions
 {
     public class InvalidStateExcepion : ApplicationException, ISerializable
     {

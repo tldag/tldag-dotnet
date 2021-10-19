@@ -2,7 +2,7 @@
 using System.Linq;
 using TLDAG.Core.Collections;
 using static TLDAG.Core.Code.Constants;
-using static TLDAG.Core.Errors;
+using static TLDAG.Core.Exceptions.Errors;
 
 namespace TLDAG.Core.Code.Internal
 {

@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using static TLDAG.Core.Resources.ErrorsResources;
 
-namespace TLDAG.Core
+namespace TLDAG.Core.Exceptions
 {
     public static class Errors
     {

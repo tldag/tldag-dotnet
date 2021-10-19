@@ -3,7 +3,7 @@
 using System.IO;
 using System.Management.Automation.Language;
 using TLDAG.Core.IO;
-using static TLDAG.Core.Errors;
+using static TLDAG.Core.Exceptions.Errors;
 
 namespace TLDAG.Build.PS
 {

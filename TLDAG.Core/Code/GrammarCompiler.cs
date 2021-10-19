@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using static TLDAG.Core.Errors;
+using static TLDAG.Core.Exceptions.Errors;
 
 namespace TLDAG.Core.Code
 {

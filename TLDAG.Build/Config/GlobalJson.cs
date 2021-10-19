@@ -6,7 +6,7 @@ using System.Text;
 using TLDAG.Core;
 using TLDAG.Core.IO;
 using static TLDAG.Build.Resources.ConfigResources;
-using static TLDAG.Core.Errors;
+using static TLDAG.Core.Exceptions.Errors;
 using static TLDAG.Core.Strings;
 
 namespace TLDAG.Build.Config

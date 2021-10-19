@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using static System.Math;
-using static TLDAG.Core.Errors;
+using static TLDAG.Core.Exceptions.Errors;
 
 namespace TLDAG.Core.Algorithms
 {

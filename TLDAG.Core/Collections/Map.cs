@@ -5,7 +5,7 @@ using System.Linq;
 using static TLDAG.Core.Algorithms.Arrays;
 using static TLDAG.Core.Algorithms.BinarySearch;
 using static TLDAG.Core.Delegates;
-using static TLDAG.Core.Errors;
+using static TLDAG.Core.Exceptions.Errors;
 using static TLDAG.Core.Primitives;
 using static TLDAG.Core.Strings;
 

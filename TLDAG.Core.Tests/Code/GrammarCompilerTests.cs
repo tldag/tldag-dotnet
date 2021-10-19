@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using TLDAG.Core.Code;
-using static TLDAG.Core.Errors;
+using static TLDAG.Core.Exceptions.Errors;
 using static TLDAG.Core.IO.Directories;
 
 namespace TLDAG.Core.Tests.Code
