@@ -1,5 +1,5 @@
 
-Get-Process -Name dotnet | Stop-Process
+Get-Process -Name dotnet -ErrorAction Ignore | Stop-Process
 
 dotnet clean tldag-dotnet.sln -c Release -v m -noLogo
 dotnet clean tldag-dotnet.sln -c Debug -v m -noLogo
