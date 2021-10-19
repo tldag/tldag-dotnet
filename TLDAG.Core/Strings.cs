@@ -8,8 +8,11 @@ namespace TLDAG.Core
 {
     public static class Strings
     {
-        public static IComparer<string> OrdinalStringComparer => StringComparer.Ordinal;
-        public static IComparer<string> OrdinalIgnoreCaseComparer => StringComparer.OrdinalIgnoreCase;
+        public static readonly StringComparison OrdinalComparison = StringComparison.Ordinal;
+        public static readonly StringComparison OrdinalIgnoreCaseComparison = StringComparison.OrdinalIgnoreCase;
+
+        public static readonly IComparer<string> OrdinalStringComparer = StringComparer.Ordinal;
+        public static readonly IComparer<string> OrdinalIgnoreCaseComparer = StringComparer.OrdinalIgnoreCase;
 
         public static readonly Compare<string> CompareOrdinal
             = Delegates.ToCompare<string>(StringComparer.Ordinal);

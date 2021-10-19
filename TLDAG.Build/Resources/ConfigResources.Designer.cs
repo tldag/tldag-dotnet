@@ -61,11 +61,20 @@ namespace TLDAG.Build.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid &apos;global.json&apos;.
+        ///   Looks up a localized string similar to Invalid &apos;global.json&apos;..
         /// </summary>
         internal static string InvalidGlobalJson {
             get {
                 return ResourceManager.GetString("InvalidGlobalJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid rollForward value &apos;{0}&apos;..
+        /// </summary>
+        internal static string InvalidRollForwardFormat {
+            get {
+                return ResourceManager.GetString("InvalidRollForwardFormat", resourceCulture);
             }
         }
     }
