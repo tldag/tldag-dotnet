@@ -121,8 +121,7 @@
     <value>Bad file format: {0} in file '{1}'.</value>
   </data>
   <data name="ExecutionExceptionFormat" xml:space="preserve">
-    <value>Execution failed with exit code '{0}'. Errors:
-{1}</value>
+    <value>Execution failed with exit code '{0}':{1}{2}</value>
   </data>
   <data name="InvalidStateFormat" xml:space="preserve">
     <value>Invalid state: {0}.</value>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using static TLDAG.Core.Resources.ErrorsResources;
+using static TLDAG.Core.Strings;
 
 namespace TLDAG.Core.Exceptions
 {
@@ -12,6 +13,6 @@ namespace TLDAG.Core.Exceptions
         protected ExecutionException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         private static string Format(int exitCode, IEnumerable<string> errors)
-            => ExecutionExceptionFormat.Format(exitCode, string.Join("\n", errors));
+            => ExecutionExceptionFormat.Format(exitCode, NewLine, errors.Join(NewLine));
     }
 }

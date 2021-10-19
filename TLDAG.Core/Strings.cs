@@ -7,6 +7,8 @@ namespace TLDAG.Core
 {
     public static class Strings
     {
+        public static string NewLine => Environment.NewLine;
+
         public static readonly StringComparison OrdinalComparison = StringComparison.Ordinal;
         public static readonly StringComparison OrdinalIgnoreCaseComparison = StringComparison.OrdinalIgnoreCase;
 
@@ -23,6 +25,9 @@ namespace TLDAG.Core
         public static bool IsDigits(this string chars) => chars.All(c => c.IsDigit());
 
         public static IEnumerable<string> ToLines(this string text) => new StringToLines(text);
+
+        public static string Join(this IEnumerable<string> strings, string separator)
+            => string.Join(separator, strings);
 
         public static string Format(this string format, params object[] args) => string.Format(format, args);
     }
