@@ -4,19 +4,19 @@ namespace TLDAG.Core.Reflection
 {
     public class ExecutionResult
     {
-        private readonly List<string> output;
-        private readonly List<string> error;
+        private readonly List<string> outputs;
+        private readonly List<string> errors;
 
         public int ExitCode { get; }
-        public IReadOnlyList<string> Output { get => output; }
-        public IReadOnlyList<string> Error { get => error; }
+        public IReadOnlyList<string> Outputs { get => outputs; }
+        public IReadOnlyList<string> Errors { get => errors; }
 
-        public ExecutionResult(int exitCode, IEnumerable<string> output, IEnumerable<string> error)
+        public ExecutionResult(int exitCode, IEnumerable<string> outputs, IEnumerable<string> errors)
         {
             ExitCode = exitCode;
 
-            this.output = new(output);
-            this.error = new(error);
+            this.outputs = new(outputs);
+            this.errors = new(errors);
         }
     }
 }

@@ -70,7 +70,8 @@ namespace TLDAG.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Execution failed with exit code &apos;{0}&apos;. Errors:\n{1}.
+        ///   Looks up a localized string similar to Execution failed with exit code &apos;{0}&apos;. Errors:
+        ///{1}.
         /// </summary>
         internal static string ExecutionExceptionFormat {
             get {

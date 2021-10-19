@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Linq;
+using static TLDAG.Core.Exceptions.Errors;
 
 namespace TLDAG.Core.Reflection
 {
@@ -30,10 +31,8 @@ namespace TLDAG.Core.Reflection
 
             ExecutionResult result = builder.Build();
 
-            if (throwOnError && (result.ExitCode != 0 || result.Error.Any()))
-            {
-
-            }
+            if (throwOnError && (result.ExitCode != 0 || result.Errors.Any()))
+                throw ExecutionFailed(result.ExitCode, result.Errors);
 
             return result;
         }

@@ -18,8 +18,8 @@ namespace TLDAG.Core.Tests.Reflection
             ExecutionResult result = execution.Execute(true);
 
             Assert.AreEqual(0, result.ExitCode);
-            Assert.IsTrue(result.Output.Count > 0);
-            Assert.AreEqual(0, result.Error.Count);
+            Assert.IsTrue(result.Outputs.Count > 0);
+            Assert.AreEqual(0, result.Errors.Count);
         }
     }
 }

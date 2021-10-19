@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -35,5 +36,8 @@ namespace TLDAG.Core.Exceptions
 
         public static InvalidStateExcepion InvalidState(string message)
             => new(InvalidStateFormat.Format(message));
+
+        public static ExecutionException ExecutionFailed(int exitCode, IEnumerable<string> errors)
+            => new(exitCode, errors);
     }
 }

@@ -13,8 +13,4 @@
     <ProjectReference Include="$(TldagCore)" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
-
 </Project>
