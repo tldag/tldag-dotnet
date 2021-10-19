@@ -4,6 +4,7 @@ using System.Text;
 using TLDAG.Core.IO;
 using static TLDAG.Core.Exceptions;
 using static TLDAG.Build.Resources.ConfigResources;
+using NuGet.Versioning;
 
 namespace TLDAG.Build.Config
 {
@@ -13,7 +14,8 @@ namespace TLDAG.Build.Config
         [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
         public class SdkSection
         {
-
+            [JsonProperty("version")]
+            public SemanticVersion Version { get; set; } = new(0, 0, 0);
         }
 
         public const string FileName = "global.json";
