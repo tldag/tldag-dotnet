@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Errors;
 
 namespace TLDAG.Core.Collections
 {

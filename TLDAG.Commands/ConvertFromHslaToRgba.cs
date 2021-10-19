@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management.Automation;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Management.Automation;
 using TLDAG.Automation;
 using TLDAG.Core.Drawing;
-using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Commands
 {

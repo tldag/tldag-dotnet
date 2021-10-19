@@ -1,6 +1,6 @@
 ﻿using Microsoft.Build.Construction;
 using System.IO;
-using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Errors;
 
 namespace TLDAG.Build.Analyze
 {

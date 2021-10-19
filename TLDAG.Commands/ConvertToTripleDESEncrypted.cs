@@ -2,7 +2,6 @@
 using System.Management.Automation;
 using TLDAG.Automation;
 using TLDAG.Core.Cryptography;
-using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Commands
 {

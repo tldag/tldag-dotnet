@@ -1,5 +1,4 @@
 ﻿using static System.Math;
-using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Core.Algorithms
 {

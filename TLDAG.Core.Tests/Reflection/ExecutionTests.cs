@@ -15,7 +15,7 @@ namespace TLDAG.Core.Tests.Reflection
                 .UseShellExecute(false)
                 .Build();
 
-            ExecutionResult result = execution.Execute();
+            ExecutionResult result = execution.Execute(true);
 
             Assert.AreEqual(0, result.ExitCode);
             Assert.IsTrue(result.Output.Count > 0);

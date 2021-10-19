@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static TLDAG.Core.Exceptions;
-using static System.Math;
-
-namespace TLDAG.Core.Drawing
+﻿namespace TLDAG.Core.Drawing
 {
     public static class Colors
     {

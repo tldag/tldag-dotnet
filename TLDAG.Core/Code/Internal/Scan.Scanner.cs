@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Errors;
 using static TLDAG.Core.Code.Rex;
 using static TLDAG.Core.Code.Scan;
 using static TLDAG.Core.Code.Internal.Rex;

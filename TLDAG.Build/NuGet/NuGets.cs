@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using TLDAG.Core;
 using TLDAG.Core.IO;
-using static TLDAG.Core.Exceptions;
 
 namespace TLDAG.Build.NuGet
 {

@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TLDAG.Core.Algorithms;
 using static TLDAG.Core.Algorithms.Arrays;
 using static TLDAG.Core.Algorithms.BinarySearch;
-using static TLDAG.Core.Exceptions;
 using static TLDAG.Core.Delegates;
+using static TLDAG.Core.Errors;
 using static TLDAG.Core.Primitives;
-using System.Collections;
 using static TLDAG.Core.Strings;
 
 namespace TLDAG.Core.Collections

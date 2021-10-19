@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using TLDAG.Core.Collections;
-using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Errors;
 
 namespace TLDAG.Core.Reflection
 {

@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace TLDAG.Core
 {
-    public class InvalidStateExcepion : Exception, ISerializable
+    public class InvalidStateExcepion : ApplicationException, ISerializable
     {
         public InvalidStateExcepion() { }
         public InvalidStateExcepion(string message) : base(message) { }

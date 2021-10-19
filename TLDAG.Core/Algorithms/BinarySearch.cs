@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Errors;
 using static TLDAG.Core.Strings;
 
 namespace TLDAG.Core.Algorithms

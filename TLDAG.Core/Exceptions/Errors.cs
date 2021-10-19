@@ -2,11 +2,11 @@
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
-using static TLDAG.Core.Resources.ExceptionResources;
+using static TLDAG.Core.Resources.ErrorsResources;
 
 namespace TLDAG.Core
 {
-    public static class Exceptions
+    public static class Errors
     {
         public static Exception InnerMost(this Exception exception)
             => exception.InnerException?.InnerMost() ?? exception;

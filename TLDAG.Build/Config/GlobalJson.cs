@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
-using System.IO;
-using System.Text;
-using TLDAG.Core.IO;
-using static TLDAG.Core.Exceptions;
-using static TLDAG.Build.Resources.ConfigResources;
 using NuGet.Versioning;
 using System;
-using static TLDAG.Core.Strings;
+using System.IO;
+using System.Text;
 using TLDAG.Core;
+using TLDAG.Core.IO;
+using static TLDAG.Build.Resources.ConfigResources;
+using static TLDAG.Core.Errors;
+using static TLDAG.Core.Strings;
 
 namespace TLDAG.Build.Config
 {

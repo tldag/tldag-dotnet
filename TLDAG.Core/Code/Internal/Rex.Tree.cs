@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using TLDAG.Core.Collections;
-using static TLDAG.Core.Exceptions;
+using static TLDAG.Core.Errors;
 using static TLDAG.Core.Code.Constants;
 using System;
 

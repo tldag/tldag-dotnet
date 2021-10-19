@@ -10,17 +10,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\ExceptionResources.Designer.cs">
+    <Compile Update="Resources\ErrorsResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ExceptionResources.resx</DependentUpon>
+      <DependentUpon>ErrorsResources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources\ExceptionResources.resx">
+    <EmbeddedResource Update="Resources\ErrorsResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ExceptionResources.Designer.cs</LastGenOutput>
+      <LastGenOutput>ErrorsResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   

@@ -9,7 +9,7 @@ namespace TLDAG.Core.Tests.Resources
         [TestMethod]
         public void Test()
         {
-            string actual = ExceptionResources.InvalidStateFormat.Format("foo");
+            string actual = ErrorsResources.InvalidStateFormat.Format("foo");
 
             Assert.IsTrue(actual.EndsWith("foo."));
         }

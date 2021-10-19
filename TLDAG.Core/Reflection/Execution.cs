@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using static TLDAG.Core.Exceptions;
+using System.Linq;
 
 namespace TLDAG.Core.Reflection
 {
@@ -14,7 +14,7 @@ namespace TLDAG.Core.Reflection
             startInfo.RedirectStandardOutput = true;
         }
 
-        public ExecutionResult Execute()
+        public ExecutionResult Execute(bool throwOnError)
         {
             using Process process = new();
             ExecutionResultBuilder builder = new();
@@ -28,12 +28,14 @@ namespace TLDAG.Core.Reflection
             process.WaitForExit();
             builder.ExitCode(process.ExitCode);
 
-            return builder.Build();
-        }
+            ExecutionResult result = builder.Build();
 
-        private void ErrorDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            throw NotYetImplemented();
+            if (throwOnError && (result.ExitCode != 0 || result.Error.Any()))
+            {
+
+            }
+
+            return result;
         }
     }
 }

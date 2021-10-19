@@ -3,9 +3,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using TLDAG.Core.Collections;
 using static System.Math;
-using static TLDAG.Core.Exceptions;
-using static TLDAG.Core.Primitives;
 using static TLDAG.Core.Algorithms.Arrays;
+using static TLDAG.Core.Primitives;
 
 namespace TLDAG.Core.Cryptography
 {
