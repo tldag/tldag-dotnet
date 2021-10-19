@@ -27,7 +27,7 @@ namespace TLDAG.Build.NuGet
         public static ISettings GetSettings(DirectoryInfo directory)
             => Settings.LoadDefaultSettings(directory.FullName);
 
-        public static ISettings CurrentSettings => GetSettings(Env.CurrentDirectory);
+        public static ISettings CurrentSettings => GetSettings(Env.WorkingDirectory);
 
         public static ISettings Initialize(DirectoryInfo root, string? name, string? repository,
             string? packages, bool backup)

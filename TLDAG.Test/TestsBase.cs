@@ -49,7 +49,7 @@ namespace TLDAG.Test
         }
 
         private DirectoryInfo GetSolutionDirectory()
-            => Env.CurrentDirectory.GetDirectoryOfFileAbove(SolutionName);
+            => Env.WorkingDirectory.GetDirectoryOfFileAbove(SolutionName);
 
         private DirectoryInfo CreateTestOutputDirectory()
             => Directory.CreateDirectory(SolutionDirectory.CombineDirectory("TestOutput").FullName);

@@ -30,6 +30,6 @@ namespace TLDAG.Core.Reflection
                 .FirstOrDefault();
         }
 
-        public static IEnumerable<DirectoryInfo> LookupPath => Env.Path.Prepend(Env.CurrentDirectory);
+        public static IEnumerable<DirectoryInfo> LookupPath => Env.Path.Prepend(Env.WorkingDirectory);
     }
 }

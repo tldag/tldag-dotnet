@@ -9,7 +9,7 @@ namespace TLDAG.Core
     {
         public static readonly char PathSeparator = System.IO.Path.PathSeparator;
 
-        public static DirectoryInfo CurrentDirectory => new(Environment.CurrentDirectory);
+        public static DirectoryInfo WorkingDirectory => new(Environment.CurrentDirectory);
 
         public static IEnumerable<DirectoryInfo> Path
         {
