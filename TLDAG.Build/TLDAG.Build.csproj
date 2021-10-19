@@ -31,12 +31,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ConfigResources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\DotNetResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DotNetResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   
   <ItemGroup>
     <EmbeddedResource Update="Resources\ConfigResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ConfigResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\DotNetResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DotNetResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
