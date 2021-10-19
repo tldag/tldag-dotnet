@@ -25,12 +25,5 @@ namespace TLDAG.Build.Tests
 #else
         private const string Configuration = "Release";
 #endif
-
-        private static FileInfo GetListFile()
-        {
-            DirectoryInfo root = Directories.GetDirectoryOfFileAbove(".", "tldag-dotnet.sln");
-
-            return root.Combine("TLDAG.Build", "obj", Configuration, "net5.0", "Compile.lst");
-        }
     }
 }

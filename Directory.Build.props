@@ -41,6 +41,7 @@
     <MicrosoftWSManManagementVersion>7.1.4</MicrosoftWSManManagementVersion>
     <MSTestTestAdapterVersion>2.2.7</MSTestTestAdapterVersion>
     <MSTestTestFrameworkVersion>2.2.7</MSTestTestFrameworkVersion>
+    <NewtonsoftJsonVersion>13.0.1</NewtonsoftJsonVersion>
     <NuGetPackagingVersion>5.11.0</NuGetPackagingVersion>
     <NuGetProtocolVersion>5.11.0</NuGetProtocolVersion>
     <SystemManagementAutomationVersion>7.1.4</SystemManagementAutomationVersion>
