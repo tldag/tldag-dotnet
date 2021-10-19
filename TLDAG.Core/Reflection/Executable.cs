@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
+using TLDAG.Core.IO;
 
 namespace TLDAG.Core.Reflection
 {
     public class Executable
     {
-        public readonly string Path;
+        public FileInfo File { get; }
+        public DirectoryInfo Directory { get => File.GetDirectory(); }
+        public string Path { get => File.FullName; }
 
-        public Executable(string path)
+        public Executable(FileInfo file)
         {
-            Path = path;
+            File = file;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace TLDAG.Core.Reflection
             return ExecutableExtensions
                 .Select(ext => name + ext)
                 .SelectMany(pattern => directory.GetFiles(pattern, options))
-                .Select(file => new Executable(file.FullName))
+                .Select(file => new Executable(file))
                 .FirstOrDefault();
         }
 
