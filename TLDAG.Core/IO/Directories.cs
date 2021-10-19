@@ -17,23 +17,24 @@ namespace TLDAG.Core.IO
             return directory.Exists ? directory : throw DirectoryNotFound(directory.FullName);
         }
 
-        public static DirectoryInfo GetDirectoryOfFileAbove(string startDirectory, string fileName)
-            => GetDirectoryOfFileAbove(new DirectoryInfo(startDirectory), fileName);
-
-        public static DirectoryInfo GetDirectoryOfFileAbove(this DirectoryInfo startDirectory, string fileName)
+        public static FileInfo GetFileAbove(this DirectoryInfo startDirectory, string fileName)
         {
             DirectoryInfo? directory = startDirectory;
 
             while (directory != null)
             {
-                if (directory.EnumerateFiles(fileName, TopDirectoryOnly).Any())
-                    return directory;
+                FileInfo? file = directory.EnumerateFiles(fileName, TopDirectoryOnly).FirstOrDefault();
+
+                if (file is not null) return file;
 
                 directory = directory.Parent;
             }
 
             throw FileNotFound(fileName);
         }
+
+        public static DirectoryInfo GetDirectoryOfFileAbove(this DirectoryInfo startDirectory, string fileName)
+            => GetFileAbove(startDirectory, fileName).GetDirectory();
 
         public static void Clear(this DirectoryInfo root)
         {
