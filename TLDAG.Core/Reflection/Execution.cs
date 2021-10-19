@@ -6,11 +6,15 @@ namespace TLDAG.Core.Reflection
 {
     public class Execution
     {
-        private ProcessStartInfo startInfo;
+        private readonly Executable executable;
+        private readonly ProcessStartInfo startInfo;
 
-        public Execution(ProcessStartInfo info)
+        public Execution(Executable executable, ProcessStartInfo startInfo)
         {
-            startInfo = info;
+            this.executable = executable;
+            this.startInfo = startInfo;
+
+            startInfo.FileName = executable.Path;
             startInfo.RedirectStandardError = true;
             startInfo.RedirectStandardOutput = true;
         }
@@ -18,7 +22,7 @@ namespace TLDAG.Core.Reflection
         public ExecutionResult Execute(bool throwOnError)
         {
             using Process process = new();
-            ExecutionResultBuilder builder = new();
+            ExecutionResultBuilder builder = new(executable);
 
             process.StartInfo = startInfo;
             process.OutputDataReceived += (_, e) => builder.Output(e.Data);

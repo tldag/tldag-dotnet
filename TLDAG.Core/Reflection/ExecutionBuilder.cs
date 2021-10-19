@@ -6,11 +6,13 @@ namespace TLDAG.Core.Reflection
 {
     public class ExecutionBuilder
     {
+        private readonly Executable executable;
         private readonly ProcessStartInfo info;
         private readonly List<string> arguments = new();
 
         public ExecutionBuilder(Executable executable)
         {
+            this.executable = executable;
             info = new(executable.Path);
         }
 
@@ -51,7 +53,7 @@ namespace TLDAG.Core.Reflection
         public ExecutionBuilder AddArguments(IEnumerable<string> args)
             { foreach (string arg in args) AddArgument(arg); return this; }
 
-        public Execution Build() { ProcessArguments(); return new(info);}
+        public Execution Build() { ProcessArguments(); return new(executable, info);}
 
 #if NET472
         private void ProcessArguments() { info.Arguments = string.Join(" ", arguments); }
