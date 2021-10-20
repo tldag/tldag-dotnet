@@ -2,12 +2,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using static TLDAG.Build.Logging.MSBuildEventConstants;
+using System.Runtime.InteropServices;
 
 namespace TLDAG.Build.Logging
 {
     public static class MSBuildEventModel
     {
+        public static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+        public static readonly IEqualityComparer<string> FileNameComparer
+            = IsWindows ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+
         [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
         public class Project
         {
@@ -30,7 +35,7 @@ namespace TLDAG.Build.Logging
         }
 
         [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-        public class BuildData
+        public class BuildResult
         {
             private Dictionary<string, Project> projects = new(FileNameComparer);
 

@@ -7,6 +7,8 @@ using TLDAG.Core;
 using TLDAG.Core.IO;
 using TLDAG.Core.Reflection;
 using static TLDAG.Core.Strings;
+using static TLDAG.Build.Logging.MSBuildEventModel;
+using Newtonsoft.Json;
 
 namespace TLDAG.Build.Tests.DotNet
 {
@@ -24,11 +26,17 @@ namespace TLDAG.Build.Tests.DotNet
                 Loggers = { receiver.GetSenderLogger() }
             };
 
-            ExecutionResult result = DotNetRunner.Build(sln, options, true);
+            ExecutionResult executionResult = DotNetRunner.Build(sln, options, true);
 
-            Debug.WriteLine($"ExitCode: {result.ExitCode}");
-            Debug.WriteLine($"Errors:{NewLine}{result.Errors.Join(NewLine)}");
-            Debug.WriteLine($"Output:{NewLine}{result.Outputs.Join(NewLine)}");
+            Debug.WriteLine($"ExitCode: {executionResult.ExitCode}");
+            Debug.WriteLine($"Errors:{NewLine}{executionResult.Errors.Join(NewLine)}");
+            Debug.WriteLine($"Output:{NewLine}{executionResult.Outputs.Join(NewLine)}");
+
+            BuildResult? buildResult = receiver.GetResult();
+
+            Assert.IsNotNull(buildResult);
+
+            Debug.WriteLine(JsonConvert.SerializeObject(buildResult));
         }
     }
 }

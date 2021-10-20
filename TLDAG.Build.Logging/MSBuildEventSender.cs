@@ -1,21 +1,24 @@
 ﻿using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO.Pipes;
 using static TLDAG.Build.Logging.MSBuildEventModel;
 
 namespace TLDAG.Build.Logging
 {
     public class MSBuildEventSender : Logger
     {
-        private MSBuildEventSenderPipe? pipe;
+        private AnonymousPipeClientStream? pipe;
+        private BuildResult result = new();
 
-        private BuildData build = new();
+        private string Handle { get => Parameters.Split(';')[0]; }
 
         public override void Initialize(IEventSource eventSource)
         {
-            pipe = CreatePipe();
+            pipe = new(PipeDirection.Out, Handle);
 
             eventSource.AnyEventRaised += OnAnyEventRaised;
 
@@ -40,12 +43,10 @@ namespace TLDAG.Build.Logging
         public override void Shutdown()
         {
             pipe?.Dispose();
+            pipe = null;
 
             base.Shutdown();
         }
-
-        protected virtual MSBuildEventSenderPipe CreatePipe() => new(Parameters, CreateSerializer());
-        protected virtual MSBuildEventSerializer CreateSerializer() => new();
 
         protected virtual void OnAnyEventRaised(object sender, BuildEventArgs e)
         {
@@ -55,39 +56,40 @@ namespace TLDAG.Build.Logging
 
         protected virtual void OnBuildStarted(object sender, BuildStartedEventArgs e)
         {
-            build.Clear();
-            build.SetEnvironment(e.BuildEnvironment);
+            result.Clear();
+            result.SetEnvironment(e.BuildEnvironment);
         }
 
-        protected virtual void OnBuildFinished(object sender, BuildFinishedEventArgs e) { pipe?.Send(build); }
+        protected virtual void OnBuildFinished(object sender, BuildFinishedEventArgs e)
+        {
+            if (pipe is null) return;
+
+            MSBuildEventStream stream = new(pipe);
+
+            stream.Write(JsonConvert.SerializeObject(result));
+        }
 
         protected virtual void OnProjectStarted(object sender, ProjectStartedEventArgs e)
-        {
-            Project project = build.GetProject(e.ProjectFile);
-
-            project.AddGlobalProperties(e.GlobalProperties);
-
-            if (e.Properties is IEnumerable<DictionaryEntry> properties)
-                project.AddProperties(properties);
-
-            if (e.Items is IEnumerable<DictionaryEntry> items)
-                project.AddItems(items);
-        }
+            { OnProjectData(e.ProjectFile, e.GlobalProperties, e.Properties, e.Items); }
 
         protected virtual void OnProjectEvaluationFinished(object sender, ProjectEvaluationFinishedEventArgs e)
+            { OnProjectData(e.ProjectFile, e.GlobalProperties, e.Properties, e.Items); }
+
+        protected virtual void OnProjectData(string file, IEnumerable? globals, IEnumerable? properties, IEnumerable? items)
         {
-            Project project = build.GetProject(e.ProjectFile);
+            Project project = result.GetProject(file);
 
-            Console.WriteLine("OnProjectEvaluationFinished");
+            if (globals is IDictionary<string, string> globalsDict)
+                project.AddGlobalProperties(globalsDict);
 
-            if (e.GlobalProperties is IEnumerable<DictionaryEntry> globalProperties)
-                project.AddGlobalProperties(globalProperties);
+            if (globals is IEnumerable<DictionaryEntry> globalsEnum)
+                project.AddGlobalProperties(globalsEnum);
 
-            if (e.Properties is IEnumerable<DictionaryEntry> properties)
-                project.AddProperties(properties);
+            if (properties is IEnumerable<DictionaryEntry> propertiesEnum)
+                project.AddProperties(propertiesEnum);
 
-            if (e.Items is IEnumerable<DictionaryEntry> items)
-                project.AddItems(items);
+            if (items is IEnumerable<DictionaryEntry> itemsEnum)
+                project.AddItems(itemsEnum);
         }
 
         protected virtual void OnProjectFinished(object sender, ProjectFinishedEventArgs e) { }
