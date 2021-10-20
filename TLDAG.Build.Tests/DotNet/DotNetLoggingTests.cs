@@ -16,7 +16,7 @@ namespace TLDAG.Build.Tests.DotNet
         [TestMethod]
         public void Test()
         {
-            MSBuildEventReceiver receiver = new();
+            using MSBuildEventReceiver receiver = new();
             FileInfo sln = Env.WorkingDirectory.GetFileAbove("tldag-dotnet-samples.sln");
 
             DotNetOptions options = new()
