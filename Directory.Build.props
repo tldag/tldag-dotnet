@@ -19,6 +19,7 @@
   <PropertyGroup>
     <TldagAutomation>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Automation', 'TLDAG.Automation.csproj' ))</TldagAutomation>
     <TldagBuild>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Build', 'TLDAG.Build.csproj' ))</TldagBuild>
+    <TldagBuildLogging>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Build.Logging', 'TLDAG.Build.Logging.csproj' ))</TldagBuildLogging>
     <TldagCore>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Core', 'TLDAG.Core.csproj' ))</TldagCore>
     <TldagCommands>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Commands', 'TLDAG.Commands.csproj' ))</TldagCommands>
     <TldagSdk>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Sdk', 'TLDAG.Sdk.csproj' ))</TldagSdk>
@@ -33,6 +34,7 @@
     <MicrosoftBuildUtilitiesCoreVersion>16.11.0</MicrosoftBuildUtilitiesCoreVersion>
     <MicrosoftCodeAnalysisCSharpVersion>4.0.0-4.final</MicrosoftCodeAnalysisCSharpVersion>
     <MicrosoftCodeAnalysisCSharpWorkspacesVersion>4.0.0-4.final</MicrosoftCodeAnalysisCSharpWorkspacesVersion>
+    <MicrosoftExtensionsLoggingVersion>5.0.0</MicrosoftExtensionsLoggingVersion>
     <MicrosoftNetTestSdkVersion>16.11.0</MicrosoftNetTestSdkVersion>
     <MicrosoftPowerShellCommandsDiagnosticsVersion>7.1.4</MicrosoftPowerShellCommandsDiagnosticsVersion>
     <MicrosoftPowerShellCommandsManagementVersion>7.1.4</MicrosoftPowerShellCommandsManagementVersion>

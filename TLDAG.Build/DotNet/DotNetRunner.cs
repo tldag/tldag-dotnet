@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using TLDAG.Core.IO;
 using TLDAG.Core.Reflection;
-using static TLDAG.Core.Exceptions.Errors;
 
 namespace TLDAG.Build.DotNet
 {
@@ -23,6 +22,8 @@ namespace TLDAG.Build.DotNet
 
         private static ExecutionBuilder AddOptions(ExecutionBuilder builder, DotNetOptions options)
         {
+            options.Loggers.ForEach(info => { builder.AddArgument($"-logger:{info}"); });
+
             return builder;
         }
     }
