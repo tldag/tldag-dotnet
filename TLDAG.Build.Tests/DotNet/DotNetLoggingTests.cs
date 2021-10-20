@@ -9,11 +9,12 @@ using TLDAG.Core.Reflection;
 using static TLDAG.Core.Strings;
 using static TLDAG.Build.Logging.MSBuildEventModel;
 using Newtonsoft.Json;
+using TLDAG.Test;
 
 namespace TLDAG.Build.Tests.DotNet
 {
     [TestClass]
-    public class DotNetLoggingTests
+    public class DotNetLoggingTests : TestsBase
     {
         [TestMethod]
         public void Test()
@@ -36,7 +37,9 @@ namespace TLDAG.Build.Tests.DotNet
 
             Assert.IsNotNull(buildResult);
 
-            Debug.WriteLine(JsonConvert.SerializeObject(buildResult));
+            GetTestDirectory(true)
+                .Combine("tldag-dotnet-samples.json")
+                .WriteAllText(JsonConvert.SerializeObject(buildResult, Formatting.Indented));
         }
     }
 }

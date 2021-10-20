@@ -57,7 +57,7 @@ namespace TLDAG.Build.Logging
         protected virtual void OnBuildStarted(object sender, BuildStartedEventArgs e)
         {
             result.Clear();
-            result.SetEnvironment(e.BuildEnvironment);
+            result.Environment.AddEntries(e.BuildEnvironment);
         }
 
         protected virtual void OnBuildFinished(object sender, BuildFinishedEventArgs e)
