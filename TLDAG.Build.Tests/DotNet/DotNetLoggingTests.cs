@@ -24,7 +24,7 @@ namespace TLDAG.Build.Tests.DotNet
                 Loggers = { receiver.GetSenderInfo() }
             };
 
-            ExecutionResult result = DotNetRunner.Restore(sln, options, true);
+            ExecutionResult result = DotNetRunner.Build(sln, options, true);
 
             Debug.WriteLine($"ExitCode: {result.ExitCode}");
             Debug.WriteLine($"Errors:{NewLine}{result.Errors.Join(NewLine)}");

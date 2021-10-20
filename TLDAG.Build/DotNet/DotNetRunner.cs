@@ -6,6 +6,9 @@ namespace TLDAG.Build.DotNet
 {
     public class DotNetRunner
     {
+        public static ExecutionResult Build(FileInfo slnOrProj, DotNetOptions options, bool throwOnError)
+            => Execute("build", slnOrProj, options, throwOnError);
+
         public static ExecutionResult Restore(FileInfo slnOrProj, DotNetOptions options, bool throwOnError)
             => Execute("restore", slnOrProj, options, throwOnError);
 
