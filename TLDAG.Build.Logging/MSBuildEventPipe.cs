@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using static TLDAG.Build.Logging.MSBuildEventModel;
 
 namespace TLDAG.Build.Logging
 {
     public class MSBuildEventSenderPipe : IDisposable
     {
-        public MSBuildEventSenderPipe(string handle)
+        public MSBuildEventSenderPipe(string handle, MSBuildEventSerializer serializer)
         {
             Console.WriteLine($"Created MSBuildEventSenderPipe({handle})");
         }
@@ -15,6 +17,10 @@ namespace TLDAG.Build.Logging
         private void Dispose(bool _)
         {
             Console.WriteLine("Disposing MSBuildEventSenderPipe");
+        }
+
+        public void Send(BuildData build)
+        {
         }
     }
 

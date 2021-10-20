@@ -1,6 +1,9 @@
 ﻿using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using static TLDAG.Build.Logging.MSBuildEventModel;
 
 namespace TLDAG.Build.Logging
 {
@@ -8,12 +11,13 @@ namespace TLDAG.Build.Logging
     {
         private MSBuildEventSenderPipe? pipe;
 
+        private BuildData build = new();
+
         public override void Initialize(IEventSource eventSource)
         {
-            Console.WriteLine("MSBuildEventSender.Initialize");
-            Console.WriteLine(Parameters);
+            pipe = CreatePipe();
 
-            pipe = new(Parameters);
+            eventSource.AnyEventRaised += OnAnyEventRaised;
 
             eventSource.BuildStarted += OnBuildStarted;
             eventSource.BuildFinished += OnBuildFinished;
@@ -31,74 +35,68 @@ namespace TLDAG.Build.Logging
             eventSource.WarningRaised += OnWarningRaised;
 
             eventSource.CustomEventRaised += OnCustomEventRaised;
-
         }
 
         public override void Shutdown()
         {
-            Console.WriteLine("MSBuildEventSender.Shutdown");
-
             pipe?.Dispose();
 
             base.Shutdown();
         }
 
-        protected virtual void OnBuildStarted(object sender, BuildStartedEventArgs e)
+        protected virtual MSBuildEventSenderPipe CreatePipe() => new(Parameters, CreateSerializer());
+        protected virtual MSBuildEventSerializer CreateSerializer() => new();
+
+        protected virtual void OnAnyEventRaised(object sender, BuildEventArgs e)
         {
-            Console.WriteLine("MSBuildEventSender.OnBuildStarted");
+            if (e is ProjectEvaluationFinishedEventArgs fe)
+                OnProjectEvaluationFinished(sender, fe);
         }
 
-        protected virtual void OnBuildFinished(object sender, BuildFinishedEventArgs e)
+        protected virtual void OnBuildStarted(object sender, BuildStartedEventArgs e)
         {
-            Console.WriteLine("MSBuildEventSender.OnBuildFinished");
+            build.Clear();
+            build.SetEnvironment(e.BuildEnvironment);
         }
+
+        protected virtual void OnBuildFinished(object sender, BuildFinishedEventArgs e) { pipe?.Send(build); }
 
         protected virtual void OnProjectStarted(object sender, ProjectStartedEventArgs e)
         {
-            Console.WriteLine("MSBuildEventSender.OnProjectStarted");
-            Console.WriteLine($"  {e.ProjectFile}");
-            Console.WriteLine($"  {e.TargetNames}");
+            Project project = build.GetProject(e.ProjectFile);
+
+            project.AddGlobalProperties(e.GlobalProperties);
+
+            if (e.Properties is IEnumerable<DictionaryEntry> properties)
+                project.AddProperties(properties);
+
+            if (e.Items is IEnumerable<DictionaryEntry> items)
+                project.AddItems(items);
         }
 
-        protected virtual void OnProjectFinished(object sender, ProjectFinishedEventArgs e)
+        protected virtual void OnProjectEvaluationFinished(object sender, ProjectEvaluationFinishedEventArgs e)
         {
-            Console.WriteLine("MSBuildEventSender.OnProjectFinished");
-            Console.WriteLine($"  {e.ProjectFile}");
+            Project project = build.GetProject(e.ProjectFile);
+
+            Console.WriteLine("OnProjectEvaluationFinished");
+
+            if (e.GlobalProperties is IEnumerable<DictionaryEntry> globalProperties)
+                project.AddGlobalProperties(globalProperties);
+
+            if (e.Properties is IEnumerable<DictionaryEntry> properties)
+                project.AddProperties(properties);
+
+            if (e.Items is IEnumerable<DictionaryEntry> items)
+                project.AddItems(items);
         }
 
-        protected virtual void OnTargetStarted(object sender, TargetStartedEventArgs e)
-        {
-            Console.WriteLine($"MSBuildEventSender.OnTargetStarted({e.TargetName})");
-        }
-
-        protected virtual void OnTargetFinished(object sender, TargetFinishedEventArgs e)
-        {
-            Console.WriteLine($"MSBuildEventSender.OnTargetFinished({e.TargetName})");
-        }
-
-        protected virtual void OnTaskStarted(object sender, TaskStartedEventArgs e)
-        {
-            Console.WriteLine($"MSBuildEventSender.OnTaskStarted({e.TaskName})");
-        }
-
-        protected virtual void OnTaskFinished(object sender, TaskFinishedEventArgs e)
-        {
-            Console.WriteLine($"MSBuildEventSender.OnTaskFinished({e.TaskName})");
-        }
-
-        protected virtual void OnErrorRaised(object sender, BuildErrorEventArgs e)
-        {
-            Console.WriteLine($"MSBuildEventSender.OnErrorRaised({e.Message})");
-        }
-
-        protected virtual void OnWarningRaised(object sender, BuildWarningEventArgs e)
-        {
-            Console.WriteLine($"MSBuildEventSender.OnWarningRaised({e.Message})");
-        }
-
-        protected virtual void OnCustomEventRaised(object sender, CustomBuildEventArgs e)
-        {
-            Console.WriteLine($"MSBuildEventSender.OnCustomEventRaised({e.Message})");
-        }
+        protected virtual void OnProjectFinished(object sender, ProjectFinishedEventArgs e) { }
+        protected virtual void OnTargetStarted(object sender, TargetStartedEventArgs e) { }
+        protected virtual void OnTargetFinished(object sender, TargetFinishedEventArgs e) { }
+        protected virtual void OnTaskStarted(object sender, TaskStartedEventArgs e) { }
+        protected virtual void OnTaskFinished(object sender, TaskFinishedEventArgs e) { }
+        protected virtual void OnErrorRaised(object sender, BuildErrorEventArgs e) { }
+        protected virtual void OnWarningRaised(object sender, BuildWarningEventArgs e) { }
+        protected virtual void OnCustomEventRaised(object sender, CustomBuildEventArgs e) { }
     }
 }

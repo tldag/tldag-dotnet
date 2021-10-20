@@ -21,7 +21,7 @@ namespace TLDAG.Build.Tests.DotNet
 
             DotNetOptions options = new()
             {
-                Loggers = { receiver.GetSenderInfo() }
+                Loggers = { receiver.GetSenderLogger() }
             };
 
             ExecutionResult result = DotNetRunner.Build(sln, options, true);

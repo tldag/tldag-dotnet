@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace TLDAG.Build.Logging
 {
@@ -10,7 +11,11 @@ namespace TLDAG.Build.Logging
         public void Dispose() { GC.SuppressFinalize(this); Dispose(true); }
         private void Dispose(bool _) { pipe.Dispose(); }
 
-        public MSBuildLoggerInfo GetSenderInfo()
-            => MSBuildLoggerInfo.Create<MSBuildEventSender>(pipe.Handle);
+        public string GetSenderLogger()
+        {
+            Type type = typeof(MSBuildEventSender);
+
+            return $"{type.FullName},\"{type.Assembly.Location}\";{pipe.Handle}";
+        }
     }
 }

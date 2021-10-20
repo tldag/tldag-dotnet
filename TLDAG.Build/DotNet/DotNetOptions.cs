@@ -5,6 +5,6 @@ namespace TLDAG.Build.DotNet
 {
     public class DotNetOptions
     {
-        public List<MSBuildLoggerInfo> Loggers = new();
+        public List<string> Loggers = new();
     }
 }
