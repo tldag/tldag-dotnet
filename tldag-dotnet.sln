@@ -38,7 +38,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Test", "TLDAG.Test\TL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Tasks", "TLDAG.Tasks\TLDAG.Tasks.csproj", "{D06D7BFB-A499-495D-B1DE-C45B18C64350}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLDAG.Build.Logging", "TLDAG.Build.Logging\TLDAG.Build.Logging.csproj", "{2F5E6926-AA98-4FDC-97B5-60F83AB1C328}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLDAG.Build.Logging", "TLDAG.Build.Logging\TLDAG.Build.Logging.csproj", "{2F5E6926-AA98-4FDC-97B5-60F83AB1C328}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLDAG.Build.Logging.Tests", "TLDAG.Build.Logging.Tests\TLDAG.Build.Logging.Tests.csproj", "{A892CA59-4CBA-479C-AEA7-3CA2AD8E76A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,6 +100,10 @@ Global
 		{2F5E6926-AA98-4FDC-97B5-60F83AB1C328}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F5E6926-AA98-4FDC-97B5-60F83AB1C328}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F5E6926-AA98-4FDC-97B5-60F83AB1C328}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A892CA59-4CBA-479C-AEA7-3CA2AD8E76A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A892CA59-4CBA-479C-AEA7-3CA2AD8E76A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A892CA59-4CBA-479C-AEA7-3CA2AD8E76A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A892CA59-4CBA-479C-AEA7-3CA2AD8E76A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

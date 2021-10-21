@@ -1,9 +1,6 @@
 ﻿using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using Newtonsoft.Json;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO.Pipes;
 using static TLDAG.Build.Logging.MSBuildEventModel;
 
@@ -57,7 +54,7 @@ namespace TLDAG.Build.Logging
         protected virtual void OnBuildStarted(object sender, BuildStartedEventArgs e)
         {
             result.Clear();
-            result.Environment.AddEntries(e.BuildEnvironment);
+            result.AddBuildData(new(e));
         }
 
         protected virtual void OnBuildFinished(object sender, BuildFinishedEventArgs e)
@@ -66,30 +63,30 @@ namespace TLDAG.Build.Logging
 
             MSBuildEventStream stream = new(pipe);
 
-            stream.Write(JsonConvert.SerializeObject(result));
+            stream.Write(result.Serialize());
         }
 
         protected virtual void OnProjectStarted(object sender, ProjectStartedEventArgs e)
-            { OnProjectData(e.ProjectFile, e.GlobalProperties, e.Properties, e.Items); }
+            { result.AddProjectData(new(e)); }
 
         protected virtual void OnProjectEvaluationFinished(object sender, ProjectEvaluationFinishedEventArgs e)
-            { OnProjectData(e.ProjectFile, e.GlobalProperties, e.Properties, e.Items); }
+            { result.AddProjectData(new(e)); }
 
         protected virtual void OnProjectData(string file, IEnumerable? globals, IEnumerable? properties, IEnumerable? items)
         {
-            Project project = result.GetProject(file);
+            //Project project = result.GetProject(file);
 
-            if (globals is IDictionary<string, string> globalsDict)
-                project.AddGlobalProperties(globalsDict);
+            //if (globals is IDictionary<string, string> globalsDict)
+            //    project.AddGlobalProperties(globalsDict);
 
-            if (globals is IEnumerable<DictionaryEntry> globalsEnum)
-                project.AddGlobalProperties(globalsEnum);
+            //if (globals is IEnumerable<DictionaryEntry> globalsEnum)
+            //    project.AddGlobalProperties(globalsEnum);
 
-            if (properties is IEnumerable<DictionaryEntry> propertiesEnum)
-                project.AddProperties(propertiesEnum);
+            //if (properties is IEnumerable<DictionaryEntry> propertiesEnum)
+            //    project.AddProperties(propertiesEnum);
 
-            if (items is IEnumerable<DictionaryEntry> itemsEnum)
-                project.AddItems(itemsEnum);
+            //if (items is IEnumerable<DictionaryEntry> itemsEnum)
+            //    project.AddItems(itemsEnum);
         }
 
         protected virtual void OnProjectFinished(object sender, ProjectFinishedEventArgs e) { }

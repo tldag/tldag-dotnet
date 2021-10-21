@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Xml;
+using System.Xml.Serialization;
 using ITaskItem2 = Microsoft.Build.Framework.ITaskItem2;
 
 namespace TLDAG.Build.Logging
@@ -15,12 +17,15 @@ namespace TLDAG.Build.Logging
         public static readonly StringComparison FileNameComparison
             = IsWindows ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
+        public static readonly StringComparer FileNameComparer
+            = IsWindows ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+
         private static SortedSet<string>? restrictedProperties = null;
         private static SortedSet<string> RestrictedProperties => restrictedProperties ??= GetRestrictedProperties();
 
         private static SortedSet<string> GetRestrictedProperties()
         {
-            SortedSet<string> result = new();
+            SortedSet<string> result = new(StringComparer.OrdinalIgnoreCase);
 
             foreach (object key in Environment.GetEnvironmentVariables().Keys)
                 result.Add(key.ToString());
@@ -28,70 +33,83 @@ namespace TLDAG.Build.Logging
             return result;
         }
 
-        [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
         public class StringEntry
         {
-            [JsonProperty("key")]
+            [XmlAttribute("key")]
             public string Key { get; set; }
 
-            [JsonProperty("value")]
+            [XmlAttribute("value")]
             public string Value { get; set; }
 
             public StringEntry(string key, string value) { Key = key; Value = value; }
             public StringEntry() : this("", "") { }
         }
 
-        [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
         public class Properties
         {
-            [JsonProperty("entries")]
+            [XmlElement("entry")]
             public List<StringEntry> Entries { get; set; } = new();
 
-            public void AddEntries(IEnumerable<KeyValuePair<string, string>> entries)
+            [XmlIgnore]
+            public Dictionary<string, string> Map
             {
-                foreach (KeyValuePair<string, string> entry in entries)
-                    AddEntry(entry.Key, entry.Value);
-            }
-
-            public void AddEntry(string key, string value)
-            {
-                if (RestrictedProperties.Contains(key)) return;
-
-                Remove(key);
-                Entries.Add(new(key, value));
-            }
-
-            private void Remove(string key)
-            {
-                for (int i = 0, n = Entries.Count; i < n; ++i)
+                get => Entries.ToDictionary(e => e.Key, e => e.Value);
+                private set
                 {
-                    if (Entries[i].Key.Equals(key))
-                    {
-                        Entries.RemoveAt(i);
-                        Remove(key);
-                        return;
-                    }
+                    IEnumerable<StringEntry> entries = value
+                        .OrderBy(kvp => kvp.Key, StringComparer.Ordinal)
+                        .Select(kvp => new StringEntry(kvp.Key, kvp.Value));
+
+                    Entries = new(entries);
                 }
+            }
+
+            public string? this[string key]
+            {
+                get => Entries.Where(e => e.Key.Equals(key)).FirstOrDefault()?.Value;
+                set
+                {
+                    Dictionary<string, string> map = Map;
+
+                    map.Remove(key);
+
+                    if (value is not null && !RestrictedProperties.Contains(key))
+                        map[key] = value;
+
+                    Map = map;
+                }
+            }
+
+            public void Clear() { Entries.Clear(); }
+
+            public void AddOrReplace(Dictionary<string, string> input)
+            {
+                Dictionary<string, string> map = Map;
+
+                foreach (KeyValuePair<string, string> kvp in input)
+                {
+                    if (RestrictedProperties.Contains(kvp.Key)) continue;
+
+                    map.Remove(kvp.Key);
+                    map[kvp.Key] = kvp.Value;
+                }
+
+                Map = map;
             }
         }
 
-        [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
         public class Item
         {
-            [JsonProperty("include")]
             public string Include { get; set; }
 
             public Item(string include) { Include = include; }
             public Item() : this("") { }
         }
 
-        [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
         public class ItemType
         {
-            [JsonProperty("type")]
             public string Type { get; set; }
 
-            [JsonProperty("items")]
             public List<Item> Items { get; set; } = new();
 
             public ItemType(string type) { Type = type; }
@@ -120,38 +138,29 @@ namespace TLDAG.Build.Logging
             }
         }
 
-        [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
         public class Project
         {
-            [JsonProperty("file")]
+            [XmlAttribute("name")]
+            public string Name
+            {
+                get => Properties["ProjectName"] ?? Path.GetFileNameWithoutExtension(File);
+                set { Properties["ProjectName"] = value; }
+            }
+
+            [XmlElement("file")]
             public string File { get; set; }
 
-            [JsonProperty("globalProperties")]
-            public Properties GlobalProperties { get; set; } = new();
+            [XmlElement("globals")]
+            public Properties Globals { get; set; } = new();
 
-            [JsonProperty("properties")]
+            [XmlElement("properties")]
             public Properties Properties { get; set; } = new();
 
-            [JsonProperty("itemTypes")]
-            public List<ItemType> ItemTypes { get; set; } = new();
+            [XmlElement("types")]
+            public List<ItemType> Types { get; set; } = new();
 
             public Project(string file) { File = file; }
             public Project() : this("") { }
-
-            public void AddGlobalProperties(IDictionary<string, string> properties)
-                { GlobalProperties.AddEntries(properties); }
-
-            public void AddGlobalProperties(IEnumerable<DictionaryEntry> properties)
-            {
-                foreach (DictionaryEntry entry in properties)
-                    GlobalProperties.AddEntry(entry.Key.ToString(), entry.Value.ToString());
-            }
-
-            public void AddProperties(IEnumerable<DictionaryEntry> properties)
-            {
-                foreach (DictionaryEntry entry in properties)
-                    Properties.AddEntry(entry.Key.ToString(), entry.Value.ToString());
-            }
 
             public void AddItems(IEnumerable<DictionaryEntry> items)
             {
@@ -164,43 +173,106 @@ namespace TLDAG.Build.Logging
 
             private ItemType GetItemType(string key)
             {
-                ItemType? itemType = ItemTypes.Where(it => it.Type.Equals(key)).FirstOrDefault();
+                ItemType? itemType = Types.Where(it => it.Type.Equals(key)).FirstOrDefault();
 
                 if (itemType is null)
                 {
-                    ItemTypes.Add(itemType = new(key));
+                    Types.Add(itemType = new(key));
                 }
 
                 return itemType;
             }
         }
 
-        [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+        public class ProjectMap
+        {
+            public List<Project> Projects
+            {
+                get => byFile.Values.OrderBy(p => p.Name).ToList();
+                set
+                {
+                    Clear();
+
+                    foreach (Project project in value)
+                        byFile[project.File] = project;
+                }
+            }
+
+            private readonly Dictionary<string, Project> byFile = new(FileNameComparer);
+            private readonly Dictionary<int, Project> byId = new();
+
+            public void Clear() { byFile.Clear(); byId.Clear(); }
+
+            public Project GetProject(int id, string file)
+            {
+                if (byId.TryGetValue(id, out Project? project)) return project;
+                byFile.TryGetValue(file, out project);
+
+                if (project is null)
+                    byFile[file] = project = new(file);
+
+                if (id >= 0) byId[id] = project;
+
+                Console.WriteLine($"registered {id} = {project.Name}");
+
+                return project;
+            }
+        }
+
+        [XmlRoot("build")]
         public class BuildResult
         {
-            [JsonProperty("environment")]
+            [XmlElement("environment")]
             public Properties Environment { get; set; } = new();
 
-            [JsonProperty("projects")]
-            public List<Project> Projects { get; set; } = new();
+            [XmlElement("project")]
+            public List<Project> Projects
+            {
+                get => projects.Projects;
+                set { projects.Projects = value; }
+            }
+
+            private ProjectMap projects = new();
 
             public void Clear()
             {
-                Projects.Clear();
+                Environment.Clear();
+                projects.Clear();
             }
 
-            public Project GetProject(string file)
+            public void AddBuildData(MSBuildBuildData data)
             {
-                Project? project = Projects.Where(p => p.File.Equals(file, FileNameComparison)).FirstOrDefault();
+                Environment.AddOrReplace(data.Environment);
+            }
 
-                if (project is not null) return project;
+            public void AddProjectData(MSBuildProjectData data)
+            {
+                Project project = projects.GetProject(data.Id, data.File);
 
-                project = new(file);
-                Projects.Add(project);
+                project.Globals.AddOrReplace(data.Globals);
+                project.Properties.AddOrReplace(data.Properties);
+            }
 
-                Console.WriteLine($"Created project '{file}'");
+            public static XmlSerializer Serializer { get; } = new(typeof(BuildResult));
+            private static XmlWriterSettings Settings { get; } = new() { Indent = false };
 
-                return project;
+            public string Serialize(XmlWriterSettings? settings = null)
+            {
+                settings ??= Settings;
+
+                using StringWriter stringWriter = new();
+                using XmlWriter xmlWriter = XmlWriter.Create(stringWriter, settings);
+
+                Serializer.Serialize(xmlWriter, this);
+
+                return stringWriter.ToString();
+            }
+
+            public static BuildResult Deserialize(string xml)
+            {
+                using StringReader reader = new(xml);
+
+                return (BuildResult)Serializer.Deserialize(reader);
             }
         }
     }

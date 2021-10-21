@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.IO.Pipes;
 using static TLDAG.Build.Logging.MSBuildEventModel;
@@ -10,6 +9,8 @@ namespace TLDAG.Build.Logging
     {
         private readonly AnonymousPipeServerStream pipe;
         private readonly MSBuildEventStream stream;
+
+        public BuildResult Result { get => BuildResult.Deserialize(stream.EndRead()); }
 
         public MSBuildEventReceiver()
         {
@@ -28,7 +29,5 @@ namespace TLDAG.Build.Logging
 
             return $"{type.FullName},\"{type.Assembly.Location}\";{pipe.GetClientHandleAsString()}";
         }
-
-        public BuildResult? GetResult() => JsonConvert.DeserializeObject<BuildResult>(stream.EndRead());
     }
 }

@@ -10,6 +10,9 @@ using static TLDAG.Core.Strings;
 using static TLDAG.Build.Logging.MSBuildEventModel;
 using Newtonsoft.Json;
 using TLDAG.Test;
+using System.Xml.Serialization;
+using System.Xml;
+using System.Text;
 
 namespace TLDAG.Build.Tests.DotNet
 {
@@ -33,13 +36,38 @@ namespace TLDAG.Build.Tests.DotNet
             Debug.WriteLine($"Errors:{NewLine}{executionResult.Errors.Join(NewLine)}");
             Debug.WriteLine($"Output:{NewLine}{executionResult.Outputs.Join(NewLine)}");
 
-            BuildResult? buildResult = receiver.GetResult();
+            BuildResult? buildResult = receiver.Result;
 
-            Assert.IsNotNull(buildResult);
+            DirectoryInfo directory = GetTestDirectory(true);
+            SerializeToXml(directory, buildResult);
 
-            GetTestDirectory(true)
-                .Combine("tldag-dotnet-samples.json")
-                .WriteAllText(JsonConvert.SerializeObject(buildResult, Formatting.Indented));
+            buildResult = DeserializeFromXml(directory);
+        }
+
+        private void SerializeToXml(DirectoryInfo directory, BuildResult result)
+        {
+            XmlWriterSettings settings = new()
+            {
+                Encoding = Encoding.UTF8,
+                Indent = true,
+                IndentChars = "  "
+            };
+
+            XmlSerializer serializer = new(typeof(BuildResult));
+            FileInfo file = directory.Combine("tldag-dotnet-samples.xml");
+            using FileStream stream = new(file.FullName, FileMode.Create);
+            using XmlWriter writer = XmlWriter.Create(stream, settings);
+
+            serializer.Serialize(writer, result);
+        }
+
+        private BuildResult? DeserializeFromXml(DirectoryInfo directory)
+        {
+            XmlSerializer serializer = new(typeof(BuildResult));
+            FileInfo file = directory.Combine("tldag-dotnet-samples.xml");
+            using FileStream stream = new(file.FullName, FileMode.Open);
+
+            return serializer.Deserialize(stream) as BuildResult;
         }
     }
 }
