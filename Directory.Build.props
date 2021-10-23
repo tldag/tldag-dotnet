@@ -22,6 +22,7 @@
     <TldagBuildLogging>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Build.Logging', 'TLDAG.Build.Logging.csproj' ))</TldagBuildLogging>
     <TldagCore>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Core', 'TLDAG.Core.csproj' ))</TldagCore>
     <TldagCommands>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Commands', 'TLDAG.Commands.csproj' ))</TldagCommands>
+    <TldagDotNetLogger>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.DotNetLogger', 'TLDAG.DotNetLogger.csproj' ))</TldagDotNetLogger>
     <TldagSdk>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Sdk', 'TLDAG.Sdk.csproj' ))</TldagSdk>
     <TldagTest>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Test', 'TLDAG.Test.csproj' ))</TldagTest>
   </PropertyGroup>
