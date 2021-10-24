@@ -6,6 +6,9 @@ namespace TLDAG.DotNetLogger.Adapter
     {
         public override string? ProjectFile { get => Args.ProjectFile; }
 
+        public string? TargetName { get => Args.TargetName; }
+        public bool Success { get => Args.Succeeded; }
+
         public TargetFinishedAdapter(TargetFinishedEventArgs args) : base(args) { }
     }
 }

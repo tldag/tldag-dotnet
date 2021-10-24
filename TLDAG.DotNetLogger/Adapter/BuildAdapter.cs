@@ -11,6 +11,8 @@ namespace TLDAG.DotNetLogger.Adapter
 
         public virtual string? ProjectFile { get => null; }
         public virtual int PassId { get => Context.ProjectId; }
+        public virtual int TargetId { get => Context.TargetId; }
+        public virtual int TaskId { get => Context.TaskId; }
 
         public BuildAdapter(BuildEventArgs args) { this.args = args; }
     }

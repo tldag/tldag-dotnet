@@ -1,17 +1,20 @@
 ﻿using System;
 using System.IO;
 using System.IO.Pipes;
+using System.Threading;
+using System.Threading.Tasks;
 using TLDAG.DotNetLogger.IO;
 using TLDAG.DotNetLogger.Model;
+using TLDAG.DotNetLogger.Threading;
 using static TLDAG.DotNetLogger.IO.Serialization;
 
 namespace TLDAG.DotNetLogger
 {
     public class ReceiverBuildReceivedEventArgs : EventArgs
     {
-        public Build Build { get; }
+        public Log Log{ get; }
 
-        public ReceiverBuildReceivedEventArgs(Build build) { Build = build; }
+        public ReceiverBuildReceivedEventArgs(Log log) { Log = log; }
     }
 
     public delegate void ReceiverBuildReceivedHandler(Receiver receiver, ReceiverBuildReceivedEventArgs args);
@@ -20,6 +23,8 @@ namespace TLDAG.DotNetLogger
     {
         private readonly AnonymousPipeServerStream pipe;
         private readonly BytesPipeReceiver receiver;
+
+        private long count = 0;
 
         public string SenderDescriptor { get => Sender.GetDescriptor(pipe.GetClientHandleAsString()); }
 
@@ -37,14 +42,37 @@ namespace TLDAG.DotNetLogger
         public void Dispose() { Dispose(true); }
         private void Dispose(bool _) { receiver.Dispose(); pipe.Dispose(); }
 
+        public long Wait(long expected, TimeSpan? timeout = null)
+        {
+            using Cancels cancels = new();
+            Task<long> task = new(() => WaitAsync(expected).Result);
+
+            task.Start(); task.Wait(cancels.Token(timeout));
+
+            return task.Result;
+        }
+
+        private async Task<long> WaitAsync(long expected)
+        {
+            while (GetCount() < expected) await Task.Yield();
+            return GetCount();
+        }
+
         private void BytesReceived(BytesPipeReceiver _, BytesPipeReceivedEventArgs args)
         {
             if (BuildReceived is not null)
             {
-                Build build = FromBytes(args.Bytes);
+                Log log = FromBytes(args.Bytes);
 
-                BuildReceived.Invoke(this, new(build));
+                log.Transferred = args.Received;
+
+                BuildReceived.Invoke(this, new(log));
             }
+
+            IncrementCount();
         }
+
+        private long GetCount() => Interlocked.Read(ref count);
+        private void IncrementCount() { Interlocked.Increment(ref count); }
     }
 }

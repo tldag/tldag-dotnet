@@ -2,7 +2,7 @@
 using Microsoft.Build.Utilities;
 using TLDAG.DotNetLogger.Model;
 using static TLDAG.DotNetLogger.IO.Serialization;
-using static TLDAG.DotNetLogger.Algorithm.Interpreter;
+using static TLDAG.DotNetLogger.Construction.Conveyor;
 
 namespace TLDAG.DotNetLogger
 {
@@ -13,7 +13,7 @@ namespace TLDAG.DotNetLogger
 
         public string PipeHandle { get => Parameters; }
 
-        private readonly Builds builds = new();
+        private readonly Logs logs = new();
 
         public override void Initialize(IEventSource eventSource)
         {
@@ -43,24 +43,24 @@ namespace TLDAG.DotNetLogger
                 OnProjectEvaluationFinished(sender, fe);
         }
 
-        private void OnBuildStarted(object sender, BuildStartedEventArgs e) { Transfer(e, builds); }
-        private void OnBuildFinished(object sender, BuildFinishedEventArgs e) { Send(Transfer(e, builds), PipeHandle); }
+        private void OnBuildStarted(object sender, BuildStartedEventArgs e) { Transfer(e, logs); }
+        private void OnBuildFinished(object sender, BuildFinishedEventArgs e) { Send(Transfer(e, logs), PipeHandle); }
 
-        private void OnProjectStarted(object sender, ProjectStartedEventArgs e) { Transfer(e, builds); }
-        private void OnProjectFinished(object sender, ProjectFinishedEventArgs e) { Transfer(e, builds); }
+        private void OnProjectStarted(object sender, ProjectStartedEventArgs e) { Transfer(e, logs); }
+        private void OnProjectFinished(object sender, ProjectFinishedEventArgs e) { Transfer(e, logs); }
 
-        private void OnTargetStarted(object sender, TargetStartedEventArgs e) { Transfer(e, builds); }
-        private void OnTargetFinished(object sender, TargetFinishedEventArgs e) { Transfer(e, builds); }
+        private void OnTargetStarted(object sender, TargetStartedEventArgs e) { Transfer(e, logs); }
+        private void OnTargetFinished(object sender, TargetFinishedEventArgs e) { Transfer(e, logs); }
 
-        private void OnTaskStarted(object sender, TaskStartedEventArgs e) { Transfer(e, builds); }
-        private void OnTaskFinished(object sender, TaskFinishedEventArgs e) { Transfer(e, builds); }
+        private void OnTaskStarted(object sender, TaskStartedEventArgs e) { Transfer(e, logs); }
+        private void OnTaskFinished(object sender, TaskFinishedEventArgs e) { Transfer(e, logs); }
 
-        private void OnErrorRaised(object sender, BuildErrorEventArgs e) { Transfer(e, builds); }
-        private void OnWarningRaised(object sender, BuildWarningEventArgs e) { Transfer(e, builds); }
+        private void OnErrorRaised(object sender, BuildErrorEventArgs e) { Transfer(e, logs); }
+        private void OnWarningRaised(object sender, BuildWarningEventArgs e) { Transfer(e, logs); }
 
-        private void OnCustomEventRaised(object sender, CustomBuildEventArgs e) { Transfer(e, builds); }
+        private void OnCustomEventRaised(object sender, CustomBuildEventArgs e) { Transfer(e, logs); }
 
         private void OnProjectEvaluationFinished(object sender, ProjectEvaluationFinishedEventArgs e)
-            { Transfer(e, builds); }
+            { Transfer(e, logs); }
     }
 }

@@ -7,6 +7,8 @@ namespace TLDAG.DotNetLogger.Adapter
         private readonly BuildEventContext context;
 
         public int ProjectId { get => context.ProjectInstanceId; }
+        public int TargetId { get => context.TargetId; }
+        public int TaskId { get => context.TaskId; }
 
         public ContextAdapter(BuildEventContext? context)
         {

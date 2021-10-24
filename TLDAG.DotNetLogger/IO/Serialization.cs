@@ -13,50 +13,50 @@ namespace TLDAG.DotNetLogger.IO
         private static readonly XmlWriterSettings DefaultXmlWriterSettings
             = new() { Indent = false, Encoding = UTF8 };
 
-        private static readonly XmlSerializer xmlSerializer = new(typeof(Build));
+        private static readonly XmlSerializer xmlSerializer = new(typeof(Log));
 
-        public static string ToXml(Build build, XmlWriterSettings? settings = null)
+        public static string ToXml(Log log, XmlWriterSettings? settings = null)
         {
             settings ??= DefaultXmlWriterSettings;
 
             using MemoryStream stream = new();
             using XmlWriter xmlWriter = XmlWriter.Create(stream, settings);
 
-            xmlSerializer.Serialize(xmlWriter, build, build.Namespaces);
+            xmlSerializer.Serialize(xmlWriter, log, log.Namespaces);
 
             return settings.Encoding.GetString(stream.ToArray());
         }
 
-        public static Build FromXml(string xml)
+        public static Log FromXml(string xml)
         {
             using StringReader reader = new(xml);
 
-            return (Build)xmlSerializer.Deserialize(reader);
+            return (Log)xmlSerializer.Deserialize(reader);
         }
 
         private static readonly BinaryFormatter binaryFormatter = new();
 
-        public static byte[] ToBytes(Build build)
+        public static byte[] ToBytes(Log log)
         {
             using MemoryStream stream = new();
 
-            binaryFormatter.Serialize(stream, build);
+            binaryFormatter.Serialize(stream, log);
 
             return stream.ToArray();
         }
 
-        public static Build FromBytes(byte[] bytes)
+        public static Log FromBytes(byte[] bytes)
         {
             using MemoryStream stream = new(bytes);
 
-            return (Build)binaryFormatter.Deserialize(stream);
+            return (Log)binaryFormatter.Deserialize(stream);
         }
 
-        public static void Send(Build build, string pipeHandle)
+        public static void Send(Log log, string pipeHandle)
         {
-            byte[] bytes = ToBytes(build);
+            byte[] bytes = ToBytes(log);
             using AnonymousPipeClientStream pipe = new(PipeDirection.Out, pipeHandle);
-            BytesPipeSender sender = new(pipe);
+            using BytesPipeSender sender = new(pipe);
 
             sender.Send(bytes);
         }

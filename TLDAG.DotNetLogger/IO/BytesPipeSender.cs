@@ -21,11 +21,11 @@ namespace TLDAG.DotNetLogger.IO
     {
         public event BytesPipeSentHandler? BytesSent;
 
-        public BytesPipeSender(PipeStream pipe, bool compressed = true, TimeSpan? timeout = null)
-            : base(pipe, compressed, timeout) { }
+        public BytesPipeSender(PipeStream pipe, bool compressed = true)
+            : base(pipe, compressed) { }
 
-        public int Send(byte[] bytes)
-            => Raise(SendAsync(bytes, Cancel.Token).Result);
+        public int Send(byte[] bytes, TimeSpan? timeout = null)
+            => Raise(SendAsync(bytes, Cancels.Token(timeout)).Result);
 
         public async Task<int> SendAsync(byte[] bytes, CancellationToken cancel)
         {

@@ -14,19 +14,24 @@ namespace TLDAG.DotNetLogger.IO
 
     public delegate void StringPipeSentHandler(StringPipeSender sender, StringPipeSentEventArgs args);
 
-    public class StringPipeSender : StringPipe
+    public class StringPipeSender : StringPipe, IDisposable
     {
         public event StringPipeSentHandler? StringSent;
 
         private readonly BytesPipeSender sender;
         protected override BytesPipe BytesPipe => sender;
 
-        public StringPipeSender(PipeStream pipe, bool compressed = true, TimeSpan? timeout = null)
+        public StringPipeSender(PipeStream pipe, bool compressed = true)
         {
-            sender = new(pipe, compressed, timeout);
+            sender = new(pipe, compressed);
         }
 
-        public int Send(string text) => Raise(sender.Send(Encoding.GetBytes(text)), text.Length);
+        ~StringPipeSender() { Dispose(false); }
+        public void Dispose() { GC.SuppressFinalize(this); Dispose(true); }
+        private void Dispose(bool _) { sender.Dispose(); }
+
+        public int Send(string text, TimeSpan? timeout = null)
+            => Raise(sender.Send(Encoding.GetBytes(text), timeout), text.Length);
 
         private int Raise(int count, int length)
         {

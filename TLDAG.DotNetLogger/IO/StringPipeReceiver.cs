@@ -6,8 +6,9 @@ namespace TLDAG.DotNetLogger.IO
     public class StringPipeReceivedEventArgs : EventArgs
     {
         public string Text { get; }
+        public int Received { get; }
 
-        public StringPipeReceivedEventArgs(string text) { Text = text; }
+        public StringPipeReceivedEventArgs(string text, int received) { Text = text; Received = received; }
     }
 
     public delegate void StringPipeReceivedHandler(StringPipeReceiver receiver, StringPipeReceivedEventArgs args);
@@ -34,7 +35,9 @@ namespace TLDAG.DotNetLogger.IO
         private void BytesReceived(BytesPipeReceiver receiver, BytesPipeReceivedEventArgs args)
         {
             if (StringReceived is not null)
-                StringReceived.Invoke(this, new(Encoding.GetString(args.Bytes)));
+            {
+                StringReceived.Invoke(this, new(Encoding.GetString(args.Bytes), args.Received));
+            }
         }
     }
 }

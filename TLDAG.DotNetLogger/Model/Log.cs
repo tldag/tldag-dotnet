@@ -8,11 +8,14 @@ using static TLDAG.DotNetLogger.DotNetLoggerConstants;
 namespace TLDAG.DotNetLogger.Model
 {
     [Serializable]
-    [XmlRoot("build")]
-    public class Build
+    [XmlRoot("log")]
+    public class Log
     {
         [XmlAttribute("created")]
         public DateTime Created { get; set; } = DateTime.UtcNow;
+
+        [XmlAttribute("transferred")]
+        public int Transferred { get; set; }
 
         [XmlAttribute("success")]
         public bool Success { get; set; } = false;

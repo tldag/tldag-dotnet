@@ -6,6 +6,8 @@ namespace TLDAG.DotNetLogger.Adapter
     {
         public override string? ProjectFile { get => Args.ProjectFile; }
 
+        public string? TargetName { get => Args.TargetName; }
+
         public TargetStartedAdapter(TargetStartedEventArgs args) : base(args) { }
     }
 }

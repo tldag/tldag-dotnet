@@ -10,9 +10,9 @@ namespace TLDAG.DotNetLogger.Tests.IO
         [TestMethod]
         public void Test()
         {
-            Build build = new();
+            Log log = new();
 
-            ToBytes(build);
+            ToBytes(log);
         }
     }
 }

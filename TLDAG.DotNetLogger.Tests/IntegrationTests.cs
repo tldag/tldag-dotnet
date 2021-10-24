@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -25,9 +26,9 @@ namespace TLDAG.DotNetLogger.Tests
             FileInfo solutionFile = SolutionDirectory.Combine("tldag-dotnet-samples.sln");
             DirectoryInfo directory = GetTestDirectory(true);
 
-            List<Build> builds = new();
+            List<Log> logs = new();
 
-            using Receiver receiver = new((_, e) => { builds.Add(e.Build); });
+            using Receiver receiver = new((_, e) => { logs.Add(e.Log); });
 
             ExecutionBuilder.Create("dotnet")
                 .UseShellExecute(false)
@@ -39,13 +40,15 @@ namespace TLDAG.DotNetLogger.Tests
                 .Build()
                 .Execute(true);
 
-            while (builds.Count < 1) Task.Delay(10).Wait();
+            TimeSpan? timeout = Debugger.IsAttached ? null : TimeSpan.FromSeconds(4);
 
-            for (int i = 0; i < builds.Count; ++i)
+            receiver.Wait(1, timeout);
+
+            for (int i = 0; i < logs.Count; ++i)
             {
                 FileInfo file = directory.Combine($"{i}.xml");
 
-                file.WriteAllText(ToXml(builds[i], writerSettings));
+                file.WriteAllText(ToXml(logs[i], writerSettings));
             }
         }
     }
