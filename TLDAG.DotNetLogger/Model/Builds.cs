@@ -4,11 +4,11 @@ namespace TLDAG.DotNetLogger.Model
 {
     public class Builds
     {
-        private readonly Stack<Build> _builds = new();
+        private readonly Stack<Build> builds = new();
 
-        public Build StartBuild() { _builds.Push(new()); return _builds.Peek(); }
-        public Build EndBuild() => _builds.Pop();
+        public Build StartBuild() { builds.Push(new()); return builds.Peek(); }
+        public Build EndBuild() => builds.Pop();
 
-        public Build GetBuild() => _builds.Peek();
+        public Build GetBuild() => builds.Peek();
     }
 }

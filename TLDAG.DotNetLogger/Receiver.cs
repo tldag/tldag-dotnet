@@ -18,24 +18,24 @@ namespace TLDAG.DotNetLogger
 
     public class Receiver : IDisposable
     {
-        private readonly AnonymousPipeServerStream _pipe;
-        private readonly BytesPipeReceiver _receiver;
+        private readonly AnonymousPipeServerStream pipe;
+        private readonly BytesPipeReceiver receiver;
 
-        public string SenderDescriptor { get => Sender.GetDescriptor(_pipe.GetClientHandleAsString()); }
+        public string SenderDescriptor { get => Sender.GetDescriptor(pipe.GetClientHandleAsString()); }
 
         public event ReceiverBuildReceivedHandler? BuildReceived;
 
         public Receiver(ReceiverBuildReceivedHandler handler)
         {
-            _pipe = new(PipeDirection.In, HandleInheritability.Inheritable);
-            _receiver = new(_pipe, BytesReceived);
+            pipe = new(PipeDirection.In, HandleInheritability.Inheritable);
+            receiver = new(pipe, BytesReceived);
 
             BuildReceived += handler;
         }
 
         ~Receiver() { Dispose(false); }
         public void Dispose() { Dispose(true); }
-        private void Dispose(bool _) { _receiver.Dispose(); _pipe.Dispose(); }
+        private void Dispose(bool _) { receiver.Dispose(); pipe.Dispose(); }
 
         private void BytesReceived(BytesPipeReceiver _, BytesPipeReceivedEventArgs args)
         {

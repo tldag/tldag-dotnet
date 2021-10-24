@@ -18,15 +18,15 @@ namespace TLDAG.DotNetLogger.IO
     {
         public event StringPipeSentHandler? StringSent;
 
-        private readonly BytesPipeSender _sender;
-        protected override BytesPipe BytesPipe => _sender;
+        private readonly BytesPipeSender sender;
+        protected override BytesPipe BytesPipe => sender;
 
         public StringPipeSender(PipeStream pipe, bool compressed = true, TimeSpan? timeout = null)
         {
-            _sender = new(pipe, compressed, timeout);
+            sender = new(pipe, compressed, timeout);
         }
 
-        public int Send(string text) => Raise(_sender.Send(Encoding.GetBytes(text)), text.Length);
+        public int Send(string text) => Raise(sender.Send(Encoding.GetBytes(text)), text.Length);
 
         private int Raise(int count, int length)
         {

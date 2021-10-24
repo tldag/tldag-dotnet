@@ -2,7 +2,7 @@
 
 namespace TLDAG.DotNetLogger.Adapter
 {
-    public class BuildStartedAdapter : BuildAdapter
+    public class BuildStartedAdapter : BuildAdapter<BuildStartedEventArgs>
     {
         public BuildStartedAdapter(BuildStartedEventArgs args) : base(args) { }
     }

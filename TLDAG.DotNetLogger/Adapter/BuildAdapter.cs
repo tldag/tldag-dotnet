@@ -4,15 +4,22 @@ namespace TLDAG.DotNetLogger.Adapter
 {
     public class BuildAdapter
     {
-        public int Submission { get; }
-        public int Evaluation { get; }
+        private readonly BuildEventArgs args;
 
-        public BuildAdapter(BuildEventArgs args)
-        {
-            BuildEventContext context = args.BuildEventContext ?? BuildEventContext.Invalid;
+        private ContextAdapter? context = null;
+        private ContextAdapter Context { get => context ??= new(args.BuildEventContext); }
 
-            Evaluation = context.EvaluationId;
-            Submission = context.SubmissionId;
-        }
+        public virtual string? ProjectFile { get => null; }
+        public virtual int PassId { get => Context.ProjectId; }
+
+        public BuildAdapter(BuildEventArgs args) { this.args = args; }
+    }
+
+    public class BuildAdapter<T> : BuildAdapter
+        where T : BuildEventArgs
+    {
+        public T Args { get; }
+
+        public BuildAdapter(T args) : base(args) { Args = args; }
     }
 }

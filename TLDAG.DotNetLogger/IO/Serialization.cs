@@ -10,17 +10,19 @@ namespace TLDAG.DotNetLogger.IO
 {
     public static class Serialization
     {
-        private static readonly XmlWriterSettings _xmlWriterSettings = new() { Indent = false, Encoding = UTF8 };
-        private static readonly XmlSerializer _xmlSerializer = new(typeof(Build));
+        private static readonly XmlWriterSettings DefaultXmlWriterSettings
+            = new() { Indent = false, Encoding = UTF8 };
+
+        private static readonly XmlSerializer xmlSerializer = new(typeof(Build));
 
         public static string ToXml(Build build, XmlWriterSettings? settings = null)
         {
-            settings ??= _xmlWriterSettings;
+            settings ??= DefaultXmlWriterSettings;
 
             using MemoryStream stream = new();
             using XmlWriter xmlWriter = XmlWriter.Create(stream, settings);
 
-            _xmlSerializer.Serialize(xmlWriter, build, build.Namespaces);
+            xmlSerializer.Serialize(xmlWriter, build, build.Namespaces);
 
             return settings.Encoding.GetString(stream.ToArray());
         }
@@ -29,16 +31,16 @@ namespace TLDAG.DotNetLogger.IO
         {
             using StringReader reader = new(xml);
 
-            return (Build)_xmlSerializer.Deserialize(reader);
+            return (Build)xmlSerializer.Deserialize(reader);
         }
 
-        private static readonly BinaryFormatter _binaryFormatter = new();
+        private static readonly BinaryFormatter binaryFormatter = new();
 
         public static byte[] ToBytes(Build build)
         {
             using MemoryStream stream = new();
 
-            _binaryFormatter.Serialize(stream, build);
+            binaryFormatter.Serialize(stream, build);
 
             return stream.ToArray();
         }
@@ -47,7 +49,7 @@ namespace TLDAG.DotNetLogger.IO
         {
             using MemoryStream stream = new(bytes);
 
-            return (Build)_binaryFormatter.Deserialize(stream);
+            return (Build)binaryFormatter.Deserialize(stream);
         }
 
         public static void Send(Build build, string pipeHandle)

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
-using static TLDAG.DotNetLogger.DotNetLoggerConstants;
 using static TLDAG.DotNetLogger.Algorithm.Algorithms;
 
 namespace TLDAG.DotNetLogger.Model

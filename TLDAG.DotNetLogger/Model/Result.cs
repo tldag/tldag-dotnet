@@ -23,11 +23,11 @@ namespace TLDAG.DotNetLogger.Model
         }
 
         [XmlElement("project")]
-        public List<Project> Projects { get; set; } = new();
+        public List<ProjectOld> Projects { get; set; } = new();
 
-        public Project? GetProject(int id, string? file)
+        public ProjectOld? GetProject(int id, string? file)
         {
-            Project? project = GetProject(id);
+            ProjectOld? project = GetProject(id);
 
             if (project is not null)
                 return project;
@@ -45,14 +45,14 @@ namespace TLDAG.DotNetLogger.Model
             return project;
         }
 
-        private Project? GetProject(int id) => Projects.Where(p => p.HasId(id)).FirstOrDefault();
+        private ProjectOld? GetProject(int id) => Projects.Where(p => p.HasId(id)).FirstOrDefault();
 
-        private Project? GetProject(string? file)
+        private ProjectOld? GetProject(string? file)
             => file is null ? null : Projects.Where(p => file.Equals(p.File, FileNameComparison)).FirstOrDefault();
 
-        private Project AddProject(string file)
+        private ProjectOld AddProject(string file)
         {
-            Project project = new(file);
+            ProjectOld project = new(file);
 
             Projects.Add(project);
             Projects.Sort();

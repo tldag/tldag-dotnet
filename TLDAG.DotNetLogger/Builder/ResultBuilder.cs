@@ -33,7 +33,7 @@ namespace TLDAG.DotNetLogger.Builder
 
         public ResultBuilder Add(ProjectData data)
         {
-            Project? project = result.GetProject(data.Id, data.File);
+            ProjectOld? project = result.GetProject(data.Id, data.File);
 
             if (project is not null)
             {

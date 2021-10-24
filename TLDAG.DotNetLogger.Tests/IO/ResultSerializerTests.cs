@@ -19,7 +19,7 @@ namespace TLDAG.DotNetLogger.Tests.IO
         private Result CreateResult()
         {
             Result result = new();
-            Project? project = result.GetProject(1, "foo.csproj");
+            ProjectOld? project = result.GetProject(1, "foo.csproj");
 
             Assert.IsNotNull(project);
 

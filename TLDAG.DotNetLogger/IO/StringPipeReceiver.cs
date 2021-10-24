@@ -16,20 +16,20 @@ namespace TLDAG.DotNetLogger.IO
     {
         public event StringPipeReceivedHandler? StringReceived;
 
-        private readonly BytesPipeReceiver _receiver;
-        protected override BytesPipe BytesPipe => _receiver;
+        private readonly BytesPipeReceiver receiver;
+        protected override BytesPipe BytesPipe => receiver;
 
         public StringPipeReceiver(PipeStream pipe, StringPipeReceivedHandler handler, bool compressed = true,
             TimeSpan? timeout = null)
         {
-            _receiver = new(pipe, BytesReceived, compressed, timeout);
+            receiver = new(pipe, BytesReceived, compressed, timeout);
 
             StringReceived += handler;
         }
 
         ~StringPipeReceiver() { Dispose(false); }
         public void Dispose() { GC.SuppressFinalize(this); Dispose(true); }
-        private void Dispose(bool _) { _receiver.Dispose(); }
+        private void Dispose(bool _) { receiver.Dispose(); }
 
         private void BytesReceived(BytesPipeReceiver receiver, BytesPipeReceivedEventArgs args)
         {
