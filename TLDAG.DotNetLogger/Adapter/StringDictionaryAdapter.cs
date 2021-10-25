@@ -4,9 +4,11 @@ namespace TLDAG.DotNetLogger.Adapter
 {
     public class StringDictionaryAdapter
     {
-        private IDictionary<string, string>? dictionary;
-        public IDictionary<string, string> Dictionary => dictionary ??= new Dictionary<string, string>();
+        public readonly IDictionary<string, string> Dictionary;
 
-        public StringDictionaryAdapter(IDictionary<string, string>? dictionary) { this.dictionary = dictionary; }
+        public StringDictionaryAdapter(IDictionary<string, string>? dictionary)
+        {
+            Dictionary = dictionary ?? new Dictionary<string, string>();
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace TLDAG.DotNetLogger.Model
 
         public Project? GetProject(int passId, string? file)
         {
-            Project? project = GetProject(passId);
+            Project? project = passId < 0 ? null : GetProject(passId);
 
             if (project is not null)
                 return project;
@@ -38,12 +38,12 @@ namespace TLDAG.DotNetLogger.Model
             if (project is null)
                 project = AddProject(file);
 
-            project.AddPass(passId);
+            project.Passes.Add(passId);
 
             return project;
         }
 
-        private Project? GetProject(int passId) => Projects.Where(p => p.HasPass(passId)).FirstOrDefault();
+        private Project? GetProject(int passId) => Projects.Where(p => p.Passes.Contains(passId)).FirstOrDefault();
 
         private Project? GetProject(string? file)
             => file is null ? null : Projects.Where(p => file.Equals(p.File, FileNameComparison)).FirstOrDefault();
@@ -62,6 +62,6 @@ namespace TLDAG.DotNetLogger.Model
         public XmlSerializerNamespaces Namespaces { get => namespaces; }
 
         private static readonly XmlSerializerNamespaces namespaces
-            = new(new XmlQualifiedName[] { new("", "urn:build") });
+            = new(new XmlQualifiedName[] { new("", "urn:log") });
     }
 }

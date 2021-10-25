@@ -7,9 +7,9 @@ namespace TLDAG.DotNetLogger.Construction
     {
         public static void Transfer(TaskStartedAdapter args, Logs logs)
         {
-            Target target = logs.GetPassTarget(args);
+            Target target = logs.GetTarget(args);
 
-            target.AddTask(args.TaskName, args.TaskId);
+            target.Tasks.Add(args.TaskName, args.TaskId);
         }
 
         public static void Transfer(TaskFinishedAdapter args, Logs logs)

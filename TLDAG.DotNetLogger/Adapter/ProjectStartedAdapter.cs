@@ -1,7 +1,5 @@
 ﻿using Microsoft.Build.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace TLDAG.DotNetLogger.Adapter
 {
@@ -10,8 +8,9 @@ namespace TLDAG.DotNetLogger.Adapter
         public override string? ProjectFile { get => Args.ProjectFile; }
         public override int PassId => Args.ProjectId;
 
-        private StringDictionaryAdapter? globals = null;
-        public IDictionary<string, string> Globals => (globals ??= new(Args.GlobalProperties)).Dictionary;
+        public IDictionary<string, string> Globals => new StringDictionaryAdapter(Args.GlobalProperties).Dictionary;
+        public PropertiesAdapter Properties => new(Args.Properties);
+        public ItemsAdapter Items => new(Args.Items);
 
         public ProjectStartedAdapter(ProjectStartedEventArgs args) : base(args) { }
     }

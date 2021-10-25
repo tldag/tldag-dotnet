@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using static TLDAG.DotNetLogger.DotNetLoggerConstants;
 using static TLDAG.DotNetLogger.Algorithm.Algorithms;
+using System.Collections;
 
 namespace TLDAG.DotNetLogger.Model
 {
@@ -16,6 +17,12 @@ namespace TLDAG.DotNetLogger.Model
         {
             foreach (KeyValuePair<string, string> kvp in source)
                 AddOrReplace(kvp.Key, kvp.Value);
+        }
+
+        public void AddOrReplace(IEnumerable<DictionaryEntry> source)
+        {
+            foreach (DictionaryEntry entry in source)
+                AddOrReplace(entry.Key.ToString(), entry.Value.ToString());
         }
 
         public void AddOrReplace(string key, string? value)

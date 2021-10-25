@@ -12,7 +12,7 @@ namespace TLDAG.DotNetLogger.Construction
             => logs.Current.GetProject(args);
 
         private static Pass GetPass(this Project project, BuildAdapter args)
-            => project.HasPass(args.PassId) ? project.GetPass(args.PassId) : new();
+            => project.Passes.Contains(args.PassId) ? project.Passes.Get(args.PassId) : new();
 
         private static Pass GetPass(this Log log, BuildAdapter args)
             => log.GetProject(args).GetPass(args);
@@ -20,23 +20,23 @@ namespace TLDAG.DotNetLogger.Construction
         private static Pass GetPass(this Logs logs, BuildAdapter args)
             => logs.Current.GetPass(args);
 
-        private static Target GetPassTarget(this Pass pass, BuildAdapter args)
-            => pass.GetTarget(args.TargetId) ?? new();
+        private static Target GetTarget(this Pass pass, BuildAdapter args)
+            => pass.Targets.Get(args.TargetId) ?? new();
 
-        private static Target GetPassTarget(this Project project, BuildAdapter args)
-            => project.GetPass(args).GetPassTarget(args);
+        private static Target GetTarget(this Project project, BuildAdapter args)
+            => project.GetPass(args).GetTarget(args);
 
-        private static Target GetPassTarget(this Log log, BuildAdapter args)
-            => log.GetProject(args).GetPassTarget(args);
+        private static Target GetTarget(this Log log, BuildAdapter args)
+            => log.GetProject(args).GetTarget(args);
 
-        private static Target GetPassTarget(this Logs logs, BuildAdapter args)
-            => logs.Current.GetPassTarget(args);
+        private static Target GetTarget(this Logs logs, BuildAdapter args)
+            => logs.Current.GetTarget(args);
 
         private static BuildTask GetTask(this Target target, BuildAdapter args)
-            => target.GetTask(args.TaskId) ?? new();
+            => target.Tasks.Get(args.TaskId) ?? new();
 
         private static BuildTask GetTask(this Pass pass, BuildAdapter args)
-            => pass.GetPassTarget(args).GetTask(args);
+            => pass.GetTarget(args).GetTask(args);
 
         private static BuildTask GetTask(this Project project, BuildAdapter args)
             => project.GetPass(args).GetTask(args);
@@ -46,5 +46,12 @@ namespace TLDAG.DotNetLogger.Construction
 
         private static BuildTask GetTask(this Logs logs, BuildAdapter args)
             => logs.Current.GetTask(args);
+
+        private static Item CreateItem(ItemAdapter source)
+        {
+            Item item = new(source.Type, source.Spec);
+
+            return item;
+        }
     }
 }

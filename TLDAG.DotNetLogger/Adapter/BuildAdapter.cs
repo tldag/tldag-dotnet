@@ -6,8 +6,7 @@ namespace TLDAG.DotNetLogger.Adapter
     {
         private readonly BuildEventArgs args;
 
-        private ContextAdapter? context = null;
-        private ContextAdapter Context { get => context ??= new(args.BuildEventContext); }
+        private ContextAdapter Context { get => new(args.BuildEventContext); }
 
         public virtual string? ProjectFile { get => null; }
         public virtual int PassId { get => Context.ProjectId; }

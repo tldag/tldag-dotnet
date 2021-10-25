@@ -19,23 +19,17 @@ namespace TLDAG.DotNetLogger.Model
             set { }
         }
 
-        [XmlElement("pass")]
-        public List<Pass> Passes { get; set; } = new();
+        [XmlElement("globals")]
+        public Properties Globals { get; set; } = new();
+
+        [XmlElement("properties")]
+        public Properties Properties { get; set; } = new();
+
+        [XmlElement("passes")]
+        public Passes Passes { get; set; } = new();
 
         public Project(string file) { File = file; }
         public Project() : this("") { }
-
-        public bool HasPass(int id) => Passes.Where(p => p.Id == id).Any();
-        public Pass GetPass(int id) => Passes.Where(p => p.Id == id).First();
-
-        public void AddPass(int id)
-        {
-            if (id >= 0)
-            {
-                Passes.Add(new(id));
-                Passes.Sort();
-            }
-        }
 
         public int CompareTo(Project other) => StringComparer.Ordinal.Compare(Name, other.Name);
     }
