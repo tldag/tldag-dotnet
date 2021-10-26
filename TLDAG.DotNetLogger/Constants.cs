@@ -17,10 +17,10 @@ namespace TLDAG.DotNetLogger
         public static readonly StringComparer EnvNameComparer
             = IsWindows ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
 
-        private static SortedSet<string>? restrictedProperties = null;
-        internal static SortedSet<string> RestrictedProperties => restrictedProperties ??= GetRestrictedProperties();
+        private static SortedSet<string>? restrictedPropertyKeys = null;
+        public static SortedSet<string> RestrictedPropertyKeys => restrictedPropertyKeys ??= GetRestrictedPropertyKeys();
 
-        private static SortedSet<string> GetRestrictedProperties()
+        private static SortedSet<string> GetRestrictedPropertyKeys()
         {
             SortedSet<string> result = new(StringComparer.OrdinalIgnoreCase);
 
@@ -28,6 +28,33 @@ namespace TLDAG.DotNetLogger
                 result.Add(key.ToString());
 
             return result;
+        }
+
+        private static SortedSet<string>? restrictedMetadataKeys = null;
+        public static SortedSet<string> RestrictedMetadataKeys => restrictedMetadataKeys ??= GetRestrictedMetadataKeys();
+
+        private static SortedSet<string> GetRestrictedMetadataKeys()
+        {
+            string[] keys = 
+            {
+                "AccessedTime",
+                "CreatedTime",
+                "DefiningProjectDirectory",
+                "DefiningProjectExtension",
+                "DefiningProjectFullPath",
+                "DefiningProjectName",
+                "Directory",
+                "Extension",
+                "Filename",
+                "FullPath",
+                "Identity",
+                "ModifiedTime",
+                "RecursiveDir",
+                "RelativeDir",
+                "RootDir"
+            };
+
+            return new(keys);
         }
     }
 }

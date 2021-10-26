@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using static TLDAG.DotNetLogger.Model.Support.PropertiesSupport;
+using static TLDAG.DotNetLogger.Model.Support.ItemsSupport;
 
 namespace TLDAG.DotNetLogger.Model
 {
@@ -19,8 +21,14 @@ namespace TLDAG.DotNetLogger.Model
         [XmlIgnore]
         public string Key { get => key ??= $"{Type}.{Spec}"; }
 
+        [XmlElement("metadata")]
+        public Properties? Metadata = null;
+
         public Item(string type, string spec) { Type = type; Spec = spec; }
         public Item() : this(string.Empty, string.Empty) { }
+
+        public void SetMetadata(IDictionary<string, string> metadata)
+            { Metadata = CreateProperties(metadata, FilterMetadata); }
 
         public override int GetHashCode() => Key.GetHashCode();
         public override bool Equals(object obj) => EqualsTo(obj as Item);

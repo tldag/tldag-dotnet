@@ -34,6 +34,30 @@ namespace TLDAG.DotNetLogger.Adapter
         public string Type => type;
         public string Spec => item.EvaluatedIncludeEscaped;
 
+        public Dictionary<string, string> Metadata
+        {
+            get
+            {
+                Dictionary<string, string> metadata = new();
+
+                if (item.MetadataCount == 0) return metadata;
+                if (item.MetadataNames is not ICollection keys) return metadata;
+
+                foreach (object? keyObject in keys)
+                {
+                    string? key = keyObject?.ToString();
+
+                    if (key is null || string.IsNullOrWhiteSpace(key))
+                        continue;
+
+                    metadata.Remove(key);
+                    metadata[key] = item.GetMetadataValueEscaped(key) ?? "";
+                }
+
+                return metadata;
+            }
+        }
+
         public ItemAdapter(string type, ITaskItem2? item)
         {
             this.type = type;

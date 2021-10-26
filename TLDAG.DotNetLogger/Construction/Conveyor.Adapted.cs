@@ -64,6 +64,8 @@ namespace TLDAG.DotNetLogger.Construction
         {
             Item item = new(source.Type, source.Spec);
 
+            item.SetMetadata(source.Metadata);
+
             return item;
         }
     }
