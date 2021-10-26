@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
+using static TLDAG.DotNetLogger.Model.Support.ItemsSupport;
+using static TLDAG.DotNetLogger.Model.Support.PropertiesSupport;
 
 namespace TLDAG.DotNetLogger.Model
 {
     [Serializable]
-    public class Project : IComparable<Project>
+    public class Project : IHasGlobals, IHasProperties, IHasItems, IComparable<Project>
     {
         [XmlElement("file")]
         public string File { get; set; }
@@ -19,9 +19,6 @@ namespace TLDAG.DotNetLogger.Model
             get => string.IsNullOrWhiteSpace(File) ? "" : Path.GetFileNameWithoutExtension(File);
             set { }
         }
-
-        [XmlElement("info")]
-        public List<string>? Infos { get; set; } = null;
 
         [XmlElement("globals")]
         public Properties? Globals { get; set; } = null;
@@ -40,28 +37,13 @@ namespace TLDAG.DotNetLogger.Model
 
         public int CompareTo(Project other) => StringComparer.Ordinal.Compare(Name, other.Name);
 
-        public void SetGlobals(IEnumerable<StringEntry> source)
-        {
-            if (!source.Any()) return;
+        public void SetGlobals(IEnumerable<StringEntry>? source)
+            { Globals = CreateProperties(source, FilterProperty); }
 
-            Globals ??= new();
-            Globals.Set(source);
-        }
+        public void SetProperties(IEnumerable<StringEntry>? source)
+            { Properties = CreateProperties(source, FilterProperty); }
 
-        public void SetProperties(IEnumerable<StringEntry> source)
-        {
-            if (!source.Any()) return;
-
-            Properties ??= new();
-            Properties.Set(source);
-        }
-
-        public void AddOrReplaceItems(IEnumerable<Item> source)
-        {
-            if (!source.Any()) return;
-
-            Items ??= new();
-            Items.AddOrReplace(source);
-        }
+        public void SetItems(IEnumerable<Item>? source)
+            { Items = CreateItems(source); }
     }
 }

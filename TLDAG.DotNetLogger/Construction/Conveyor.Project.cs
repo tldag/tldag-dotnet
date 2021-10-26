@@ -33,7 +33,7 @@ namespace TLDAG.DotNetLogger.Construction
         {
             pass.SetGlobals(args.Globals.Select(CreateStringEntry));
             pass.SetProperties(args.Properties.Select(CreateStringEntry));
-            pass.AddOrReplaceItems(args.Items.Select(CreateItem));
+            pass.SetItems(args.Items.Select(CreateItem));
         }
 
         public static void Transfer(EvaluationFinishedAdapter args, Logs logs)
@@ -42,7 +42,7 @@ namespace TLDAG.DotNetLogger.Construction
 
             project.SetGlobals(args.Globals.Select(CreateStringEntry));
             project.SetProperties(args.Properties.Select(CreateStringEntry));
-            project.AddOrReplaceItems(args.Items.Select(CreateItem));
+            project.SetItems(args.Items.Select(CreateItem));
         }
     }
 }

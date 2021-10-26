@@ -20,9 +20,6 @@ namespace TLDAG.DotNetLogger.Model
         [XmlAttribute("success")]
         public bool Success { get; set; } = false;
 
-        [XmlElement("info")]
-        public List<string>? Infos { get; set; } = null;
-
         [XmlElement("project")]
         public List<Project> Projects { get; set; } = new();
 

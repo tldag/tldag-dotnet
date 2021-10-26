@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
+using static TLDAG.DotNetLogger.Model.Support.SortedSetList;
 
 namespace TLDAG.DotNetLogger.Model
 {
@@ -12,19 +12,11 @@ namespace TLDAG.DotNetLogger.Model
         public int Count { get => Entries.Count; set { } }
 
         [XmlElement("item")]
-        public List<Item> Entries { get; set; } = new();
+        public List<Item> Entries { get; set; }
 
-        public void AddOrReplace(IEnumerable<Item> source)
-        {
-            SortedSet<Item> set = new(Entries);
+        internal Items(List<Item> entries) { Entries = entries; }
+        public Items() : this(new()) { }
 
-            foreach (Item item in source)
-                set.Remove(item);
-
-            foreach (Item item in source)
-                set.Add(item);
-
-            Entries = set.ToList();
-        }
+        public void Set(IEnumerable<Item>? source) { Entries = CreateSortedSetList(source); }
     }
 }

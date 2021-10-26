@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
+using static TLDAG.DotNetLogger.Model.Support.ItemsSupport;
+using static TLDAG.DotNetLogger.Model.Support.PropertiesSupport;
 
 namespace TLDAG.DotNetLogger.Model
 {
     [Serializable]
-    public class Pass : IComparable<Pass>
+    public class Pass : IHasGlobals, IHasProperties, IHasItems, IComparable<Pass>
     {
         [XmlAttribute("id")]
         public int Id { get; set; }
 
         [XmlAttribute("success")]
         public bool Success { get; set; }
-
-        [XmlElement("info")]
-        public List<string>? Infos { get; set; } = null;
 
         [XmlElement("globals")]
         public Properties? Globals { get; set; } = null;
@@ -35,29 +32,14 @@ namespace TLDAG.DotNetLogger.Model
 
         public int CompareTo(Pass other) => Id.CompareTo(other.Id);
 
-        public void SetGlobals(IEnumerable<StringEntry> source)
-        {
-            if (!source.Any()) return;
+        public void SetGlobals(IEnumerable<StringEntry>? source)
+            { Globals = CreateProperties(source, FilterProperty); }
 
-            Globals ??= new();
-            Globals.Set(source);
-        }
+        public void SetProperties(IEnumerable<StringEntry>? source)
+            { Properties = CreateProperties(source, FilterProperty); }
 
-        public void SetProperties(IEnumerable<StringEntry> source)
-        {
-            if (!source.Any()) return;
-
-            Properties ??= new();
-            Properties.Set(source);
-        }
-
-        public void AddOrReplaceItems(IEnumerable<Item> source)
-        {
-            if (!source.Any()) return;
-
-            Items ??= new();
-            Items.AddOrReplace(source);
-        }
+        public void SetItems(IEnumerable<Item>? source)
+            { Items = CreateItems(source); }
 
         public Target? GetTarget(int id) => Targets?.Get(id);
 

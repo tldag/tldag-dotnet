@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace TLDAG.DotNetLogger.Model
 {
     [Serializable]
-    public class StringEntry : IComparable<StringEntry>
+    public class StringEntry : IEquatable<StringEntry>, IComparable<StringEntry>
     {
         [XmlAttribute("key")]
         public string Key { get; set; }
@@ -12,7 +12,7 @@ namespace TLDAG.DotNetLogger.Model
         [XmlAttribute("value")]
         public string Value { get; set; }
 
-        public StringEntry(string key, string value) { Key = key; Value = value; }
+        public StringEntry(string key, string? value) { Key = key; Value = value ?? ""; }
         public StringEntry() : this(string.Empty, string.Empty) { }
 
         public override int GetHashCode() => Key.GetHashCode();
