@@ -1,41 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
+using TLDAG.DotNetLogger.Model.Support;
 using static TLDAG.DotNetLogger.DotNetLoggerConstants;
-using static TLDAG.DotNetLogger.Algorithm.Algorithms;
-using System.Collections;
 
 namespace TLDAG.DotNetLogger.Model
 {
     [Serializable]
     public class Properties
     {
+        [XmlAttribute("count")]
+        public int Count { get => Entries.Count; set { } }
+
         [XmlElement("entry")]
         public List<StringEntry> Entries { get; set; } = new();
 
-        public void AddOrReplace(IDictionary<string, string> source)
+        public void Set(IEnumerable<StringEntry> source)
         {
-            foreach (KeyValuePair<string, string> kvp in source)
-                AddOrReplace(kvp.Key, kvp.Value);
-        }
+            SortedSet<StringEntry> set = new();
+            IEnumerable<StringEntry> filtered = source.Where(p => !RestrictedProperties.Contains(p.Key));
 
-        public void AddOrReplace(IEnumerable<DictionaryEntry> source)
-        {
-            foreach (DictionaryEntry entry in source)
-                AddOrReplace(entry.Key.ToString(), entry.Value.ToString());
-        }
-
-        public void AddOrReplace(string key, string? value)
-        {
-            Remove(key);
-            
-            if (value is not null && !RestrictedProperties.Contains(key))
+            foreach (StringEntry entry in filtered)
             {
-                Entries.Add(new(key, value));
-                Entries.Sort();
+                set.Remove(entry);
+                set.Add(entry);
             }
-        }
 
-        public void Remove(string key) => RemoveWhere(Entries, e => e.Key.Equals(key));
+            Entries = set.ToList();
+        }
     }
 }

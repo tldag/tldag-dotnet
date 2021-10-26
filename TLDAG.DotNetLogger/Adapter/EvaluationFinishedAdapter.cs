@@ -8,6 +8,7 @@ namespace TLDAG.DotNetLogger.Adapter
 
         public PropertiesAdapter Globals => new(Args.Properties);
         public PropertiesAdapter Properties => new(Args.Properties);
+        public ItemsAdapter Items => new(Args.Items);
 
         public EvaluationFinishedAdapter(ProjectEvaluationFinishedEventArgs args) : base(args) { }
     }

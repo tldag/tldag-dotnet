@@ -20,10 +20,9 @@ namespace TLDAG.DotNetLogger.IO
         private readonly BytesPipeReceiver receiver;
         protected override BytesPipe BytesPipe => receiver;
 
-        public StringPipeReceiver(PipeStream pipe, StringPipeReceivedHandler handler, bool compressed = true,
-            TimeSpan? timeout = null)
+        public StringPipeReceiver(PipeStream pipe, StringPipeReceivedHandler handler, TimeSpan? timeout = null)
         {
-            receiver = new(pipe, BytesReceived, compressed, timeout);
+            receiver = new(pipe, BytesReceived, timeout);
 
             StringReceived += handler;
         }

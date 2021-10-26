@@ -1,4 +1,6 @@
-﻿using TLDAG.DotNetLogger.Adapter;
+﻿using System.Collections;
+using System.Collections.Generic;
+using TLDAG.DotNetLogger.Adapter;
 using TLDAG.DotNetLogger.Model;
 
 namespace TLDAG.DotNetLogger.Construction
@@ -21,7 +23,7 @@ namespace TLDAG.DotNetLogger.Construction
             => logs.Current.GetPass(args);
 
         private static Target GetTarget(this Pass pass, BuildAdapter args)
-            => pass.Targets.Get(args.TargetId) ?? new();
+            => pass.GetTarget(args.TargetId) ?? new();
 
         private static Target GetTarget(this Project project, BuildAdapter args)
             => project.GetPass(args).GetTarget(args);
@@ -33,7 +35,7 @@ namespace TLDAG.DotNetLogger.Construction
             => logs.Current.GetTarget(args);
 
         private static BuildTask GetTask(this Target target, BuildAdapter args)
-            => target.Tasks.Get(args.TaskId) ?? new();
+            => target.GetTask(args.TaskId) ?? new();
 
         private static BuildTask GetTask(this Pass pass, BuildAdapter args)
             => pass.GetTarget(args).GetTask(args);
@@ -46,6 +48,17 @@ namespace TLDAG.DotNetLogger.Construction
 
         private static BuildTask GetTask(this Logs logs, BuildAdapter args)
             => logs.Current.GetTask(args);
+
+        private static StringEntry CreateStringEntry(KeyValuePair<string, string> source)
+            => new(source.Key, source.Value);
+
+        private static StringEntry CreateStringEntry(DictionaryEntry source)
+        {
+            string key = source.Key?.ToString() ?? string.Empty;
+            string value = source.Value?.ToString() ?? string.Empty;
+
+            return new(key, value);
+        }
 
         private static Item CreateItem(ItemAdapter source)
         {

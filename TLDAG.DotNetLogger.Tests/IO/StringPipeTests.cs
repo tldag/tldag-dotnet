@@ -42,7 +42,7 @@ namespace TLDAG.DotNetLogger.Tests.IO
             StringPipeSentHandler sentHandler = (_, e) => sentCounts.Add(e.Count);
 
             using StringPipeReceiver receiver = new(receiverPipe, receivedHandler);
-            StringPipeSender sender = new(senderPipe, receiver.Compressed);
+            StringPipeSender sender = new(senderPipe);
 
             sender.StringSent += sentHandler;
 

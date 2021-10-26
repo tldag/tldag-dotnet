@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TLDAG.DotNetLogger.Adapter;
 using TLDAG.DotNetLogger.Model;
 
@@ -6,21 +7,16 @@ namespace TLDAG.DotNetLogger.Construction
 {
     public static partial class Conveyor
     {
+        private static Dictionary<int, ProjectStartedAdapter> projectAdapters = new();
+
         public static void Transfer(ProjectStartedAdapter args, Logs logs)
         {
             Pass pass = logs.GetPass(args);
 
-            pass.Globals.AddOrReplace(args.Globals);
-            pass.Properties.AddOrReplace(args.Properties);
-            pass.Items.AddOrReplace(args.Items.Select(CreateItem));
-        }
+            Transfer(args, pass);
 
-        public static void Transfer(EvaluationFinishedAdapter args, Logs logs)
-        {
-            Project project = logs.GetProject(args);
-
-            project.Globals.AddOrReplace(args.Properties);
-            project.Properties.AddOrReplace(args.Properties);
+            projectAdapters.Remove(pass.Id);
+            projectAdapters[pass.Id] = args;
         }
 
         public static void Transfer(ProjectFinishedAdapter args, Logs logs)
@@ -28,6 +24,25 @@ namespace TLDAG.DotNetLogger.Construction
             Pass pass = logs.GetPass(args);
 
             pass.Success = args.Success;
+
+            if (projectAdapters.TryGetValue(pass.Id, out ProjectStartedAdapter adpt))
+                Transfer(adpt, pass);
+        }
+
+        private static void Transfer(ProjectStartedAdapter args, Pass pass)
+        {
+            pass.SetGlobals(args.Globals.Select(CreateStringEntry));
+            pass.SetProperties(args.Properties.Select(CreateStringEntry));
+            pass.AddOrReplaceItems(args.Items.Select(CreateItem));
+        }
+
+        public static void Transfer(EvaluationFinishedAdapter args, Logs logs)
+        {
+            Project project = logs.GetProject(args);
+
+            project.SetGlobals(args.Globals.Select(CreateStringEntry));
+            project.SetProperties(args.Properties.Select(CreateStringEntry));
+            project.AddOrReplaceItems(args.Items.Select(CreateItem));
         }
     }
 }

@@ -8,8 +8,6 @@ namespace TLDAG.DotNetLogger.IO
         protected abstract BytesPipe BytesPipe { get; }
 
         public PipeStream Pipe { get => BytesPipe.Pipe; }
-        public bool Compressed { get => BytesPipe.Compressed; }
-
         public Encoding Encoding { get; } = Encoding.UTF8;
     }
 }

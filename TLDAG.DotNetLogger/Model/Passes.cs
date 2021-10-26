@@ -16,7 +16,7 @@ namespace TLDAG.DotNetLogger.Model
 
         public void Add(int id)
         {
-            if (!Contains(id))
+            if (!Contains(id) && id >= 0)
             {
                 Entries.Add(new(id));
                 Entries.Sort();

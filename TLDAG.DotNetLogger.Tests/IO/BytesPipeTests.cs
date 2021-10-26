@@ -42,7 +42,7 @@ namespace TLDAG.DotNetLogger.Tests.IO
             BytesPipeSentHandler sentHandler = (_, e) => { sentCounts.Add(e.Count); };
 
             using BytesPipeReceiver receiver = new(receiverPipe, receivedHandler);
-            BytesPipeSender sender = new(senderPipe, receiver.Compressed);
+            BytesPipeSender sender = new(senderPipe);
 
             sender.BytesSent += sentHandler;
 

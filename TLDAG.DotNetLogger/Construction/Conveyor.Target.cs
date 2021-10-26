@@ -9,7 +9,7 @@ namespace TLDAG.DotNetLogger.Construction
         {
             Pass pass = logs.GetPass(args);
 
-            pass.Targets.Add(args.TargetName, args.TargetId);
+            pass.AddTarget(args.TargetName, args.TargetId);
         }
 
         public static void Transfer(TargetFinishedAdapter args, Logs logs)

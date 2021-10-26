@@ -2,7 +2,6 @@
 using System.IO.Pipes;
 using System.Threading;
 using System.Threading.Tasks;
-using static TLDAG.DotNetLogger.Algorithm.Inflater;
 using static TLDAG.DotNetLogger.Conversion.Primitives;
 
 namespace TLDAG.DotNetLogger.IO
@@ -21,8 +20,7 @@ namespace TLDAG.DotNetLogger.IO
     {
         public event BytesPipeReceivedHandler? BytesReceived;
 
-        public BytesPipeReceiver(PipeStream pipe, BytesPipeReceivedHandler handler, bool compressed = true,
-            TimeSpan? timeout = null) : base(pipe, compressed)
+        public BytesPipeReceiver(PipeStream pipe, BytesPipeReceivedHandler handler, TimeSpan? timeout = null) : base(pipe)
         {
             BytesReceived += handler;
 
@@ -39,13 +37,11 @@ namespace TLDAG.DotNetLogger.IO
             await Pipe.ReadAsync(lengthBytes, 0, lengthBytes.Length, cancel);
 
             int length = BytesToInt(lengthBytes);
-            byte[] deflated = new byte[length];
+            byte[] bytes = new byte[length];
 
-            await Pipe.ReadAsync(deflated, 0, deflated.Length);
+            await Pipe.ReadAsync(bytes, 0, bytes.Length);
 
-            byte[] inflated = Inflate(deflated, Compressed);
-
-            return new(inflated, lengthBytes.Length + deflated.Length);
+            return new(bytes, lengthBytes.Length + bytes.Length);
         }
 
         private void Raise(BytesPipeReceivedEventArgs args)

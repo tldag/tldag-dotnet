@@ -7,13 +7,11 @@ namespace TLDAG.DotNetLogger.IO
     public class BytesPipe : IDisposable
     {
         public PipeStream Pipe { get; }
-        public bool Compressed { get; }
         public Cancels Cancels { get; }
 
-        public BytesPipe(PipeStream pipe, bool compressed)
+        public BytesPipe(PipeStream pipe)
         {
             Pipe = pipe;
-            Compressed = compressed;
             Cancels = new();
         }
 

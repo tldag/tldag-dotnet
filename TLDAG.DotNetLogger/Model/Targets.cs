@@ -8,6 +8,9 @@ namespace TLDAG.DotNetLogger.Model
     [Serializable]
     public class Targets
     {
+        [XmlAttribute("count")]
+        public int Count { get => Entries.Count; set { } }
+
         [XmlElement("target")]
         public List<Target> Entries { get; set; } = new();
 

@@ -8,8 +8,8 @@ namespace TLDAG.DotNetLogger.IO
     {
         public int Length { get; }
 
-        public StringPipeSentEventArgs(int count, bool compressed, int length)
-            : base(count, compressed) { Length = length; }
+        public StringPipeSentEventArgs(int count, int length)
+            : base(count) { Length = length; }
     }
 
     public delegate void StringPipeSentHandler(StringPipeSender sender, StringPipeSentEventArgs args);
@@ -21,9 +21,9 @@ namespace TLDAG.DotNetLogger.IO
         private readonly BytesPipeSender sender;
         protected override BytesPipe BytesPipe => sender;
 
-        public StringPipeSender(PipeStream pipe, bool compressed = true)
+        public StringPipeSender(PipeStream pipe)
         {
-            sender = new(pipe, compressed);
+            sender = new(pipe);
         }
 
         ~StringPipeSender() { Dispose(false); }
@@ -36,7 +36,7 @@ namespace TLDAG.DotNetLogger.IO
         private int Raise(int count, int length)
         {
             if (StringSent is not null)
-                StringSent.Invoke(this, new(count, Compressed, length));
+                StringSent.Invoke(this, new(count, length));
 
             return count;
         }

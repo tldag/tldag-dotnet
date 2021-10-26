@@ -2,7 +2,6 @@
 using System.IO.Pipes;
 using System.Threading;
 using System.Threading.Tasks;
-using static TLDAG.DotNetLogger.Algorithm.Deflater;
 using static TLDAG.DotNetLogger.Conversion.Primitives;
 
 namespace TLDAG.DotNetLogger.IO
@@ -10,9 +9,8 @@ namespace TLDAG.DotNetLogger.IO
     public class BytesPipeSentEventArgs : EventArgs
     {
         public int Count { get; }
-        public bool Compressed { get; }
 
-        public BytesPipeSentEventArgs(int count, bool compressed) { Count = count; Compressed = compressed; }
+        public BytesPipeSentEventArgs(int count) { Count = count; }
     }
 
     public delegate void BytesPipeSentHandler(BytesPipeSender sender, BytesPipeSentEventArgs args);
@@ -21,27 +19,26 @@ namespace TLDAG.DotNetLogger.IO
     {
         public event BytesPipeSentHandler? BytesSent;
 
-        public BytesPipeSender(PipeStream pipe, bool compressed = true)
-            : base(pipe, compressed) { }
+        public BytesPipeSender(PipeStream pipe)
+            : base(pipe) { }
 
         public int Send(byte[] bytes, TimeSpan? timeout = null)
             => Raise(SendAsync(bytes, Cancels.Token(timeout)).Result);
 
         public async Task<int> SendAsync(byte[] bytes, CancellationToken cancel)
         {
-            byte[] deflated = Deflate(bytes, Compressed);
-            byte[] lengthBytes = IntToBytes(deflated.Length);
+            byte[] lengthBytes = IntToBytes(bytes.Length);
 
             await Pipe.WriteAsync(lengthBytes, 0, lengthBytes.Length, cancel);
-            await Pipe.WriteAsync(deflated, 0, deflated.Length, cancel);
+            await Pipe.WriteAsync(bytes, 0, bytes.Length, cancel);
 
-            return deflated.Length;
+            return lengthBytes.Length + bytes.Length;
         }
 
         private int Raise(int count)
         {
             if (BytesSent is not null)
-                BytesSent.Invoke(this, new(count, Compressed));
+                BytesSent.Invoke(this, new(count));
 
             return count;
         }
