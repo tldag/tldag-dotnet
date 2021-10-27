@@ -1,16 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
 
-  <Target Name="DeleteObjDirectory" BeforeTargets="Clean;Rebuild" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
-
-    <PropertyGroup>
-      <_DeleteObjDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildProjectDirectory), $(BaseIntermediateOutputPath) ))</_DeleteObjDirectory>
-    </PropertyGroup>
-
-    <RemoveDir Directories="$(_DeleteObjDirectory)" />
-    
-  </Target>
-
   <Target Name="DeleteBinDirectory" BeforeTargets="Clean;Rebuild">
 
     <PropertyGroup>
