@@ -35,8 +35,8 @@ namespace TLDAG.Core.Reflection
 
             ExecutionResult result = builder.Build();
 
-            if (throwOnError && (result.ExitCode != 0 || result.Errors.Any()))
-                throw ExecutionFailed(result.ExitCode, result.Errors);
+            if (throwOnError)
+                result.ThrowOnError();
 
             return result;
         }

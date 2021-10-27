@@ -3,19 +3,48 @@ using Microsoft.Build.Utilities;
 using TLDAG.DotNetLogger.Model;
 using static TLDAG.DotNetLogger.IO.Serialization;
 using static TLDAG.DotNetLogger.Construction.Conveyor;
+using System;
+using TLDAG.DotNetLogger.Context;
 
 namespace TLDAG.DotNetLogger
 {
-    public class Sender : Logger
+    public class DnlSender : Logger
     {
         public static string GetDescriptor(string pipeHandle)
-            => $"{typeof(Sender).FullName},\"{typeof(Sender).Assembly.Location}\";{pipeHandle}";
+            => $"{typeof(DnlSender).FullName},\"{typeof(DnlSender).Assembly.Location}\";{pipeHandle}";
 
         public string PipeHandle { get => Parameters; }
 
+        private IEventSource? eventSource = null;
         private readonly Logs logs = new();
 
         public override void Initialize(IEventSource eventSource)
+        {
+            Invoke(() =>
+            {
+                InitializeLogs();
+                InitializeHandlers(eventSource);
+            });
+        }
+
+        public override void Shutdown()
+        {
+            Invoke(() =>
+            {
+                ShutdownHandlers();
+                ShutdownLogs();
+            });
+        }
+
+        private void InitializeLogs()
+        {
+            DnlConfig config = DnlConfig.Parse(Parameters);
+            DnlContext context = new(config);
+        }
+
+        private void ShutdownLogs() { }
+
+        private void InitializeHandlers(IEventSource eventSource)
         {
             eventSource.AnyEventRaised += OnAnyEventRaised;
 
@@ -35,6 +64,35 @@ namespace TLDAG.DotNetLogger
             eventSource.WarningRaised += OnWarningRaised;
 
             eventSource.CustomEventRaised += OnCustomEventRaised;
+
+            this.eventSource = eventSource;
+        }
+
+        private void ShutdownHandlers()
+        {
+            if (eventSource is not null)
+            {
+                eventSource.AnyEventRaised -= OnAnyEventRaised;
+
+                eventSource.BuildStarted -= OnBuildStarted;
+                eventSource.BuildFinished -= OnBuildFinished;
+
+                eventSource.ProjectStarted -= OnProjectStarted;
+                eventSource.ProjectFinished -= OnProjectFinished;
+
+                eventSource.TargetStarted -= OnTargetStarted;
+                eventSource.TargetFinished -= OnTargetFinished;
+
+                eventSource.TaskStarted -= OnTaskStarted;
+                eventSource.TaskFinished -= OnTaskFinished;
+
+                eventSource.ErrorRaised -= OnErrorRaised;
+                eventSource.WarningRaised -= OnWarningRaised;
+
+                eventSource.CustomEventRaised -= OnCustomEventRaised;
+
+                eventSource = null;
+            }
         }
 
         private void OnAnyEventRaised(object sender, BuildEventArgs e)
@@ -62,5 +120,18 @@ namespace TLDAG.DotNetLogger
 
         private void OnProjectEvaluationFinished(object sender, ProjectEvaluationFinishedEventArgs e)
             { Transfer(e, logs); }
+
+        private void Invoke(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+        }
     }
 }

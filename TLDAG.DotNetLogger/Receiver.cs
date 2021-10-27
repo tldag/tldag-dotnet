@@ -26,7 +26,7 @@ namespace TLDAG.DotNetLogger
 
         private long count = 0;
 
-        public string SenderDescriptor { get => Sender.GetDescriptor(pipe.GetClientHandleAsString()); }
+        public string SenderDescriptor { get => DnlSender.GetDescriptor(pipe.GetClientHandleAsString()); }
 
         public event ReceiverBuildReceivedHandler? BuildReceived;
 

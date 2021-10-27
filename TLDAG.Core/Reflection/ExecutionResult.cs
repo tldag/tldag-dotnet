@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using static TLDAG.Core.Exceptions.Errors;
 
 namespace TLDAG.Core.Reflection
 {
@@ -19,6 +21,12 @@ namespace TLDAG.Core.Reflection
 
             this.outputs = new(outputs);
             this.errors = new(errors);
+        }
+
+        public void ThrowOnError()
+        {
+            if (ExitCode != 0 || Errors.Any())
+                throw ExecutionFailed(ExitCode, Errors);
         }
     }
 }

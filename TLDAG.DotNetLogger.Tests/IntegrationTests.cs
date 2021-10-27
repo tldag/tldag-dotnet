@@ -30,15 +30,27 @@ namespace TLDAG.DotNetLogger.Tests
 
             using Receiver receiver = new((_, e) => { logs.Add(e.Log); });
 
-            ExecutionBuilder.Create("dotnet")
+            ExecutionResult result = ExecutionBuilder.Create("dotnet")
                 .UseShellExecute(false)
                 .CreateNoWindow(true)
                 .WorkingDirectory(SolutionDirectory)
                 .AddArgument("build")
                 .AddArgument($"\"{solutionFile.FullName}\"")
+                //.AddArgument("-target:Rebuild")
                 .AddArgument($"-logger:{receiver.SenderDescriptor}")
+                .SetEnvironmentVariable("DesignTimeBuild", "true")
+                .SetEnvironmentVariable("BuildProjectReferences", "false")
+                .SetEnvironmentVariable("SkipCompilerExecution", "true")
+                .SetEnvironmentVariable("DisableRarCache", "true")
+                .SetEnvironmentVariable("AutoGenerateBindingRedirects", "false")
+                .SetEnvironmentVariable("CopyBuildOutputToOutputDirectory", "false")
+                .SetEnvironmentVariable("CopyOutputSymbolsToOutputDirectory", "false")
+                .SetEnvironmentVariable("SkipCopyBuildProduct", "false")
+                .SetEnvironmentVariable("AddModules", "false")
+                .SetEnvironmentVariable("UseCommonOutputDirectory", "true")
+                .SetEnvironmentVariable("GeneratePackageOnBuild", "false")
                 .Build()
-                .Execute(true);
+                .Execute(false);
 
             TimeSpan? timeout = Debugger.IsAttached ? null : TimeSpan.FromSeconds(4);
 
@@ -50,6 +62,11 @@ namespace TLDAG.DotNetLogger.Tests
 
                 file.WriteAllText(ToXml(logs[i], writerSettings));
             }
+
+            foreach (string line in result.Errors) Console.WriteLine(line);
+            foreach (string line in result.Outputs) Console.WriteLine(line);
+
+            result.ThrowOnError();
         }
     }
 }

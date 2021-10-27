@@ -8,6 +8,9 @@ namespace TLDAG.DotNetLogger.Model
     [Serializable]
     public class Passes
     {
+        [XmlAttribute("count")]
+        public int Count { get => Entries.Count; set { } }
+
         [XmlElement("pass")]
         public List<Pass> Entries { get; set; } = new();
 
