@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TLDAG.DotNetLogger.Adapter;
 using TLDAG.DotNetLogger.Model;
@@ -44,6 +43,7 @@ namespace TLDAG.DotNetLogger.Factory
             {
                 pass.Success = finished.Success;
                 pass.Targets = CreateTargets(passId);
+                pass.Items = CreateItems(started.Items);
             }
 
             return pass;

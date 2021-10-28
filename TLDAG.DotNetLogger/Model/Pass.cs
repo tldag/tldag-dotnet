@@ -19,8 +19,8 @@ namespace TLDAG.DotNetLogger.Model
         [XmlElement("properties")]
         public Properties? Properties { get; set; } = null;
 
-        [XmlElement("items")]
-        public Items? Items { get; set; } = null;
+        [XmlElement("item")]
+        public List<DnlItem> Items { get; set; } = new();
 
         [XmlElement("target")]
         public List<DnlTarget> Targets { get; set; } = new();

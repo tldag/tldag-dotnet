@@ -31,8 +31,8 @@ namespace TLDAG.DotNetLogger.Adapter
         private readonly string type;
         private readonly ITaskItem2 item;
 
-        public string Type => type;
-        public string Spec => item.EvaluatedIncludeEscaped;
+        public string Type { get => type; }
+        public string Spec { get => item.EvaluatedIncludeEscaped; }
 
         public Dictionary<string, string> Metadata
         {
