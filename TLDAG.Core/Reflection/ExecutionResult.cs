@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using static TLDAG.Core.Exceptions.Errors;
 
@@ -11,13 +12,22 @@ namespace TLDAG.Core.Reflection
 
         public Executable Executable { get; }
         public int ExitCode { get; }
+
+        public DateTime StartTime { get; }
+        public DateTime ExitTime { get; }
+        public TimeSpan ElapsedTime { get => ExitTime - StartTime; }
+
         public IReadOnlyList<string> Outputs { get => outputs; }
         public IReadOnlyList<string> Errors { get => errors; }
 
-        public ExecutionResult(Executable executable, int exitCode, IEnumerable<string> outputs, IEnumerable<string> errors)
+        public ExecutionResult(Executable executable, int exitCode, DateTime startTime, DateTime exitTime,
+            IEnumerable<string> outputs, IEnumerable<string> errors)
         {
             Executable = executable;
             ExitCode = exitCode;
+
+            StartTime = startTime;
+            ExitTime = exitTime;
 
             this.outputs = new(outputs);
             this.errors = new(errors);

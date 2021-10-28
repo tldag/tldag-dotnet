@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using static TLDAG.Core.Exceptions.Errors;
 
@@ -23,6 +24,7 @@ namespace TLDAG.Core.Reflection
         {
             using Process process = new();
             ExecutionResultBuilder builder = new(executable);
+            DateTime startTime = DateTime.UtcNow;
 
             process.StartInfo = startInfo;
             process.OutputDataReceived += (_, e) => builder.Output(e.Data);
@@ -31,7 +33,10 @@ namespace TLDAG.Core.Reflection
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
             process.WaitForExit();
+
             builder.ExitCode(process.ExitCode);
+            builder.Started(startTime);
+            builder.Exited(DateTime.UtcNow);
 
             ExecutionResult result = builder.Build();
 

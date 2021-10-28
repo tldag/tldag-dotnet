@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TLDAG.Core.Reflection
 {
@@ -8,6 +9,8 @@ namespace TLDAG.Core.Reflection
         private List<string> outputs = new();
         private List<string> errors = new();
         private int exitCode;
+        private DateTime startTime = DateTime.UtcNow;
+        private DateTime exitTime = DateTime.UtcNow;
 
         public ExecutionResultBuilder(Executable executable) { this.executable = executable; }
 
@@ -20,7 +23,9 @@ namespace TLDAG.Core.Reflection
             { if (data is not null) errors.Add(data); return this; }
 
         public ExecutionResultBuilder ExitCode(int exitCode) { this.exitCode = exitCode; return this; }
+        public ExecutionResultBuilder Started(DateTime startTime) { this.startTime = startTime; return this; }
+        public ExecutionResultBuilder Exited(DateTime exitTime) { this.exitTime = exitTime; return this; }
 
-        public ExecutionResult Build() => new(executable, exitCode, outputs, errors);
+        public ExecutionResult Build() => new(executable, exitCode, startTime, exitTime, outputs, errors);
     }
 }
