@@ -9,20 +9,9 @@ namespace TLDAG.DotNetLogger.Model
     public class BuildTasks
     {
         [XmlElement("task")]
-        public List<BuildTask> Entries { get; set; } = new();
+        public List<BuildTask> Entries { get; set; }
 
-        public BuildTask? Get(int id) => Entries.Where(t => t.Id == id).FirstOrDefault();
-
-        public BuildTask Add(string? name, int id)
-        {
-            if (name is null || string.IsNullOrWhiteSpace(name) || id < 0)
-                return new();
-
-            BuildTask task = new(name, id);
-
-            Entries.Add(task);
-
-            return task;
-        }
+        internal BuildTasks(List<BuildTask>? entries) { Entries = entries ?? new(); }
+        public BuildTasks() : this(null) { }
     }
 }

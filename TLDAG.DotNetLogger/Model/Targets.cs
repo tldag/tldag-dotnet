@@ -12,20 +12,9 @@ namespace TLDAG.DotNetLogger.Model
         public int Count { get => Entries.Count; set { } }
 
         [XmlElement("target")]
-        public List<Target> Entries { get; set; } = new();
+        public List<Target> Entries { get; set; }
 
-        public Target? Get(int id) => Entries.Where(t => t.Id == id).LastOrDefault();
-
-        public Target Add(string? name, int id)
-        {
-            if (name is null || string.IsNullOrWhiteSpace(name))
-                return new();
-
-            Target target = new(name, id);
-
-            Entries.Add(target);
-
-            return target;
-        }
+        internal Targets(List<Target>? entries) { Entries = entries ?? new(); }
+        public Targets() : this(null) { }
     }
 }

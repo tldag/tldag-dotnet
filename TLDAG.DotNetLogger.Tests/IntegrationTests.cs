@@ -10,7 +10,7 @@ using TLDAG.Core.IO;
 using TLDAG.Core.Reflection;
 using TLDAG.DotNetLogger.Model;
 using TLDAG.Test;
-using static TLDAG.DotNetLogger.IO.Serialization;
+using static TLDAG.DotNetLogger.IO.DnlSerialization;
 
 namespace TLDAG.DotNetLogger.Tests
 {
@@ -63,6 +63,7 @@ namespace TLDAG.DotNetLogger.Tests
                 file.WriteAllText(ToXml(logs[i], writerSettings));
             }
 
+            Console.WriteLine(result.ElapsedTime);
             foreach (string line in result.Errors) Console.WriteLine(line);
             foreach (string line in result.Outputs) Console.WriteLine(line);
 

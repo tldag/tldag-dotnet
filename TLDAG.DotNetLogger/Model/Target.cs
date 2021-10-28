@@ -8,11 +8,11 @@ namespace TLDAG.DotNetLogger.Model
     [Serializable]
     public class Target
     {
-        [XmlAttribute("name")]
-        public string Name { get; set; }
-
         [XmlAttribute("ident")]
         public int Id { get; set; }
+
+        [XmlAttribute("name")]
+        public string Name { get; set; } = string.Empty;
 
         [XmlAttribute("success")]
         public bool Success { get; set; }
@@ -20,19 +20,7 @@ namespace TLDAG.DotNetLogger.Model
         [XmlElement("tasks")]
         public BuildTasks? Tasks { get; set; } = null;
 
-        public Target(string name, int id) { Name = name; Id = id; }
-        public Target() : this(string.Empty, -1) { }
-
-        public BuildTask? GetTask(int id) => Tasks?.Get(id);
-
-        public BuildTask AddTask(string? name, int id)
-        {
-            if (name is null || string.IsNullOrWhiteSpace(name) || id < 0)
-                return new();
-
-            Tasks ??= new();
-
-            return Tasks.Add(name, id);
-        }
+        public Target(int id) { Id = id; }
+        public Target() : this(-1) { }
     }
 }

@@ -1,22 +1,46 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Runtime.InteropServices;
+using TLDAG.DotNetLogger.Adapter;
+using static System.StringComparer;
 
 namespace TLDAG.DotNetLogger.Context
 {
     public class DnlContext
     {
         public static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        public static readonly StringComparer FileNameComparer = IsWindows ? OrdinalIgnoreCase : Ordinal;
 
-        private readonly SortedSet<string> restrictedProperties = new();
-        private readonly SortedSet<string> restrictedMetadata = new();
+        public DnlConfig Config { get; private set; } = DnlConfig.Invalid;
+        public DnlRestrictions Restrictions { get; } = new();
+        public DnlElements Elements { get; } = new(FileNameComparer);
+        public DnlEvents Events { get; } = new();
 
-        public DnlContext(DnlConfig config)
+        public void Initialize(DnlConfig config)
         {
-            foreach (string name in Restrictions.RestrictedProperties) restrictedProperties.Add(name);
-            foreach (string name in config.AllowedProperties) restrictedProperties.Remove(name);
-
-            foreach (string name in Restrictions.RestrictedMetadata) restrictedMetadata.Add(name);
-            foreach (string name in config.AllowedMetadata) restrictedMetadata.Remove(name);
+            Config = config;
+            Restrictions.Initialize(Config);
+            Elements.Initialize();
+            Events.Initialize();
         }
+
+        public void Shutdown()
+        {
+            Events.Shutdown();
+            Elements.Shutdown();
+            Restrictions.Shutdown();
+            Config = DnlConfig.Invalid;
+        }
+
+        public void Add(BuildStartedAdapter args) { Events.Add(args); }
+        public void Add(BuildFinishedAdapter args) { Events.Add(args); }
+
+        public void Add(ProjectStartedAdapter args) { Elements.Add(args); Events.Add(args); }
+        public void Add(ProjectFinishedAdapter args) { Events.Add(args); }
+
+        public void Add(TargetStartedAdapter args) { Elements.Add(args); Events.Add(args); }
+        public void Add(TargetFinishedAdapter args) { Events.Add(args); }
+
+        public void Add(TaskStartedAdapter args) { Elements.Add(args); Events.Add(args); }
+        public void Add(TaskFinishedAdapter args) { Events.Add(args); }
     }
 }

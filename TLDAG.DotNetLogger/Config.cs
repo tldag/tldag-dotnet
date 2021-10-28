@@ -69,6 +69,20 @@ namespace TLDAG.DotNetLogger
             return new(pipeHandle, allowedProperties, allowedMetadata);
         }
 
+        public static DnlConfig? TryParse(string source)
+        {
+            try
+            {
+                return Parse(source);
+            }
+            catch (System.Exception)
+            {
+                return null;
+            }
+        }
+
+        public static DnlConfig Invalid { get; } = new("");
+
         private static IEnumerable<string> FilterNames(IEnumerable<string> names)
             => names.Select(name => name.Trim()).Where(name => !string.IsNullOrWhiteSpace(name));
 

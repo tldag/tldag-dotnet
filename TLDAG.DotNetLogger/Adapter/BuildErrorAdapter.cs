@@ -4,7 +4,7 @@ namespace TLDAG.DotNetLogger.Adapter
 {
     public class BuildErrorAdapter : BuildAdapter<BuildErrorEventArgs>
     {
-        public override string? ProjectFile { get => Args.ProjectFile; }
+        public override string ProjectFile { get => Args.ProjectFile ?? base.ProjectFile; }
 
         public BuildErrorAdapter(BuildErrorEventArgs args) : base(args) { }
     }

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using static TLDAG.DotNetLogger.DotNetLoggerConstants;
+using TLDAG.DotNetLogger.Adapter;
+using static TLDAG.DotNetLogger.Model.Support.MessagesSupport;
 
 namespace TLDAG.DotNetLogger.Model
 {
     [Serializable]
     [XmlRoot("log")]
-    public class Log
+    public class Log : IHasMessages
     {
         [XmlAttribute("created")]
         public DateTime Created { get; set; } = DateTime.UtcNow;
@@ -20,43 +20,13 @@ namespace TLDAG.DotNetLogger.Model
         [XmlAttribute("success")]
         public bool Success { get; set; } = false;
 
+        [XmlElement("messages")]
+        public Messages? Messages { get; set; } = null;
+
         [XmlElement("project")]
         public List<Project> Projects { get; set; } = new();
 
-        public Project? GetProject(int passId, string? file)
-        {
-            Project? project = passId < 0 ? null : GetProject(passId);
-
-            if (project is not null)
-                return project;
-
-            if (file is null || string.IsNullOrWhiteSpace(file))
-                return null;
-
-            project = GetProject(file);
-
-            if (project is null)
-                project = AddProject(file);
-
-            project.Passes.Add(passId);
-
-            return project;
-        }
-
-        private Project? GetProject(int passId) => Projects.Where(p => p.Passes.Contains(passId)).FirstOrDefault();
-
-        private Project? GetProject(string? file)
-            => file is null ? null : Projects.Where(p => file.Equals(p.File, FileNameComparison)).FirstOrDefault();
-
-        private Project AddProject(string file)
-        {
-            Project project = new(file);
-
-            Projects.Add(project);
-            Projects.Sort();
-
-            return project;
-        }
+        public void AddMessage(string? message) { Messages = AddToMessages(Messages, message); }
 
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Namespaces { get => namespaces; }

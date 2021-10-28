@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TLDAG.DotNetLogger.IO;
 using TLDAG.DotNetLogger.Model;
 using TLDAG.DotNetLogger.Threading;
-using static TLDAG.DotNetLogger.IO.Serialization;
+using static TLDAG.DotNetLogger.IO.DnlSerialization;
 
 namespace TLDAG.DotNetLogger
 {

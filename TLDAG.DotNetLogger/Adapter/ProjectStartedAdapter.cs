@@ -5,7 +5,7 @@ namespace TLDAG.DotNetLogger.Adapter
 {
     public class ProjectStartedAdapter : BuildAdapter<ProjectStartedEventArgs>
     {
-        public override string? ProjectFile { get => Args.ProjectFile; }
+        public override string ProjectFile { get => Args.ProjectFile ?? ""; }
         public override int PassId => Args.ProjectId;
 
         public IDictionary<string, string> Globals => new StringDictionaryAdapter(Args.GlobalProperties).Dictionary;
@@ -13,5 +13,7 @@ namespace TLDAG.DotNetLogger.Adapter
         public ItemsAdapter Items => new(Args.Items);
 
         public ProjectStartedAdapter(ProjectStartedEventArgs args) : base(args) { }
+
+        public static implicit operator ProjectStartedAdapter(ProjectStartedEventArgs args) => new(args);
     }
 }

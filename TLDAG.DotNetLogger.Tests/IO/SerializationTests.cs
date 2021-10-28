@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TLDAG.DotNetLogger.Model;
-using static TLDAG.DotNetLogger.IO.Serialization;
+using static TLDAG.DotNetLogger.IO.DnlSerialization;
 
 namespace TLDAG.DotNetLogger.Tests.IO
 {

@@ -4,46 +4,51 @@ using System.Text;
 
 namespace TLDAG.DotNetLogger.Context
 {
-    public static class Restrictions
+    public class DnlRestrictions
     {
-        private static SortedSet<string>? restrictedProperties = null;
-        public static SortedSet<string> RestrictedProperties => restrictedProperties ??= GetRestrictedProperties();
+        private readonly SortedSet<string> restrictedProperties = new(StringComparer.OrdinalIgnoreCase);
+        private readonly SortedSet<string> restrictedMetadata = new(StringComparer.Ordinal);
 
-        private static SortedSet<string> GetRestrictedProperties()
+        public void Initialize(DnlConfig config)
         {
-            SortedSet<string> result = new(StringComparer.OrdinalIgnoreCase);
+            Clear();
 
             foreach (object key in Environment.GetEnvironmentVariables().Keys)
-                result.Add(key.ToString());
+                restrictedProperties.Add(key.ToString());
+            foreach (string key in config.AllowedProperties)
+                restrictedProperties.Remove(key);
 
-            return result;
+            foreach (string key in restrictedMetadataKeys)
+                restrictedMetadata.Add(key);
+            foreach (string key in config.AllowedMetadata)
+                restrictedMetadata.Remove(key);
         }
 
-        private static SortedSet<string>? restrictedMetadata = null;
-        public static SortedSet<string> RestrictedMetadata => restrictedMetadata ??= GetRestrictedMetadata();
+        public void Shutdown() { Clear(); }
 
-        private static SortedSet<string> GetRestrictedMetadata()
+        private void Clear()
         {
-            string[] keys =
-            {
-                "AccessedTime",
-                "CreatedTime",
-                "DefiningProjectDirectory",
-                "DefiningProjectExtension",
-                "DefiningProjectFullPath",
-                "DefiningProjectName",
-                "Directory",
-                "Extension",
-                "Filename",
-                "FullPath",
-                "Identity",
-                "ModifiedTime",
-                "RecursiveDir",
-                "RelativeDir",
-                "RootDir"
-            };
-
-            return new(keys);
+            restrictedProperties.Clear();
+            restrictedMetadata.Clear();
         }
+
+        private static string[] restrictedMetadataKeys =
+        {
+            "AccessedTime",
+            "CreatedTime",
+            "DefiningProjectDirectory",
+            "DefiningProjectExtension",
+            "DefiningProjectFullPath",
+            "DefiningProjectName",
+            "Directory",
+            "Extension",
+            "Filename",
+            "FullPath",
+            "Identity",
+            "ModifiedTime",
+            "RecursiveDir",
+            "RelativeDir",
+            "RootDir"
+        };
     }
 }

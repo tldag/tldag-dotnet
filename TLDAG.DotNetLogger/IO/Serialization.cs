@@ -8,7 +8,7 @@ using static System.Text.Encoding;
 
 namespace TLDAG.DotNetLogger.IO
 {
-    public static class Serialization
+    public static class DnlSerialization
     {
         private static readonly XmlWriterSettings DefaultXmlWriterSettings
             = new() { Indent = false, Encoding = UTF8 };
