@@ -20,14 +20,4 @@ namespace TLDAG.DotNetLogger.Model
         public DnlTask(int id) { Id = id; }
         public DnlTask() : this(-1) { }
     }
-
-    [Serializable]
-    public class DnlTasks
-    {
-        [XmlElement("task")]
-        public List<DnlTask> Entries { get; set; }
-
-        internal DnlTasks(List<DnlTask>? entries) { Entries = entries ?? new(); }
-        public DnlTasks() : this(null) { }
-    }
 }

@@ -17,23 +17,10 @@ namespace TLDAG.DotNetLogger.Model
         [XmlAttribute("success")]
         public bool Success { get; set; }
 
-        [XmlElement("tasks")]
-        public DnlTasks? Tasks { get; set; } = null;
+        [XmlElement("task")]
+        public List<DnlTask> Tasks { get; set; } = new();
 
         public DnlTarget(int id) { Id = id; }
         public DnlTarget() : this(-1) { }
-    }
-
-    [Serializable]
-    public class DnlTargets
-    {
-        [XmlAttribute("count")]
-        public int Count { get => Entries.Count; set { } }
-
-        [XmlElement("target")]
-        public List<DnlTarget> Entries { get; set; }
-
-        internal DnlTargets(List<DnlTarget>? entries) { Entries = entries ?? new(); }
-        public DnlTargets() : this(null) { }
     }
 }

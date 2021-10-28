@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace TLDAG.DotNetLogger.Model
@@ -6,16 +7,15 @@ namespace TLDAG.DotNetLogger.Model
     [Serializable]
     public class DnlElement
     {
-        [XmlElement("messages")]
-        public Messages? Messages { get; set; } = null;
+        [XmlElement("message")]
+        public List<string> Messages { get; set; } = new();
 
         public void AddMessage(string? message)
         {
             if (message is null) return;
             if (string.IsNullOrWhiteSpace(message)) return;
 
-            Messages ??= new();
-            Messages.Lines.Add(message);
+            Messages.Add(message);
         }
     }
 }

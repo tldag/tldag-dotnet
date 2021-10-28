@@ -16,7 +16,5 @@ namespace TLDAG.DotNetLogger.Model
 
         public Properties() : this(new()) { }
         internal Properties(List<StringEntry> entries) { Entries = entries; }
-
-        public void Set(IEnumerable<StringEntry>? source) { Entries = CreateSortedSetList(source); }
     }
 }

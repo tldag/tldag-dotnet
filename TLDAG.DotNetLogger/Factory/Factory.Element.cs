@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using TLDAG.DotNetLogger.Adapter;
 using TLDAG.DotNetLogger.Model;
@@ -32,12 +33,8 @@ namespace TLDAG.DotNetLogger.Factory
             return project;
         }
 
-        public DnlPasses? CreatePasses(string file)
-        {
-            IEnumerable<int> passIds = context.Elements.GetPasses(file);
-
-            return passIds.Any() ? new(passIds.Select(CreatePass).ToList()) : null;
-        }
+        public List<DnlPass> CreatePasses(string file)
+            => context.Elements.GetPasses(file).Select(CreatePass).ToList();
 
         public DnlPass CreatePass(int passId)
         {
@@ -52,12 +49,8 @@ namespace TLDAG.DotNetLogger.Factory
             return pass;
         }
 
-        public DnlTargets? CreateTargets(int passId)
-        {
-            IEnumerable<PassTarget> keys = context.Elements.GetTargets(passId);
-
-            return keys.Any() ? new(keys.Select(CreateTarget).ToList()) : null;
-        }
+        public List<DnlTarget> CreateTargets(int passId)
+            => context.Elements.GetTargets(passId).Select(CreateTarget).ToList();
 
         public DnlTarget CreateTarget(PassTarget key)
         {
@@ -86,11 +79,7 @@ namespace TLDAG.DotNetLogger.Factory
             return task;
         }
 
-        public DnlTasks? CreateTasks(PassTarget passTarget)
-        {
-            IEnumerable<TargetTask> keys = context.Elements.GetTasks(passTarget);
-
-            return keys.Any() ? new(keys.Select(CreateTask).ToList()) : null;
-        }
+        public List<DnlTask> CreateTasks(PassTarget passTarget)
+            => context.Elements.GetTasks(passTarget).Select(CreateTask).ToList();
     }
 }

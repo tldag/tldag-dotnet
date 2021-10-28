@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -26,8 +27,8 @@ namespace TLDAG.DotNetLogger.Model
         [XmlElement("items")]
         public Items? Items { get; set; } = null;
 
-        [XmlElement("passes")]
-        public DnlPasses? Passes { get; set; } = null;
+        [XmlElement("pass")]
+        public List<DnlPass> Passes { get; set; } = new();
 
         public DnlProject(string file) { File = file; }
         public DnlProject() : this(string.Empty) { }

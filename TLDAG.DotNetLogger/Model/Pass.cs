@@ -22,25 +22,12 @@ namespace TLDAG.DotNetLogger.Model
         [XmlElement("items")]
         public Items? Items { get; set; } = null;
 
-        [XmlElement("targets")]
-        public DnlTargets? Targets { get; set; } = null;
+        [XmlElement("target")]
+        public List<DnlTarget> Targets { get; set; } = new();
 
         public DnlPass(int id) { Id = id; }
         public DnlPass() : this(-1) { }
 
         public int CompareTo(DnlPass other) => Id.CompareTo(other.Id);
-    }
-
-    [Serializable]
-    public class DnlPasses
-    {
-        [XmlAttribute("count")]
-        public int Count { get => Entries.Count; set { } }
-
-        [XmlElement("pass")]
-        public List<DnlPass> Entries { get; set; }
-
-        public DnlPasses(List<DnlPass>? entries) { Entries = entries ?? new(); }
-        public DnlPasses() : this(null) { }
     }
 }
