@@ -13,9 +13,9 @@ namespace TLDAG.DotNetLogger.IO
         private static readonly XmlWriterSettings DefaultXmlWriterSettings
             = new() { Indent = false, Encoding = UTF8 };
 
-        private static readonly XmlSerializer xmlSerializer = new(typeof(Log));
+        private static readonly XmlSerializer xmlSerializer = new(typeof(DnlLog));
 
-        public static string ToXml(Log log, XmlWriterSettings? settings = null)
+        public static string ToXml(DnlLog log, XmlWriterSettings? settings = null)
         {
             settings ??= DefaultXmlWriterSettings;
 
@@ -27,16 +27,16 @@ namespace TLDAG.DotNetLogger.IO
             return settings.Encoding.GetString(stream.ToArray());
         }
 
-        public static Log FromXml(string xml)
+        public static DnlLog FromXml(string xml)
         {
             using StringReader reader = new(xml);
 
-            return (Log)xmlSerializer.Deserialize(reader);
+            return (DnlLog)xmlSerializer.Deserialize(reader);
         }
 
         private static readonly BinaryFormatter binaryFormatter = new();
 
-        public static byte[] ToBytes(Log log)
+        public static byte[] ToBytes(DnlLog log)
         {
             using MemoryStream stream = new();
 
@@ -45,14 +45,14 @@ namespace TLDAG.DotNetLogger.IO
             return stream.ToArray();
         }
 
-        public static Log FromBytes(byte[] bytes)
+        public static DnlLog FromBytes(byte[] bytes)
         {
             using MemoryStream stream = new(bytes);
 
-            return (Log)binaryFormatter.Deserialize(stream);
+            return (DnlLog)binaryFormatter.Deserialize(stream);
         }
 
-        public static void Send(Log log, string pipeHandle)
+        public static void Send(DnlLog log, string pipeHandle)
         {
             byte[] bytes = ToBytes(log);
             using AnonymousPipeClientStream pipe = new(PipeDirection.Out, pipeHandle);

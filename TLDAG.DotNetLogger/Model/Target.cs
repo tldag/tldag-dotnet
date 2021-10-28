@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 namespace TLDAG.DotNetLogger.Model
 {
     [Serializable]
-    public class Target
+    public class DnlTarget : DnlElement
     {
         [XmlAttribute("ident")]
         public int Id { get; set; }
@@ -18,9 +18,22 @@ namespace TLDAG.DotNetLogger.Model
         public bool Success { get; set; }
 
         [XmlElement("tasks")]
-        public BuildTasks? Tasks { get; set; } = null;
+        public DnlTasks? Tasks { get; set; } = null;
 
-        public Target(int id) { Id = id; }
-        public Target() : this(-1) { }
+        public DnlTarget(int id) { Id = id; }
+        public DnlTarget() : this(-1) { }
+    }
+
+    [Serializable]
+    public class DnlTargets
+    {
+        [XmlAttribute("count")]
+        public int Count { get => Entries.Count; set { } }
+
+        [XmlElement("target")]
+        public List<DnlTarget> Entries { get; set; }
+
+        internal DnlTargets(List<DnlTarget>? entries) { Entries = entries ?? new(); }
+        public DnlTargets() : this(null) { }
     }
 }

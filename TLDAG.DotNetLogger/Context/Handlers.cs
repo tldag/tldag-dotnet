@@ -1,14 +1,14 @@
 ﻿using Microsoft.Build.Framework;
 using System;
+using TLDAG.DotNetLogger.Factory;
 using TLDAG.DotNetLogger.Model;
-using static TLDAG.DotNetLogger.Context.DnlFactory;
 
 namespace TLDAG.DotNetLogger.Context
 {
     public class DnlHandlersBuildFinishedEventArgs : EventArgs
     {
-        public Log Log { get; }
-        public DnlHandlersBuildFinishedEventArgs(Log log) { Log = log; }
+        public DnlLog Log { get; }
+        public DnlHandlersBuildFinishedEventArgs(DnlLog log) { Log = log; }
     }
 
     public delegate void DnlHandlersBuildFinishedHandler(DnlHandlers source, DnlHandlersBuildFinishedEventArgs args);
@@ -18,6 +18,7 @@ namespace TLDAG.DotNetLogger.Context
         public event DnlHandlersBuildFinishedHandler? BuildFinished;
 
         private DnlContext context = new();
+        private DnlFactory factory = new();
         private IEventSource? eventSource = null;
 
         public void Initialize(DnlContext context, IEventSource eventSource)
@@ -27,17 +28,19 @@ namespace TLDAG.DotNetLogger.Context
             this.context = context;
             this.eventSource = eventSource;
 
-            this.eventSource.BuildStarted += OnBuildStarted;
-            this.eventSource.BuildFinished += OnBuildFinished;
+            factory.Initialize(context);
 
-            this.eventSource.ProjectStarted += OnProjectStarted;
-            this.eventSource.ProjectFinished += OnProjectFinished;
+            eventSource.BuildStarted += OnBuildStarted;
+            eventSource.BuildFinished += OnBuildFinished;
 
-            this.eventSource.TargetStarted += OnTargetStarted;
-            this.eventSource.TargetFinished += OnTargetFinished;
+            eventSource.ProjectStarted += OnProjectStarted;
+            eventSource.ProjectFinished += OnProjectFinished;
 
-            this.eventSource.TaskStarted += OnTaskStarted;
-            this.eventSource.TaskFinished += OnTaskFinished;
+            eventSource.TargetStarted += OnTargetStarted;
+            eventSource.TargetFinished += OnTargetFinished;
+
+            eventSource.TaskStarted += OnTaskStarted;
+            eventSource.TaskFinished += OnTaskFinished;
         }
 
         public void Shutdown()
@@ -59,6 +62,7 @@ namespace TLDAG.DotNetLogger.Context
                 eventSource = null;
             }
 
+            factory.Shutdown();
             context = new();
         }
 
@@ -69,7 +73,7 @@ namespace TLDAG.DotNetLogger.Context
             Invoke(() =>
             {
                 context.Add(e);
-                Raise(CreateLog(context));
+                Raise(factory.CreateLog());
             });
         }
 
@@ -95,7 +99,7 @@ namespace TLDAG.DotNetLogger.Context
             }
         }
 
-        private void Raise(Log log)
+        private void Raise(DnlLog log)
         {
             if (BuildFinished is not null)
                 BuildFinished.Invoke(this, new(log));

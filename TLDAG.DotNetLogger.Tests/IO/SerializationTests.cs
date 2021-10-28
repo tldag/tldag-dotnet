@@ -10,7 +10,7 @@ namespace TLDAG.DotNetLogger.Tests.IO
         [TestMethod]
         public void Test()
         {
-            Log log = new();
+            DnlLog log = new();
 
             ToBytes(log);
         }

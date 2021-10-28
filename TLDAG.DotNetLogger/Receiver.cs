@@ -12,9 +12,9 @@ namespace TLDAG.DotNetLogger
 {
     public class ReceiverBuildReceivedEventArgs : EventArgs
     {
-        public Log Log{ get; }
+        public DnlLog Log { get; }
 
-        public ReceiverBuildReceivedEventArgs(Log log) { Log = log; }
+        public ReceiverBuildReceivedEventArgs(DnlLog log) { Log = log; }
     }
 
     public delegate void ReceiverBuildReceivedHandler(Receiver receiver, ReceiverBuildReceivedEventArgs args);
@@ -62,7 +62,7 @@ namespace TLDAG.DotNetLogger
         {
             if (BuildReceived is not null)
             {
-                Log log = FromBytes(args.Bytes);
+                DnlLog log = FromBytes(args.Bytes);
 
                 log.Transferred = args.Received;
 

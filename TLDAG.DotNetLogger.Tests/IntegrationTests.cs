@@ -26,7 +26,7 @@ namespace TLDAG.DotNetLogger.Tests
             FileInfo solutionFile = SolutionDirectory.Combine("tldag-dotnet-samples.sln");
             DirectoryInfo directory = GetTestDirectory(true);
 
-            List<Log> logs = new();
+            List<DnlLog> logs = new();
 
             using Receiver receiver = new((_, e) => { logs.Add(e.Log); });
 

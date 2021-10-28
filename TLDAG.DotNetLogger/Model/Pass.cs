@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using TLDAG.DotNetLogger.Adapter;
-using static TLDAG.DotNetLogger.Model.Support.ItemsSupport;
-using static TLDAG.DotNetLogger.Model.Support.MessagesSupport;
-using static TLDAG.DotNetLogger.Model.Support.PropertiesSupport;
 
 namespace TLDAG.DotNetLogger.Model
 {
     [Serializable]
-    public class Pass : IHasMessages, IComparable<Pass>
+    public class DnlPass : DnlElement, IComparable<DnlPass>
     {
         [XmlAttribute("ident")]
         public int Id { get; set; }
 
         [XmlAttribute("success")]
         public bool Success { get; set; }
-
-        [XmlElement("messages")]
-        public Messages? Messages { get; set; } = null;
 
         [XmlElement("globals")]
         public Properties? Globals { get; set; } = null;
@@ -30,13 +23,24 @@ namespace TLDAG.DotNetLogger.Model
         public Items? Items { get; set; } = null;
 
         [XmlElement("targets")]
-        public Targets? Targets { get; set; } = null;
+        public DnlTargets? Targets { get; set; } = null;
 
-        public Pass(int id) { Id = id; }
-        public Pass() : this(-1) { }
+        public DnlPass(int id) { Id = id; }
+        public DnlPass() : this(-1) { }
 
-        public void AddMessage(string? message) { Messages = AddToMessages(Messages, message); }
+        public int CompareTo(DnlPass other) => Id.CompareTo(other.Id);
+    }
 
-        public int CompareTo(Pass other) => Id.CompareTo(other.Id);
+    [Serializable]
+    public class DnlPasses
+    {
+        [XmlAttribute("count")]
+        public int Count { get => Entries.Count; set { } }
+
+        [XmlElement("pass")]
+        public List<DnlPass> Entries { get; set; }
+
+        public DnlPasses(List<DnlPass>? entries) { Entries = entries ?? new(); }
+        public DnlPasses() : this(null) { }
     }
 }
