@@ -7,7 +7,7 @@ namespace TLDAG.DotNetLogger.Factory
 {
     public partial class DnlFactory
     {
-        public List<DnlItem> CreateItems(ItemsAdapter source)
+        public DnlItems? CreateItems(ItemsAdapter source)
         {
             SortedSet<DnlItem> items = new();
 
@@ -19,7 +19,7 @@ namespace TLDAG.DotNetLogger.Factory
                 items.Add(item);
             }
 
-            return items.ToList();
+            return items.Any() ? new(items.ToList()) : null;
         }
 
         public DnlItem CreateItem(ItemAdapter source)

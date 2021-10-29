@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace TLDAG.DotNetLogger.Model
@@ -34,5 +35,18 @@ namespace TLDAG.DotNetLogger.Model
         public static bool operator <=(DnlItem a, DnlItem b) => a.CompareTo(b) <= 0;
         public static bool operator >(DnlItem a, DnlItem b) => a.CompareTo(b) > 0;
         public static bool operator >=(DnlItem a, DnlItem b) => a.CompareTo(b) >= 0;
+    }
+
+    [Serializable]
+    public class DnlItems
+    {
+        [XmlAttribute("count")]
+        public int Count { get => Entries.Count; set { } }
+
+        [XmlElement("item")]
+        public List<DnlItem> Entries { get; set; }
+
+        public DnlItems(List<DnlItem>? entries) { Entries = entries ?? new(); }
+        public DnlItems() : this(null) { }
     }
 }

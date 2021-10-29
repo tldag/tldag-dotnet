@@ -20,8 +20,12 @@ namespace TLDAG.DotNetLogger.Factory
             return log;
         }
 
-        public List<DnlProject> CreateProjects()
-            => context.Elements.ProjectFiles.Select(CreateProject).ToList();
+        public DnlProjects? CreateProjects()
+        {
+            IEnumerable<string> files = context.Elements.ProjectFiles;
+
+            return files.Any() ? new(files.Select(CreateProject).ToList()) : null;
+        }
 
         public DnlProject CreateProject(string file)
         {
@@ -32,8 +36,12 @@ namespace TLDAG.DotNetLogger.Factory
             return project;
         }
 
-        public List<DnlPass> CreatePasses(string file)
-            => context.Elements.GetPasses(file).Select(CreatePass).ToList();
+        public DnlPasses? CreatePasses(string file)
+        {
+            IEnumerable<int> passIds = context.Elements.GetPasses(file);
+
+            return passIds.Any() ? new(passIds.Select(CreatePass).ToList()) : null;
+        }
 
         public DnlPass CreatePass(int passId)
         {
@@ -49,8 +57,12 @@ namespace TLDAG.DotNetLogger.Factory
             return pass;
         }
 
-        public List<DnlTarget> CreateTargets(int passId)
-            => context.Elements.GetTargets(passId).Select(CreateTarget).ToList();
+        public DnlTargets? CreateTargets(int passId)
+        {
+            IEnumerable<PassTarget> keys = context.Elements.GetTargets(passId);
+
+            return keys.Any() ? new(keys.Select(CreateTarget).ToList()) : null;
+        }
 
         public DnlTarget CreateTarget(PassTarget key)
         {

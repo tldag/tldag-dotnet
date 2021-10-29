@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
+using TLDAG.Core.Executing;
 using TLDAG.Core.IO;
 using TLDAG.Core.Reflection;
 using TLDAG.DotNetLogger.Model;
@@ -50,7 +50,7 @@ namespace TLDAG.DotNetLogger.Tests
                 .SetEnvironmentVariable("UseCommonOutputDirectory", "true")
                 .SetEnvironmentVariable("GeneratePackageOnBuild", "false")
                 .Build()
-                .Execute(false);
+                .Execute();
 
             TimeSpan? timeout = Debugger.IsAttached ? null : TimeSpan.FromSeconds(4);
 

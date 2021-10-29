@@ -23,4 +23,17 @@ namespace TLDAG.DotNetLogger.Model
         public DnlTarget(int id) { Id = id; }
         public DnlTarget() : this(-1) { }
     }
+
+    [Serializable]
+    public class DnlTargets
+    {
+        [XmlAttribute("count")]
+        public int Count { get => Entries.Count; set { } }
+
+        [XmlElement("target")]
+        public List<DnlTarget> Entries { get; set; }
+
+        public DnlTargets(List<DnlTarget>? entries) { Entries = entries ?? new(); }
+        public DnlTargets() : this(null) { }
+    }
 }

@@ -18,8 +18,8 @@ namespace TLDAG.DotNetLogger.Model
         [XmlAttribute("success")]
         public bool Success { get; set; } = false;
 
-        [XmlElement("project")]
-        public List<DnlProject> Projects { get; set; } = new();
+        [XmlElement("projects")]
+        public DnlProjects? Projects { get; set; }
 
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Namespaces { get => namespaces; }

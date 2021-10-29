@@ -24,12 +24,25 @@ namespace TLDAG.DotNetLogger.Model
         [XmlElement("properties")]
         public Properties? Properties { get; set; } = null;
 
-        [XmlElement("pass")]
-        public List<DnlPass> Passes { get; set; } = new();
+        [XmlElement("passes")]
+        public DnlPasses? Passes { get; set; }
 
         public DnlProject(string file) { File = file; }
         public DnlProject() : this(string.Empty) { }
 
         public int CompareTo(DnlProject other) => StringComparer.Ordinal.Compare(Name, other.Name);
+    }
+
+    [Serializable]
+    public class DnlProjects
+    {
+        [XmlAttribute("count")]
+        public int Count { get => Entries.Count; set { } }
+
+        [XmlElement("project")]
+        public List<DnlProject> Entries { get; set; }
+
+        public DnlProjects(List<DnlProject>? entries) { Entries = entries ?? new(); }
+        public DnlProjects() : this(null) { }
     }
 }
