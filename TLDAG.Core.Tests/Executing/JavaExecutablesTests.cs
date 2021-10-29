@@ -25,6 +25,7 @@ namespace TLDAG.Core.Tests.Executing
         {
             ExecutionResult result = ExecutionBuilder
                 .Create(JavaExecutables.Find())
+                .UseShellExecute(false).CreateNoWindow(true)
                 .AddArgument("-version")
                 .Build().Execute();
 
