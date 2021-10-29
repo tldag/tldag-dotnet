@@ -1,18 +1,17 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 using TLDAG.Build.DotNet;
 using TLDAG.Build.Logging;
 using TLDAG.Core;
+using TLDAG.Core.Executing;
 using TLDAG.Core.IO;
-using TLDAG.Core.Reflection;
-using static TLDAG.Core.Strings;
-using static TLDAG.Build.Logging.MSBuildEventModel;
-using Newtonsoft.Json;
 using TLDAG.Test;
-using System.Xml.Serialization;
-using System.Xml;
-using System.Text;
+using static TLDAG.Build.Logging.MSBuildEventModel;
+using static TLDAG.Core.Strings;
 
 namespace TLDAG.Build.Tests.DotNet
 {
@@ -30,7 +29,7 @@ namespace TLDAG.Build.Tests.DotNet
                 Loggers = { receiver.GetSenderLogger() }
             };
 
-            ExecutionResult executionResult = DotNetRunner.Build(sln, options, true);
+            ExecutionResult executionResult = DotNetRunner.Build(sln, options).ThrowOnError();
 
             Debug.WriteLine($"ExitCode: {executionResult.ExitCode}");
             Debug.WriteLine($"Errors:{NewLine}{executionResult.Errors.Join(NewLine)}");

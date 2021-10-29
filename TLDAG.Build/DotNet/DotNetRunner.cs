@@ -1,19 +1,19 @@
 ﻿using System.IO;
+using TLDAG.Core.Executing;
 using TLDAG.Core.IO;
-using TLDAG.Core.Reflection;
 
 namespace TLDAG.Build.DotNet
 {
     public class DotNetRunner
     {
-        public static ExecutionResult Build(FileInfo slnOrProj, DotNetOptions options, bool throwOnError)
-            => Execute("build", slnOrProj, options, throwOnError);
+        public static ExecutionResult Build(FileInfo slnOrProj, DotNetOptions options)
+            => Execute("build", slnOrProj, options);
 
-        public static ExecutionResult Restore(FileInfo slnOrProj, DotNetOptions options, bool throwOnError)
-            => Execute("restore", slnOrProj, options, throwOnError);
+        public static ExecutionResult Restore(FileInfo slnOrProj, DotNetOptions options)
+            => Execute("restore", slnOrProj, options);
 
-        public static ExecutionResult Execute(string command, FileInfo slnOrProj, DotNetOptions options, bool throwOnError)
-            => AddOptions(CreateBuilder(command, slnOrProj), options).Build().Execute(throwOnError);
+        public static ExecutionResult Execute(string command, FileInfo slnOrProj, DotNetOptions options)
+            => AddOptions(CreateBuilder(command, slnOrProj), options).Build().Execute();
 
         private static ExecutionBuilder CreateBuilder(string command, FileInfo slnOrProj)
         {

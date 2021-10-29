@@ -1,10 +1,65 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
-namespace TLDAG.Core.Reflection
+namespace TLDAG.Core.Executing
 {
-    public class ExecutionBuilder
+    public class Execution
+    {
+        private readonly Executable executable;
+        private readonly ProcessStartInfo startInfo;
+
+        public Execution(Executable executable, ProcessStartInfo startInfo)
+        {
+            this.executable = executable;
+            this.startInfo = startInfo;
+
+            startInfo.FileName = executable.Path;
+            startInfo.RedirectStandardError = true;
+            startInfo.RedirectStandardOutput = true;
+        }
+
+        public ExecutionResult Execute()
+        {
+            return Start().Result;
+        }
+
+        public async Task<ExecutionResult> Start()
+        {
+            using Process process = new();
+            ExecutionResultBuilder builder = new(executable);
+            DateTime startTime = DateTime.UtcNow;
+
+            process.StartInfo = startInfo;
+            process.OutputDataReceived += (_, e) => builder.Output(e.Data);
+            process.ErrorDataReceived += (_, e) => builder.Error(e.Data);
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
+            await WaitForExitAsync(process);
+
+            builder.ExitCode(process.ExitCode);
+            builder.Started(startTime);
+            builder.Exited(DateTime.UtcNow);
+
+            return builder.Build();
+        }
+
+        private async Task WaitForExitAsync(Process process)
+        {
+#if NET5_0_OR_GREATER
+            await process.WaitForExitAsync();
+#else
+            while (!process.HasExited)
+                await Task.Yield();
+#endif
+        }
+    }
+
+        public class ExecutionBuilder
     {
         private readonly Executable executable;
         private readonly ProcessStartInfo info;
@@ -48,12 +103,12 @@ namespace TLDAG.Core.Reflection
         public ExecutionBuilder AddArgument(string arg) { arguments.Add(arg); return this; }
 
         public ExecutionBuilder AddArguments(params string[] args)
-            { foreach (string arg in args) AddArgument(arg); return this; }
+        { foreach (string arg in args) AddArgument(arg); return this; }
 
         public ExecutionBuilder AddArguments(IEnumerable<string> args)
-            { foreach (string arg in args) AddArgument(arg); return this; }
+        { foreach (string arg in args) AddArgument(arg); return this; }
 
-        public Execution Build() { ProcessArguments(); return new(executable, info);}
+        public Execution Build() { ProcessArguments(); return new(executable, info); }
 
 #if NET472
         private void ProcessArguments() { info.Arguments = string.Join(" ", arguments); }

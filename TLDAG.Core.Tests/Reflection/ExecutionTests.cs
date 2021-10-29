@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TLDAG.Core.Reflection;
+using TLDAG.Core.Executing;
 
 namespace TLDAG.Core.Tests.Reflection
 {
@@ -15,7 +15,7 @@ namespace TLDAG.Core.Tests.Reflection
                 .UseShellExecute(false)
                 .Build();
 
-            ExecutionResult result = execution.Execute(true);
+            ExecutionResult result = execution.Execute().ThrowOnError();
 
             Assert.AreEqual(0, result.ExitCode);
             Assert.IsTrue(result.Outputs.Count > 0);

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TLDAG.Core;
-using TLDAG.Core.Reflection;
-using static TLDAG.Core.Strings;
+using TLDAG.Core.Executing;
 using static TLDAG.Build.Resources.DotNetResources;
+using static TLDAG.Core.Strings;
 
 namespace TLDAG.Build.DotNet
 {
@@ -28,7 +28,7 @@ namespace TLDAG.Build.DotNet
                 .UseShellExecute(false).CreateNoWindow(true)
                 .WorkingDirectory(directory)
                 .AddArgument("--info")
-                .Build().Execute(true);
+                .Build().Execute().ThrowOnError();
 
             List<string> trimmed = result.Outputs.Select(line => line.Trim()).ToList();
             SemanticVersion version = ParseVersion(trimmed);
