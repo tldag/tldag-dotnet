@@ -25,5 +25,15 @@ namespace TLDAG.Core
 
             return path;
         }
+
+        public static DirectoryInfo? GetDirectory(string variableName)
+        {
+            string? path = Environment.GetEnvironmentVariable(variableName);
+
+            if (path is null || string.IsNullOrWhiteSpace(path))
+                return null;
+
+            return Directory.Exists(path) ? new(path) : null;
+        }
     }
 }

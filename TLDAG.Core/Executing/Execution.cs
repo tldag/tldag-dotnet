@@ -59,7 +59,7 @@ namespace TLDAG.Core.Executing
         }
     }
 
-        public class ExecutionBuilder
+    public class ExecutionBuilder
     {
         private readonly Executable executable;
         private readonly ProcessStartInfo info;

@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using System.Linq;
 using TLDAG.Core.Executing;
 
 namespace TLDAG.Core.Tests.Executing

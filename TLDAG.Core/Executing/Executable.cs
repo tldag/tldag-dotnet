@@ -19,7 +19,7 @@ namespace TLDAG.Core.Executing
 
     public static class Executables
     {
-        private static readonly StringSet ExecutableExtensions
+        public static readonly StringSet ExecutableExtensions
             = Platform.IsWindows ? new(".exe", Strings.CompareOrdinalIgnoreCase) : new("");
 
         public static Executable Find(string name)

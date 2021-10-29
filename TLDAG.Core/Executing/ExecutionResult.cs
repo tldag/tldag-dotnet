@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using static TLDAG.Core.Exceptions.Errors;
+using static TLDAG.Core.Strings;
 
 namespace TLDAG.Core.Executing
 {
@@ -39,6 +41,29 @@ namespace TLDAG.Core.Executing
                 throw ExecutionFailed(ExitCode, Errors);
 
             return this;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new();
+
+            sb.Append($"ExitCode = {ExitCode}");
+            sb.Append(NewLine);
+            sb.Append($"ElapsedTime = {ElapsedTime}");
+
+            if (Errors.Any())
+            {
+                sb.Append(NewLine).Append("Errors:").Append(NewLine);
+                sb.Append(string.Join(NewLine, Errors));
+            }
+
+            if (Outputs.Any())
+            {
+                sb.Append(NewLine).Append("Output:").Append(NewLine);
+                sb.Append(string.Join(NewLine, Outputs));
+            }
+
+            return sb.ToString();
         }
     }
 
