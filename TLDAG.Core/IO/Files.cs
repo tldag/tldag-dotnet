@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using TLDAG.Core.Collections;
+using static System.IO.SearchOption;
 using static TLDAG.Core.Exceptions.Errors;
 using static TLDAG.Core.Strings;
 
@@ -36,5 +38,26 @@ namespace TLDAG.Core.IO
         public static void WriteAllBytes(this FileInfo file, byte[] bytes) { File.WriteAllBytes(file.FullName, bytes); }
 
         public static Uri ToUri(this FileInfo file) => new(file.FullName);
+
+        public static FileInfo FindOnPath(string pattern, bool prependWorkingDirectory = false)
+        {
+            if (TryFindOnPath(pattern, out FileInfo file, prependWorkingDirectory))
+                return file;
+
+            throw FileNotFound(pattern);
+        }
+
+        public static bool TryFindOnPath(string pattern, out FileInfo file, bool prependWorkingDirectory = false)
+        {
+#pragma warning disable CS8601 // Possible null reference assignment.
+
+            file = Env.GetPath(prependWorkingDirectory)
+                .SelectMany(dir => dir.GetFiles(pattern, TopDirectoryOnly))
+                .FirstOrDefault();
+
+#pragma warning restore CS8601 // Possible null reference assignment.
+
+            return file is not null;
+        }
     }
 }

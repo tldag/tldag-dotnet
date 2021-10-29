@@ -54,7 +54,7 @@ namespace TLDAG.Core.Executing
             await process.WaitForExitAsync();
 #else
             while (!process.HasExited)
-                await Task.Yield();
+                await Task.Delay(10);
 #endif
         }
     }

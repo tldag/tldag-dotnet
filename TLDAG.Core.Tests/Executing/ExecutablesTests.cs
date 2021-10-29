@@ -9,12 +9,6 @@ namespace TLDAG.Core.Tests.Executing
     public class ExecutablesTests
     {
         [TestMethod]
-        public void TestLookupPath()
-        {
-            Assert.IsTrue(Executables.LookupPath.Count() > 1);
-        }
-
-        [TestMethod]
         public void FindDotnet()
         {
             Executable executable = Executables.Find("dotnet");

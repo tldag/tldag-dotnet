@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using TLDAG.Core.Collections;
 using TLDAG.Core.IO;
 using static TLDAG.Core.Exceptions.Errors;
@@ -34,30 +32,20 @@ namespace TLDAG.Core.Executing
 
         public static bool TryFind(string name, out Executable executable)
         {
-#pragma warning disable CS8601 // Possible null reference assignment.
+            foreach (string ext in ExecutableExtensions)
+            {
+                if (Files.TryFindOnPath(name + ext, out FileInfo file, true))
+                {
+                    executable = new(file);
+                    return true;
+                }
+            }
 
-            executable = LookupPath
-                .Select(directory => Find(directory, name))
-                .Where(e => e is not null)
-                .FirstOrDefault();
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+            executable = null;
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
-#pragma warning restore CS8601 // Possible null reference assignment.
-
-            return executable is not null;
+            return false;
         }
-
-        public static Executable? Find(DirectoryInfo directory, string name, bool deep = false)
-        {
-            SearchOption options = deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
-            return ExecutableExtensions
-                .Select(ext => name + ext)
-                .SelectMany(pattern => directory.GetFiles(pattern, options))
-                .Select(file => new Executable(file))
-                .FirstOrDefault();
-        }
-
-        public static IEnumerable<DirectoryInfo> LookupPath => Env.Path.Prepend(Env.WorkingDirectory);
     }
-
 }
