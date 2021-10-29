@@ -3,15 +3,24 @@
 modules/
 packages/
 repository/
+TestOutput/
 TestResults/
 
 TLDAG.Automation/
 TLDAG.Automation.Tests/
 TLDAG.Build/
+TLDAG.Build.Logging/
+TLDAG.Build.Logging.Tests/
 TLDAG.Build.Tests/
 TLDAG.Commands/
 TLDAG.Commands.Tests/
 TLDAG.Core/
 TLDAG.Core.Tests/
+TLDAG.DotNetLogger/
+TLDAG.DotNetLogger.Tests/
+TLDAG.Samples.BuildOrder/
+TLDAG.Samples.UsingTask/
 TLDAG.Sdk/
 TLDAG.Sdk.Tests/
+TLDAG.Tasks/
+TLDAG.Test/
