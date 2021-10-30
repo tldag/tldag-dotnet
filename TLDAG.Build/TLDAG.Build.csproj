@@ -14,7 +14,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
     <PackageReference Include="NuGet.Packaging" Version="$(NuGetPackagingVersion)" />
     <PackageReference Include="NuGet.Protocol" Version="$(NuGetProtocolVersion)" />
-    <ProjectReference Include="$(TldagBuildLogging)" />
     <ProjectReference Include="$(TldagCore)" />
   </ItemGroup>
 
