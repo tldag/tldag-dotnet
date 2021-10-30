@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using TLDAG.Build.Drawing;
 using TLDAG.Core.Collections;
 using TLDAG.Core.Executing;
 using TLDAG.Core.Executing.Java;
 using TLDAG.Core.IO;
+using TLDAG.Drawing;
 using TLDAG.Test;
 
 namespace TLDAG.Assets.Tests.Logos

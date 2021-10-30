@@ -1,13 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TLDAG.Build.Drawing;
 using TLDAG.Core.IO;
+using TLDAG.Drawing;
 using TLDAG.Test;
 using static TLDAG.Build.Tests.Resources.Logos.LogoResources;
 

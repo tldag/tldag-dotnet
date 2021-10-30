@@ -12,7 +12,7 @@ using static TLDAG.Core.Primitives;
 using static TLDAG.Core.IO.Streams;
 #endif
 
-namespace TLDAG.Build.Drawing
+namespace TLDAG.Drawing
 {
     public static class Icons
     {
