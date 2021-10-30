@@ -17,6 +17,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <TldagAssetsDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'TLDAG.Assets' ))</TldagAssetsDirectory>
+    <TldagAssetsProject>$([MSBuild]::NormalizePath( $(TldagAssetsDirectory), 'TLDAG.Assets.csproj' ))</TldagAssetsProject>
+    <TldagAssetsLogos>$([MSBuild]::NormalizeDirectory( $(TldagAssetsDirectory), 'Logos' ))</TldagAssetsLogos>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <TldagAutomationDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'TLDAG.Automation' ))</TldagAutomationDirectory>
     <TldagAutomationProject>$([MSBuild]::NormalizePath( $(TldagAutomationDirectory), 'TLDAG.Automation.csproj' ))</TldagAutomationProject>
   </PropertyGroup>

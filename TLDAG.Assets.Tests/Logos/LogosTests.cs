@@ -26,19 +26,13 @@ namespace TLDAG.Assets.Tests.Logos
 
             List<ExecutionResult> results = Sizes.Select(size => CreatePng(java, jarFile, svgFile, size)).ToList();
 
-            ExecutionResult result = ExecutionBuilder.Create(java)
-                .AddArguments("-jar", jarFile.FullName)
-                .AddArgument(svgFile.FullName)
-                .AddArguments("-w", "64", "-h", "64")
-                .Build().Execute();
-
             results.ForEach(result => { Debug.WriteLine(result); });
         }
 
         private static ExecutionResult CreatePng(Executable java, FileInfo jarFile, FileInfo svgFile, int size)
         {
             string wh = size.ToString();
-            FileInfo pngFile = svgFile.GetDirectory().Combine($"Logo-{size}.png");
+            FileInfo pngFile = svgFile.GetDirectory().Combine($"Logo_{size}.png");
 
             return ExecutionBuilder.Create(java)
                 .AddArguments("-jar", jarFile.FullName)
