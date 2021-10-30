@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
-namespace TLDAG.Core.Drawing
+namespace TLDAG.Drawing
 {
     public static class Images
     {

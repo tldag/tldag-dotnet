@@ -1,4 +1,4 @@
-﻿namespace TLDAG.Core.Drawing
+﻿namespace TLDAG.Drawing.Coloring
 {
     public static class Colors
     {

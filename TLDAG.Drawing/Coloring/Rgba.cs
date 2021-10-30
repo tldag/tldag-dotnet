@@ -1,7 +1,7 @@
 ﻿using static System.FormattableString;
 using static System.Math;
 
-namespace TLDAG.Core.Drawing
+namespace TLDAG.Drawing.Coloring
 {
     public readonly struct Rgba
     {

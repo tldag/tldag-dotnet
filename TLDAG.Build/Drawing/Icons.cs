@@ -4,10 +4,13 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using TLDAG.Core.Drawing;
 using TLDAG.Core.IO;
+using TLDAG.Drawing;
 using static TLDAG.Core.Primitives;
+
+#if NET472_OR_GREATER
 using static TLDAG.Core.IO.Streams;
+#endif
 
 namespace TLDAG.Build.Drawing
 {

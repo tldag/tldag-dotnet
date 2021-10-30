@@ -8,7 +8,6 @@
   <ItemGroup>
     <PackageReference Include="System.Management.Automation" Version="$(SystemManagementAutomationVersion)" />
     <ProjectReference Include="$(TldagBuildProject)" />
-    <ProjectReference Include="$(TldagCore)" />
     <ProjectReference Include="$(TldagAutomationProject)" />
   </ItemGroup>
 

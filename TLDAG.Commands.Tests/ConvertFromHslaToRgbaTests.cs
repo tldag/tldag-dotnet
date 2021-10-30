@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using TLDAG.Core.Drawing;
+using TLDAG.Drawing.Coloring;
 using TLDAG.Test;
 
 namespace TLDAG.Commands.Tests

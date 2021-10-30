@@ -1,6 +1,6 @@
 ﻿using System.Management.Automation;
 using TLDAG.Automation;
-using TLDAG.Core.Drawing;
+using TLDAG.Drawing.Coloring;
 
 namespace TLDAG.Commands
 {
