@@ -10,7 +10,24 @@ namespace TLDAG.Core
         public static readonly Compare<uint> UIntCompare = (a, b) => a < b ? -1 : (a > b ? 1 : 0);
         public static readonly Compare<char> CharCompare = (a, b) => a < b ? -1 : (a > b ? 1 : 0);
 
-        public static void UShortToBytes(ushort value, byte[] dest, int offset) => throw NotYetImplemented();
+        public static void UShortToBytes(ushort value, byte[] dest, int offset)
+        {
+            byte[] bytes = BitConverter.GetBytes(value);
+            if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
+            Replace(dest, offset, bytes, 0, bytes.Length);
+        }
+
+        public static byte[] UShortToBytes(ushort[] values)
+        {
+            byte[] result = new byte[values.Length * sizeof(ushort)];
+
+            for (int i = 0, n = values.Length, j = 0; i < n; ++i, j += sizeof(ushort))
+                UShortToBytes(values[i], result, j);
+
+            return result;
+        }
+
+        public static byte[] UShortToBytes(ushort value) => UShortToBytes(new ushort[] { value });
 
         public static ushort ToUShort(byte[] src, int offset = 0)
         {

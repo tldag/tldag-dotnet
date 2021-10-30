@@ -78,6 +78,7 @@
     <NuGetPackagingVersion>5.11.0</NuGetPackagingVersion>
     <NuGetProtocolVersion>5.11.0</NuGetProtocolVersion>
     <SystemManagementAutomationVersion>7.1.4</SystemManagementAutomationVersion>
+    <SystemResourcesExtensionsVersion>5.0.0</SystemResourcesExtensionsVersion>
   </PropertyGroup>
   
 </Project>
