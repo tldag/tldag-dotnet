@@ -4,34 +4,35 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using TLDAG.Core.Drawing;
+using TLDAG.Core.IO;
 using static TLDAG.Core.Primitives;
+using static TLDAG.Core.IO.Streams;
 
 namespace TLDAG.Build.Drawing
 {
     public static class Icons
     {
-        public static byte[] Create(IEnumerable<Bitmap> bitmaps)
-        {
-            List<Tuple<byte, byte[]>> images = Convert(bitmaps);
+        public static void Create(IEnumerable<Image> images, FileInfo output)
+            { output.WriteAllBytes(Create(images)); }
 
-            return Save(images);
-        }
+        public static void Create(IEnumerable<FileInfo> images, FileInfo output)
+            { Create(Images.Load(images), output); }
+
+        public static byte[] Create(IEnumerable<FileInfo> images)
+            => Create(Images.Load(images));
+
+        public static byte[] Create(IEnumerable<Image> images)
+            => Save(Convert(images));
 
         private static byte[] Save(List<Tuple<byte, byte[]>> images)
         {
             MemoryStream output = new();
-            byte[] bytes;
-
-            bytes = UShortToBytes(0); // 0..1 reserved
-            output.Write(bytes, 0, bytes.Length);
-
-            bytes = UShortToBytes(1); // 2..3 image type. 1 = icon
-            output.Write(bytes, 0, bytes.Length);
-
-            bytes = UShortToBytes((ushort)images.Count);
-            output.Write(bytes, 0, bytes.Length);
-
             int offset = 6 + (16 * images.Count);
+
+            output.Write(UShortToBytes(0)); // 0..1 reserved
+            output.Write(UShortToBytes(1)); // 2..3 image type. 1 = icon
+            output.Write(UShortToBytes((ushort)images.Count)); // 4..5 image count
 
             for (int i = 0; i < images.Count; ++i)
             {
@@ -40,48 +41,37 @@ namespace TLDAG.Build.Drawing
                 output.WriteByte(0); // color count
                 output.WriteByte(0); // reserved
 
-                bytes = UShortToBytes(0);
-                output.Write(bytes, 0, bytes.Length); // color planes
-                bytes = UShortToBytes(0);
-                output.Write(bytes, 0, bytes.Length); // bits per pixel
-                bytes = IntToBytes(images[i].Item2.Length);
-                output.Write(bytes, 0, bytes.Length); // size of image data
-                bytes = IntToBytes(offset);
-                output.Write(bytes, 0, bytes.Length); // offset of image data
+                output.Write(UShortToBytes(0)); // color planes
+                output.Write(UShortToBytes(0)); // bits per pixel
+                output.Write(IntToBytes(images[i].Item2.Length)); // size of image data
+                output.Write(IntToBytes(offset)); // offset of image data
                 offset += images[i].Item2.Length;
             }
 
             for (int i = 0; i < images.Count; ++i)
             {
-                bytes = images[i].Item2;
-                output.Write(bytes, 0, bytes.Length);
+                output.Write(images[i].Item2);
             }
 
             return output.ToArray();
         }
 
-        private static List<Tuple<byte, byte[]>> Convert(IEnumerable<Bitmap> bitmaps)
-        {
-            return bitmaps
-                .Where(IsConvertable)
-                .Select(Convert)
-                .OrderBy(t => t.Item1)
-                .ToList();
-        }
+        private static List<Tuple<byte, byte[]>> Convert(IEnumerable<Image> images)
+            => images.Where(IsConvertable).Select(Convert).OrderBy(t => t.Item1).ToList();
 
-        private static Tuple<byte, byte[]> Convert(Bitmap bitmap)
+        private static Tuple<byte, byte[]> Convert(Image image)
         {
             MemoryStream stream = new();
 
-            bitmap.Save(stream, ImageFormat.Png);
-            return Tuple.Create((byte)bitmap.Width, stream.ToArray());
+            image.Save(stream, ImageFormat.Png);
+            return Tuple.Create((byte)image.Width, stream.ToArray());
         }
 
-        private static bool IsConvertable(Bitmap bitmap)
+        private static bool IsConvertable(Image image)
         {
-            if (bitmap.Width < 1 || bitmap.Width > 255) return false;
-            if (bitmap.Height < 1 || bitmap.Height > 255) return false;
-            if (bitmap.Width != bitmap.Height) return false;
+            if (image.Width < 1 || image.Width > 255) return false;
+            if (image.Height < 1 || image.Height > 255) return false;
+            if (image.Width != image.Height) return false;
 
             return true;
         }

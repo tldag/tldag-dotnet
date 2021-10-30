@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using TLDAG.Build.Drawing;
@@ -26,12 +25,13 @@ namespace TLDAG.Assets.Tests.Logos
 
             DirectoryInfo directory = SolutionDirectory.CombineDirectory("TLDAG.Assets", "Logos");
             FileInfo svgFile = directory.Combine("TLDAG.svg");
+            FileInfo iconFile = directory.Combine("TLDAG.ico");
 
             List<ExecutionResult> results = Sizes.Select(size => CreatePng(java, jarFile, svgFile, size)).ToList();
 
             results.ForEach(result => { Debug.WriteLine(result); });
 
-            CreateIcon(directory);
+            Icons.Create(directory.EnumerateFiles("TLDAG_*.png"), iconFile);
         }
 
         private static ExecutionResult CreatePng(Executable java, FileInfo jarFile, FileInfo svgFile, int size)
@@ -45,17 +45,6 @@ namespace TLDAG.Assets.Tests.Logos
                 .AddArguments("-w", wh, "-h", wh)
                 .AddArguments("-d", pngFile.FullName)
                 .Build().Execute();
-        }
-
-        private static void CreateIcon(DirectoryInfo directory)
-        {
-            IEnumerable<Bitmap> bitmaps = Sizes
-                .Select(size => directory.Combine($"TLDAG_{size}.png"))
-                .Select(file => (Bitmap) Image.FromFile(file.FullName));
-            byte[] iconData = Icons.Create(bitmaps);
-            FileInfo iconFile = directory.Combine("TLDAG.ico");
-
-            iconFile.WriteAllBytes(iconData);
         }
     }
 }

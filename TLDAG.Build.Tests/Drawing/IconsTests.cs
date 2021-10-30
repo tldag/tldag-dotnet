@@ -22,9 +22,8 @@ namespace TLDAG.Build.Tests.Drawing
             DirectoryInfo directory = GetTestDirectory(true);
             FileInfo icoFile = directory.Combine("TLDAG.ico");
             Bitmap[] bitmaps = { TLDAG_16, TLDAG_24 };
-            byte[] bytes = Icons.Create(bitmaps);
-
-            icoFile.WriteAllBytes(bytes);
+            
+            Icons.Create(bitmaps, icoFile);
         }
     }
 }
