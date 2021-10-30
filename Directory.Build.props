@@ -17,13 +17,38 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TldagAutomation>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Automation', 'TLDAG.Automation.csproj' ))</TldagAutomation>
-    <TldagBuild>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Build', 'TLDAG.Build.csproj' ))</TldagBuild>
-    <TldagCore>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Core', 'TLDAG.Core.csproj' ))</TldagCore>
-    <TldagCommands>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Commands', 'TLDAG.Commands.csproj' ))</TldagCommands>
-    <TldagDotNetLogger>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.DotNetLogger', 'TLDAG.DotNetLogger.csproj' ))</TldagDotNetLogger>
-    <TldagSdk>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Sdk', 'TLDAG.Sdk.csproj' ))</TldagSdk>
-    <TldagTest>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), 'TLDAG.Test', 'TLDAG.Test.csproj' ))</TldagTest>
+    <TldagAutomationDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'TLDAG.Automation' ))</TldagAutomationDirectory>
+    <TldagAutomationProject>$([MSBuild]::NormalizePath( $(TldagAutomationDirectory), 'TLDAG.Automation.csproj' ))</TldagAutomationProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TldagBuildDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'TLDAG.Build' ))</TldagBuildDirectory>
+    <TldagBuildProject>$([MSBuild]::NormalizePath( $(TldagBuildDirectory), 'TLDAG.Build.csproj' ))</TldagBuildProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TldagCoreDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'TLDAG.Core' ))</TldagCoreDirectory>
+    <TldagCoreProject>$([MSBuild]::NormalizePath( $(TldagCoreDirectory), 'TLDAG.Core.csproj' ))</TldagCoreProject>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <TldagCommandsDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'TLDAG.Commands' ))</TldagCommandsDirectory>
+    <TldagCommandsProject>$([MSBuild]::NormalizePath( $(TldagCommandsDirectory), 'TLDAG.Commands.csproj' ))</TldagCommandsProject>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <TldagDotNetLoggerDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'TLDAG.DotNetLogger' ))</TldagDotNetLoggerDirectory>
+    <TldagDotNetLoggerProject>$([MSBuild]::NormalizePath( $(TldagDotNetLoggerDirectory), 'TLDAG.DotNetLogger.csproj' ))</TldagDotNetLoggerProject>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <TldagSdkDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'TLDAG.Sdk' ))</TldagSdkDirectory>
+    <TldagSdkProject>$([MSBuild]::NormalizePath( $(TldagSdkDirectory), 'TLDAG.Sdk.csproj' ))</TldagSdkProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TldagTestDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'TLDAG.Test' ))</TldagTestDirectory>
+    <TldagTestProject>$([MSBuild]::NormalizePath( $(TldagTestDirectory), 'TLDAG.Test.csproj' ))</TldagTestProject>
   </PropertyGroup>
 
   <PropertyGroup>

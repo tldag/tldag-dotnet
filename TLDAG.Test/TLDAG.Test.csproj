@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(TldagCore)" />
+    <ProjectReference Include="$(TldagCoreProject)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
     <PackageReference Include="System.Management.Automation" Version="$(SystemManagementAutomationVersion)" />
-    <ProjectReference Include="$(TldagAutomation)" />
+    <ProjectReference Include="$(TldagAutomationProject)" />
   </ItemGroup>
 
 </Project>

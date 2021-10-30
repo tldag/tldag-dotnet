@@ -10,7 +10,7 @@
     <PackageReference Include="MSTest.TestAdapter" Version="$(MSTestTestAdapterVersion)" />
     <PackageReference Include="MSTest.TestFramework" Version="$(MSTestTestFrameworkVersion)" />
     <PackageReference Include="coverlet.collector" Version="$(CoverletCollectorVersion)" />
-    <ProjectReference Include="$(TldagCore)" />
+    <ProjectReference Include="$(TldagCoreProject)" />
   </ItemGroup>
 
 </Project>

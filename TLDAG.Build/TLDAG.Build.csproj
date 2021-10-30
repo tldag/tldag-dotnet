@@ -14,7 +14,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
     <PackageReference Include="NuGet.Packaging" Version="$(NuGetPackagingVersion)" />
     <PackageReference Include="NuGet.Protocol" Version="$(NuGetProtocolVersion)" />
-    <ProjectReference Include="$(TldagCore)" />
+    <ProjectReference Include="$(TldagCoreProject)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">

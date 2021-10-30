@@ -15,8 +15,8 @@
     <PackageReference Include="Microsoft.PowerShell.Commands.Utility" Version="$(MicrosoftPowerShellCommandsUtilityVersion)" />
     <PackageReference Include="Microsoft.PowerShell.ConsoleHost" Version="$(MicrosoftPowerShellConsoleHostVersion)" />
     <PackageReference Include="Microsoft.WSMan.Management" Version="$(MicrosoftWSManManagementVersion)" />
-    <ProjectReference Include="$(TldagCommands)" />
-    <ProjectReference Include="$(TldagTest)" />
+    <ProjectReference Include="$(TldagCommandsProject)" />
+    <ProjectReference Include="$(TldagTestProject)" />
   </ItemGroup>
 
 </Project>

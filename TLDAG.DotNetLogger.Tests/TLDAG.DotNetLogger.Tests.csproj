@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net5.0;net472</TargetFrameworks>
@@ -9,8 +9,8 @@
     <PackageReference Include="MSTest.TestAdapter" Version="$(MSTestTestAdapterVersion)" />
     <PackageReference Include="MSTest.TestFramework" Version="$(MSTestTestFrameworkVersion)" />
     <PackageReference Include="coverlet.collector" Version="$(CoverletCollectorVersion)" />
-    <ProjectReference Include="$(TldagTest)" />
-    <ProjectReference Include="$(TldagDotNetLogger)" />
+    <ProjectReference Include="$(TldagTestProject)" />
+    <ProjectReference Include="$(TldagDotNetLoggerProject)" />
   </ItemGroup>
 
 </Project>
