@@ -9,6 +9,7 @@ using TLDAG.Core.Executing.Java;
 using TLDAG.Core.IO;
 using TLDAG.Drawing;
 using TLDAG.Test;
+using static TLDAG.Core.Executing.Java.Java;
 
 namespace TLDAG.Assets.Tests.Logos
 {
@@ -20,31 +21,26 @@ namespace TLDAG.Assets.Tests.Logos
         [TestMethod]
         public void Test()
         {
-            if (!JavaExecutables.TryFind(out Executable java)) return;
+            if (!HasJava()) return;
             if (!Files.TryFindOnPath("batik-rasterizer-1.14.jar", out FileInfo jarFile)) return;
 
             DirectoryInfo directory = SolutionDirectory.CombineDirectory("TLDAG.Assets", "Logos");
             FileInfo svgFile = directory.Combine("TLDAG.svg");
             FileInfo iconFile = directory.Combine("TLDAG.ico");
 
-            List<ExecutionResult> results = Sizes.Select(size => CreatePng(java, jarFile, svgFile, size)).ToList();
+            List<ExecutionResult> results = Sizes.Select(size => CreatePng(jarFile, svgFile, size)).ToList();
 
             results.ForEach(result => { Debug.WriteLine(result); });
 
             Icons.Create(directory.EnumerateFiles("TLDAG_*.png"), iconFile);
         }
 
-        private static ExecutionResult CreatePng(Executable java, FileInfo jarFile, FileInfo svgFile, int size)
+        private static ExecutionResult CreatePng(FileInfo jarFile, FileInfo svgFile, int size)
         {
             string wh = size.ToString();
             FileInfo pngFile = svgFile.GetDirectory().Combine($"TLDAG_{size}.png");
 
-            return ExecutionBuilder.Create(java)
-                .AddArguments("-jar", jarFile.FullName)
-                .AddArgument(svgFile.FullName)
-                .AddArguments("-w", wh, "-h", wh)
-                .AddArguments("-d", pngFile.FullName)
-                .Build().Execute();
+            return ExecuteJava(jarFile, svgFile.FullName, "-w", wh, "-h", wh, "-d", pngFile.FullName);
         }
     }
 }

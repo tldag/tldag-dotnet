@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -59,5 +60,8 @@ namespace TLDAG.Core.IO
 
             return file is not null;
         }
+
+        public static IEnumerable<FileInfo> FindAllOnPath(string pattern, bool prependWorkingDirectory = false)
+            => Env.GetPath(prependWorkingDirectory).SelectMany(dir => dir.GetFiles(pattern, TopDirectoryOnly));
     }
 }

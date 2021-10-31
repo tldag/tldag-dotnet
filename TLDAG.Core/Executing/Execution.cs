@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using static TLDAG.Core.Executing.Executables;
 
 namespace TLDAG.Core.Executing
 {
@@ -48,7 +49,7 @@ namespace TLDAG.Core.Executing
             return builder.Build();
         }
 
-        private async Task WaitForExitAsync(Process process)
+        private static async Task WaitForExitAsync(Process process)
         {
 #if NET5_0_OR_GREATER
             await process.WaitForExitAsync();
@@ -72,7 +73,7 @@ namespace TLDAG.Core.Executing
         }
 
         public static ExecutionBuilder Create(Executable executable) => new(executable);
-        public static ExecutionBuilder Create(string name) => Create(Executables.Find(name));
+        public static ExecutionBuilder Create(string name) => Create(FindExecutable(name));
 
         public ExecutionBuilder UseShellExecute(bool use) { info.UseShellExecute = use; return this; }
         public ExecutionBuilder CreateNoWindow(bool noWindow) { info.CreateNoWindow = noWindow; return this; }
@@ -103,10 +104,10 @@ namespace TLDAG.Core.Executing
         public ExecutionBuilder AddArgument(string arg) { arguments.Add(arg); return this; }
 
         public ExecutionBuilder AddArguments(params string[] args)
-        { foreach (string arg in args) AddArgument(arg); return this; }
+            { foreach (string arg in args) AddArgument(arg); return this; }
 
         public ExecutionBuilder AddArguments(IEnumerable<string> args)
-        { foreach (string arg in args) AddArgument(arg); return this; }
+            { foreach (string arg in args) AddArgument(arg); return this; }
 
         public Execution Build() { ProcessArguments(); return new(executable, info); }
 

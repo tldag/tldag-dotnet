@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using TLDAG.Core.Executing;
 using TLDAG.Core.Executing.Java;
+using static TLDAG.Core.Executing.Java.JavaExecutable;
 
 namespace TLDAG.Core.Tests.Executing
 {
@@ -9,22 +10,10 @@ namespace TLDAG.Core.Tests.Executing
     public class JavaExecutablesTests
     {
         [TestMethod]
-        public void TestTryFind()
-        {
-            Assert.IsTrue(JavaExecutables.TryFind(out Executable _));
-        }
-
-        [TestMethod]
-        public void TestFind()
-        {
-            JavaExecutables.Find();
-        }
-
-        [TestMethod]
         public void TestTryGetVersion()
         {
             ExecutionResult result = ExecutionBuilder
-                .Create(JavaExecutables.Find())
+                .Create(FindJava())
                 .UseShellExecute(false).CreateNoWindow(true)
                 .AddArgument("-version")
                 .Build().Execute();

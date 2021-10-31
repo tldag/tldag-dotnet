@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using TLDAG.Core.Collections;
 using TLDAG.Core.IO;
 using static TLDAG.Core.Exceptions.Errors;
@@ -22,30 +24,30 @@ namespace TLDAG.Core.Executing
         public static readonly StringSet ExecutableExtensions
             = Platform.IsWindows ? new(".exe", Strings.CompareOrdinalIgnoreCase) : new("");
 
-        public static Executable Find(string name)
-        {
-            if (TryFind(name, out Executable executable))
-                return executable;
-
-            throw FileNotFound(name);
-        }
-
-        public static bool TryFind(string name, out Executable executable)
+        public static IEnumerable<Executable> FindAllExecutables(string name)
         {
             foreach (string ext in ExecutableExtensions)
             {
-                if (Files.TryFindOnPath(name + ext, out FileInfo file, true))
-                {
-                    executable = new(file);
-                    return true;
-                }
+                foreach (FileInfo file in Files.FindAllOnPath(name + ext, true))
+                    yield return new(file);
             }
+        }
 
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-            executable = null;
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+        public static bool TryFindExecutable(string name, out Executable executable)
+        {
+#pragma warning disable CS8601 // Possible null reference assignment.
+            executable = FindAllExecutables(name).FirstOrDefault();
+#pragma warning restore CS8601 // Possible null reference assignment.
 
-            return false;
+            return executable is not null;
+        }
+
+        public static Executable FindExecutable(string name)
+        {
+            if (TryFindExecutable(name, out Executable executable))
+                return executable;
+
+            throw FileNotFound(name);
         }
     }
 }
