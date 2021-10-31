@@ -64,7 +64,7 @@ namespace TLDAG.Core.Cryptography
 
             stream.Read(bytes, 0, bytes.Length);
 
-            return ToInt(bytes);
+            return BytesToInt(bytes);
         }
 
         private static void WriteCount(int count, Stream stream)

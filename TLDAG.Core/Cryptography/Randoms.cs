@@ -15,15 +15,15 @@ namespace TLDAG.Core.Cryptography
         public static byte[] Bytes(byte[] bytes, int offset, int count) { rng.GetBytes(bytes, offset, count); return bytes; }
 
         public static ushort NextUShort(ushort min, ushort max) => Interpolate(min, max, NextDouble());
-        public static ushort NextUShort() => ToUShort(Bytes(4));
+        public static ushort NextUShort() => BytesToUShort(Bytes(4));
 
         public static int NextInt(int min, int max) => Interpolate(min, max, NextDouble());
-        public static int NextInt() => ToInt(Bytes(4));
+        public static int NextInt() => BytesToInt(Bytes(4));
 
         public static double NextDouble()
         {
             byte[] bytes = Bytes(sizeof(long));
-            long factor = Abs(ToLong(bytes)) >> 1;
+            long factor = Abs(BytesToLong(bytes)) >> 1;
 
             return DoubleStep * factor * 2.0;
         }

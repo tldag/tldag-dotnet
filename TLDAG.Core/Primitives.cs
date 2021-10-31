@@ -29,7 +29,7 @@ namespace TLDAG.Core
 
         public static byte[] UShortToBytes(ushort value) => UShortToBytes(new ushort[] { value });
 
-        public static ushort ToUShort(byte[] src, int offset = 0)
+        public static ushort BytesToUShort(byte[] src, int offset = 0)
         {
             if (!BitConverter.IsLittleEndian) { src = SubArray(src, 0, sizeof(ushort)); offset = 0; }
             return BitConverter.ToUInt16(src, offset);
@@ -51,7 +51,7 @@ namespace TLDAG.Core
 
         public static byte[] IntToBytes(int value) => IntToBytes(new int[] { value });
 
-        public static int ToInt(byte[] src, int offset = 0)
+        public static int BytesToInt(byte[] src, int offset = 0)
         {
             if (!BitConverter.IsLittleEndian)
                 { src = SubArray(src, 0, sizeof(int)); Array.Reverse(src); offset = 0; }
@@ -61,7 +61,7 @@ namespace TLDAG.Core
 
         public static void LongToBytes(long value, byte[] dest, int offset) => throw NotYetImplemented();
 
-        public static long ToLong(byte[] src, int offset = 0)
+        public static long BytesToLong(byte[] src, int offset = 0)
         {
             if (!BitConverter.IsLittleEndian)
                 { src = SubArray(src, 0, sizeof(ushort)); Array.Reverse(src); offset = 0; }
@@ -76,7 +76,7 @@ namespace TLDAG.Core
             Replace(dest, offset, bytes, 0, bytes.Length);
         }
 
-        public static char ToChar(byte[] src, int offset = 0) => throw NotYetImplemented();
+        public static char BytesToChar(byte[] src, int offset = 0) => throw NotYetImplemented();
 
         public static byte[] ToBytes(char[] values)
         {

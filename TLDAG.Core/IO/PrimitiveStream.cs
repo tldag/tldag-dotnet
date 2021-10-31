@@ -24,7 +24,7 @@ namespace TLDAG.Core.IO
         protected int ReadCount()
         {
             stream.Read(smallBuffer, 0, sizeof(int));
-            return ToInt(smallBuffer, 0);
+            return BytesToInt(smallBuffer, 0);
         }
     }
 
