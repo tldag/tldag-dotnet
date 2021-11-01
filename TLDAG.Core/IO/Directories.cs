@@ -8,12 +8,15 @@ namespace TLDAG.Core.IO
 {
     public static class Directories
     {
+        public static bool DirectoryExists(DirectoryInfo? directory)
+            => directory?.Exists ?? false;
+
         public static DirectoryInfo Existing(string path)
             => Directory.Exists(path) ? new(path) : throw DirectoryNotFound(path);
 
         public static DirectoryInfo Existing(DirectoryInfo? directory)
         {
-            if (directory == null) throw DirectoryNotFound("");
+            if (directory is null) throw DirectoryNotFound("");
             return directory.Exists ? directory : throw DirectoryNotFound(directory.FullName);
         }
 
@@ -21,7 +24,7 @@ namespace TLDAG.Core.IO
         {
             DirectoryInfo? directory = startDirectory;
 
-            while (directory != null)
+            while (directory is not null)
             {
                 FileInfo? file = directory.EnumerateFiles(fileName, TopDirectoryOnly).FirstOrDefault();
 
