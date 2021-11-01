@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using TLDAG.Core.Collections.Internal;
 
 namespace TLDAG.Core.Collections
 {
-    public static class EnumerableExtensions
+    public static class Enumerables
     {
         public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> source) where T : notnull
-            => new NotNulls<T>(source);
+            { foreach (T? value in source) if (value is not null) yield return value; }
     }
 }
