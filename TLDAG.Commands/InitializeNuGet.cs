@@ -1,15 +1,13 @@
 ﻿using NuGet.Configuration;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
-using System.Text;
-using System.Threading.Tasks;
 using TLDAG.Automation;
 using TLDAG.Build.NuGet;
 using TLDAG.Core.IO;
 using TLDAG.Core.Net;
+using static TLDAG.Core.IO.Directories;
 
 namespace TLDAG.Commands
 {
@@ -46,7 +44,7 @@ namespace TLDAG.Commands
                 Packages = "packages";
             }
 
-            DirectoryInfo root = Directories.Existing(Path);
+            DirectoryInfo root = ExistingDirectory(Path);
             string? repository = string.IsNullOrEmpty(Repository) ? null : Repository;
             string? packages = string.IsNullOrEmpty(Packages) ? null : Packages;
             bool backup = Backup.ToBool();
