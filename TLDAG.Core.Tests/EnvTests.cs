@@ -15,7 +15,7 @@ namespace TLDAG.Core.Tests
 
             DirectoryInfo dir = new(@"C:\Program Files\dotnet\");
 
-            Assert.IsTrue(Env.GetPath().Select(d => d.FullName).Contains(dir.FullName));
+            Assert.IsTrue(Env.Path.Select(d => d.FullName).Contains(dir.FullName));
         }
     }
 }

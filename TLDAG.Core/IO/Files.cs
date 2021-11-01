@@ -58,7 +58,7 @@ namespace TLDAG.Core.IO
         {
 #pragma warning disable CS8601 // Possible null reference assignment.
 
-            file = Env.GetPath()
+            file = Env.Path
                 .SelectMany(dir => dir.GetFiles(pattern, TopDirectoryOnly))
                 .FirstOrDefault();
 
@@ -68,6 +68,6 @@ namespace TLDAG.Core.IO
         }
 
         public static IEnumerable<FileInfo> FindAllOnPath(string pattern)
-            => Env.GetPath().SelectMany(dir => dir.GetFiles(pattern, TopDirectoryOnly));
+            => Env.Path.SelectMany(dir => dir.GetFiles(pattern, TopDirectoryOnly));
     }
 }
