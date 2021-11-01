@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using static System.IO.SearchOption;
@@ -27,6 +28,12 @@ namespace TLDAG.Core.IO
             if (directory is null) throw DirectoryNotFound("");
             return directory.Exists ? directory : throw DirectoryNotFound(directory.FullName);
         }
+
+        public static IEnumerable<FileInfo> EnumerateFiles(this DirectoryInfo directory, IEnumerable<string> patterns)
+            => patterns.SelectMany(pattern => directory.EnumerateFiles(pattern));
+
+        public static IEnumerable<FileInfo> EnumerateFiles(this DirectoryInfo directory, IEnumerable<string> patterns, SearchOption searchOption)
+            => patterns.SelectMany(pattern => directory.EnumerateFiles(pattern, searchOption));
 
         public static FileInfo GetFileAbove(this DirectoryInfo startDirectory, string fileName)
         {

@@ -124,9 +124,13 @@ namespace TLDAG.Core.Algorithms
             values[offset0] = v1; values[offset1] = v0;
         }
 
-        private static void Sort2<T>(T[] values, int offset, Compare<T> compare)
+        private static void Sort2<T>(T[] values, int offset0, Compare<T> compare)
         {
-            throw NotYetImplemented();
+            int offset1 = offset0 + 1;
+            T v0 = values[offset0], v1 = values[offset1];
+
+            if (compare(v0, v1) <= 0) return;
+            values[offset0] = v1; values[offset1] = v0;
         }
 
         private static void Sort3(byte[] values, int offset0)
