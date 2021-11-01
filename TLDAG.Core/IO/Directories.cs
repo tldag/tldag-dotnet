@@ -11,16 +11,16 @@ namespace TLDAG.Core.IO
         public static bool DirectoryExists(DirectoryInfo? directory)
             => directory?.Exists ?? false;
 
-        public static DirectoryInfo? TryGetDirectory(string path)
-            => Directory.Exists(path) ? new(path) : null;
+        public static DirectoryInfo? TryGetDirectory(string? path)
+            => path is null ? null : (Directory.Exists(path) ? new(path) : null);
 
 #pragma warning disable CS8601 // Possible null reference assignment.
-        public static bool TryGetDirectory(string path, out DirectoryInfo directory)
+        public static bool TryGetDirectory(string? path, out DirectoryInfo directory)
             => (directory = TryGetDirectory(path)) is not null;
 #pragma warning restore CS8601 // Possible null reference assignment.
 
-        public static DirectoryInfo Existing(string path)
-            => TryGetDirectory(path) ?? throw DirectoryNotFound(path);
+        public static DirectoryInfo Existing(string? path)
+            => TryGetDirectory(path) ?? throw DirectoryNotFound(path ?? "");
 
         public static DirectoryInfo Existing(DirectoryInfo? directory)
         {
