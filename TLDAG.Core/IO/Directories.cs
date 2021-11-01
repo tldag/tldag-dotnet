@@ -19,10 +19,10 @@ namespace TLDAG.Core.IO
             => (directory = TryGetDirectory(path)) is not null;
 #pragma warning restore CS8601 // Possible null reference assignment.
 
-        public static DirectoryInfo Existing(string? path)
+        public static DirectoryInfo ExistingDirectory(string? path)
             => TryGetDirectory(path) ?? throw DirectoryNotFound(path ?? "");
 
-        public static DirectoryInfo Existing(DirectoryInfo? directory)
+        public static DirectoryInfo ExistingDirectory(DirectoryInfo? directory)
         {
             if (directory is null) throw DirectoryNotFound("");
             return directory.Exists ? directory : throw DirectoryNotFound(directory.FullName);
