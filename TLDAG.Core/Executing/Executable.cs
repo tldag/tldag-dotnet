@@ -28,7 +28,7 @@ namespace TLDAG.Core.Executing
         {
             foreach (string ext in ExecutableExtensions)
             {
-                foreach (FileInfo file in Files.FindAllOnPath(name + ext, true))
+                foreach (FileInfo file in Files.FindAllOnPath(name + ext))
                     yield return new(file);
             }
         }

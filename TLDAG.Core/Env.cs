@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static System.IO.Path;
 
 namespace TLDAG.Core
 {
     public static class Env
     {
-        public static readonly char PathSeparator = Path.PathSeparator;
-
         public static DirectoryInfo WorkingDirectory => new(Environment.CurrentDirectory);
 
-        public static IEnumerable<DirectoryInfo> GetPath(bool prependWorkingDirectory = false)
+        public static IEnumerable<DirectoryInfo> GetPath()
         {
             IEnumerable<DirectoryInfo> path =
                 (Environment.GetEnvironmentVariable("PATH") ?? "")
@@ -20,8 +19,7 @@ namespace TLDAG.Core
                 .Select(s => new DirectoryInfo(s))
                 .Where(d => d.Exists);
 
-            if (prependWorkingDirectory)
-                path = path.Prepend(WorkingDirectory);
+            path = path.Prepend(WorkingDirectory);
 
             return path;
         }

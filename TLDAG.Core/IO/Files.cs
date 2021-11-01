@@ -46,19 +46,19 @@ namespace TLDAG.Core.IO
 
         public static Uri ToUri(this FileInfo file) => new(file.FullName);
 
-        public static FileInfo FindOnPath(string pattern, bool prependWorkingDirectory = false)
+        public static FileInfo FindOnPath(string pattern)
         {
-            if (TryFindOnPath(pattern, out FileInfo file, prependWorkingDirectory))
+            if (TryFindOnPath(pattern, out FileInfo file))
                 return file;
 
             throw FileNotFound(pattern);
         }
 
-        public static bool TryFindOnPath(string pattern, out FileInfo file, bool prependWorkingDirectory = false)
+        public static bool TryFindOnPath(string pattern, out FileInfo file)
         {
 #pragma warning disable CS8601 // Possible null reference assignment.
 
-            file = Env.GetPath(prependWorkingDirectory)
+            file = Env.GetPath()
                 .SelectMany(dir => dir.GetFiles(pattern, TopDirectoryOnly))
                 .FirstOrDefault();
 
@@ -67,7 +67,7 @@ namespace TLDAG.Core.IO
             return file is not null;
         }
 
-        public static IEnumerable<FileInfo> FindAllOnPath(string pattern, bool prependWorkingDirectory = false)
-            => Env.GetPath(prependWorkingDirectory).SelectMany(dir => dir.GetFiles(pattern, TopDirectoryOnly));
+        public static IEnumerable<FileInfo> FindAllOnPath(string pattern)
+            => Env.GetPath().SelectMany(dir => dir.GetFiles(pattern, TopDirectoryOnly));
     }
 }
