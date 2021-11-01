@@ -29,14 +29,20 @@ namespace TLDAG.Core.IO
         public static DirectoryInfo GetDirectory(this FileInfo file)
             => file.Directory ?? throw FileNotFound(file);
 
+        public static byte[] ReadAllBytes(this FileInfo file) => File.ReadAllBytes(file.FullName);
+        public static void WriteAllBytes(this FileInfo file, byte[] bytes) { File.WriteAllBytes(file.FullName, bytes); }
+
         public static string ReadAllText(this FileInfo file, Encoding? encoding = null)
             { encoding ??= Encoding.UTF8; return File.ReadAllText(file.FullName, encoding); }
 
         public static void WriteAllText(this FileInfo file, string text, Encoding? encoding = null)
             { encoding ??= Encoding.UTF8; File.WriteAllText(file.FullName, text, encoding); }
 
-        public static byte[] ReadAllBytes(this FileInfo file) => File.ReadAllBytes(file.FullName);
-        public static void WriteAllBytes(this FileInfo file, byte[] bytes) { File.WriteAllBytes(file.FullName, bytes); }
+        public static string[] ReadAllLines(this FileInfo file, Encoding? encoding = null)
+            { encoding ??= Encoding.UTF8; return File.ReadAllLines(file.FullName, encoding); }
+
+        public static void WriteAllLines(this FileInfo file, IEnumerable<string> contents, Encoding? encoding = null)
+            { encoding ??= Encoding.UTF8; File.WriteAllLines(file.FullName, contents, encoding); }
 
         public static Uri ToUri(this FileInfo file) => new(file.FullName);
 
