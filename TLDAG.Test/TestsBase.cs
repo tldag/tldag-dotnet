@@ -25,6 +25,9 @@ namespace TLDAG.Test
         private FileInfo? solutionFile = null;
         protected FileInfo SolutionFile => solutionFile ??= GetSolutionFile();
 
+        private string? configuration = null;
+        protected string Configuration => configuration ??= GetType().Assembly.Configuration();
+
         [MethodImpl(MethodImplOptions.NoInlining)]
         protected DirectoryInfo GetTestDirectory(bool clear)
         {

@@ -7,6 +7,13 @@ namespace TLDAG.Core.Reflection
 {
     public static class AssemblyExtensions
     {
+        public static string Configuration(this Assembly assembly)
+        {
+            AssemblyConfigurationAttribute? attribute = assembly.GetCustomAttribute<AssemblyConfigurationAttribute>();
+
+            return attribute?.Configuration ?? "Unknown";
+        }
+
         public static IEnumerable<string> GetMetadataValues(this Assembly assembly, string key)
         {
             return assembly
