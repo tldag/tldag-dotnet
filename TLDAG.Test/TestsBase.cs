@@ -17,13 +17,13 @@ namespace TLDAG.Test
         protected string SolutionName => solutionName ??= GetSolutionName();
 
         private DirectoryInfo? solutionDirectory = null;
-        protected DirectoryInfo SolutionDirectory => solutionDirectory ??= GetSolutionDirectory();
+        protected DirectoryInfo SolutionDirectory => solutionDirectory ??= Env.WorkingDirectory.GetDirectoryOfFileAbove(SolutionName);
 
         private DirectoryInfo? testOutputDirectory = null;
-        protected DirectoryInfo TestOutputDirectory=> testOutputDirectory ??= CreateTestOutputDirectory();
+        protected DirectoryInfo TestOutputDirectory=> testOutputDirectory ??= SolutionDirectory.CombineDirectory("TestOutput").Created();
 
         private FileInfo? solutionFile = null;
-        protected FileInfo SolutionFile => solutionFile ??= GetSolutionFile();
+        protected FileInfo SolutionFile => solutionFile ??= SolutionDirectory.Combine(SolutionName);
 
         private string? configuration = null;
         protected string Configuration => configuration ??= GetType().Assembly.Configuration();
@@ -33,14 +33,15 @@ namespace TLDAG.Test
         {
             StackFrame stackFrame = new(1, true);
             MethodBase method = Contract.State.NotNull(stackFrame.GetMethod(), "Not called from test method");
-            Type methodType = Contract.State.NotNull(method.DeclaringType, "Not called from test method");
-            string name = methodType.FullName + "." + method.Name;
-            string path = TestOutputDirectory.CombineDirectory(name).FullName;
-            DirectoryInfo directory = Directory.CreateDirectory(path);
+            Type type = Contract.State.NotNull(method.DeclaringType, "Not called from test method");
+            Assembly assembly = type.Assembly;
 
-            if (clear) directory.Clear();
+            string assemblyName = assembly.Name();
+            string typeName = type.FullName ?? "Unknown";
+            string methodName = method.Name;
+            DirectoryInfo directory = TestOutputDirectory.CombineDirectory(assemblyName, Configuration, typeName, methodName).Created();
 
-            return directory;
+            return clear ? directory.Clear() : directory;
         }
 
         private string GetSolutionName()
@@ -50,13 +51,5 @@ namespace TLDAG.Test
 
             return names.First();
         }
-
-        private DirectoryInfo GetSolutionDirectory()
-            => Env.WorkingDirectory.GetDirectoryOfFileAbove(SolutionName);
-
-        private DirectoryInfo CreateTestOutputDirectory()
-            => Directory.CreateDirectory(SolutionDirectory.CombineDirectory("TestOutput").FullName);
-
-        private FileInfo GetSolutionFile() => SolutionDirectory.Combine(SolutionName);
     }
 }

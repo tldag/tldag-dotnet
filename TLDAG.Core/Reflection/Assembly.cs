@@ -7,6 +7,9 @@ namespace TLDAG.Core.Reflection
 {
     public static class AssemblyExtensions
     {
+        public static string Name(this Assembly assembly)
+            => assembly.GetName()?.Name ?? "Unknown";
+
         public static string Configuration(this Assembly assembly)
         {
             AssemblyConfigurationAttribute? attribute = assembly.GetCustomAttribute<AssemblyConfigurationAttribute>();

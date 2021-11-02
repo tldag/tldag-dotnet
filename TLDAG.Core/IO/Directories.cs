@@ -29,6 +29,15 @@ namespace TLDAG.Core.IO
             return directory.Exists ? directory : throw DirectoryNotFound(directory.FullName);
         }
 
+        public static DirectoryInfo Created(this DirectoryInfo directory)
+        {
+            if (directory.Exists) return directory;
+
+            directory.Create();
+
+            return new(directory.FullName);
+        }
+
         public static IEnumerable<FileInfo> EnumerateFiles(this DirectoryInfo directory, IEnumerable<string> patterns)
             => patterns.SelectMany(pattern => directory.EnumerateFiles(pattern));
 
@@ -54,7 +63,7 @@ namespace TLDAG.Core.IO
         public static DirectoryInfo GetDirectoryOfFileAbove(this DirectoryInfo startDirectory, string fileName)
             => GetFileAbove(startDirectory, fileName).GetDirectory();
 
-        public static void Clear(this DirectoryInfo root)
+        public static DirectoryInfo Clear(this DirectoryInfo root)
         {
             foreach(DirectoryInfo directory in root.EnumerateDirectories())
             {
@@ -67,6 +76,8 @@ namespace TLDAG.Core.IO
                 if (File.Exists(file.FullName))
                     file.Delete();
             }
+
+            return root;
         }
 
         public static Uri ToUri(this DirectoryInfo directory)
