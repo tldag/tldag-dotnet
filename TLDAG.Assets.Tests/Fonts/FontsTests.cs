@@ -18,6 +18,10 @@ namespace TLDAG.Assets.Tests.Fonts
             DirectoryInfo directory = SolutionDirectory.CombineDirectory("TLDAG.Assets", "Fonts");
             FileInfo ttfFile = directory.Combine("tldag.ttf");
             FileInfo svgFile = directory.Combine("tldag.ttf.svg");
+
+            if (svgFile.Exists)
+                svgFile = GetTestDirectory(true).Combine("tldag.ttf.svg");
+
             string low = ((int)'A').ToString();
             string high = ((int)'Z').ToString();
 
