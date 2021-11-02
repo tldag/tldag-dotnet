@@ -2,6 +2,9 @@
 Get-Process -Name dotnet -ErrorAction Ignore | Stop-Process
 Get-Process -Name msbuild -ErrorAction Ignore | Stop-Process
 
+Get-ChildItem "TestOutput" -ErrorAction Ignore | Remove-Item -Recurse
+Get-ChildItem "TestResults" -ErrorAction Ignore | Remove-Item -Recurse
+
 dotnet clean tldag-dotnet.sln -c Release -v m -noLogo
 dotnet clean tldag-dotnet.sln -c Debug -v m -noLogo
 
