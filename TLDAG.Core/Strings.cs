@@ -36,16 +36,29 @@ namespace TLDAG.Core
         public static StreamReader GetReader(this Stream stream, Encoding? encoding = null)
             => encoding is null ? new(stream) : new(stream, encoding);
 
-        public static StringReader GetReader(this string text)
-            => new(text);
+        public static IEnumerable<string> ReadLines(this Stream stream, Encoding? encoding = null)
+        {
+            using StreamReader reader = GetReader(stream, encoding);
 
-        public static IEnumerable<string> GetLines(this TextReader reader)
-            { while (reader.ReadLine() is string line) yield return line; }
+            while (reader.ReadLine() is string line)
+                yield return line;
+        }
 
-        public static IEnumerable<string> GetLines(this Stream stream, Encoding? encoding = null)
-            => stream.GetReader(encoding).GetLines();
+        public static IEnumerable<string> ReadLines(this string text)
+        {
+            using StringReader reader = new(text);
 
-        public static IEnumerable<string> GetLines(this string text)
-            => text.GetReader().GetLines();
+            while (reader.ReadLine() is string line)
+                yield return line;
+        }
+
+        public static IEnumerable<string> ReadLines(this FileInfo file, Encoding? encoding = null)
+        {
+            using FileStream stream = new(file.FullName, FileMode.Open);
+            using StreamReader reader = GetReader(stream, encoding);
+
+            while (reader.ReadLine() is string line)
+                yield return line;
+        }
     }
 }
