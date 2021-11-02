@@ -75,7 +75,7 @@ namespace TLDAG.Core.Executing.Java
             if (state == 2)
             {
                 if (executables is null)
-                    executables = Executables.FindAllExecutables("java").GetEnumerator();
+                    executables = Executable.FindAll("java").GetEnumerator();
 
                 if (executables.MoveNext())
                 {
