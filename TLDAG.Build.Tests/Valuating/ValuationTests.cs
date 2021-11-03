@@ -50,9 +50,9 @@ namespace TLDAG.Build.Tests.Valuating
         public void TestReport()
         {
             DirectoryInfo directory = GetTestDirectory(true);
-            FileInfo xmlOutput = directory.Combine("tldag-dotnet.ncss.xml");
-            FileInfo mdOutput = directory.Combine("tldag-dotnet.ncss.md");
-            NcssReport report = NcssReport.Create(SolutionFile.FullName);
+            FileInfo xmlOutput = directory.Combine("tldag-dotnet.value.xml");
+            FileInfo mdOutput = directory.Combine("tldag-dotnet.value.md");
+            ValuationReport report = ValuationReport.Create(SolutionFile.FullName, "CHF", 12);
 
             report.SaveToXml(xmlOutput);
             report.SaveToMarkdown(string.Empty, string.Empty, mdOutput);

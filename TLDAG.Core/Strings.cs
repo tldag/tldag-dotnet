@@ -33,6 +33,9 @@ namespace TLDAG.Core
 
         public static string Format(this string format, params object[] args) => string.Format(format, args);
 
+        public static string Format(this string format, IFormatProvider formatProvider, params object[] args)
+            => string.Format(format, formatProvider, args);
+
         public static StreamReader GetReader(this Stream stream, Encoding? encoding = null)
             => encoding is null ? new(stream) : new(stream, encoding);
 

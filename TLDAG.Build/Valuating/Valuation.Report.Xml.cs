@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace TLDAG.Build.Valuating
 {
-    public partial class NcssReport
+    public partial class ValuationReport
     {
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Namespaces { get => namespaces; }
@@ -17,7 +17,7 @@ namespace TLDAG.Build.Valuating
             Serializer.Serialize(writer, this, Namespaces);
         }
 
-        public static readonly XmlSerializer Serializer = new(typeof(NcssReport));
+        public static readonly XmlSerializer Serializer = new(typeof(ValuationReport));
 
         private readonly XmlSerializerNamespaces namespaces
             = new(new XmlQualifiedName[] { new("", "urn:report") });

@@ -6,7 +6,7 @@ using static TLDAG.Core.Strings;
 
 namespace TLDAG.Build.Valuating
 {
-    public partial class NcssReport
+    public partial class ValuationReport
     {
         public void SaveToMarkdown(string prologue, string epilogue, FileInfo output)
         {
@@ -22,45 +22,52 @@ namespace TLDAG.Build.Valuating
 
         private void AppendMarkdownSummary(StringBuilder builder)
         {
-            builder.Append("## Summary").Append(NewLine);
-            builder.Append("Language | NCSS").Append(NewLine);
-            builder.Append("--- | ---:").Append(NewLine);
+            string rate = string.Format(ValueFormat, "{0:C0} {1}/Statement.", Factor, Currency);
+
+            builder.Append("## Summary").Append(NewLine).Append(NewLine);
+
+            builder.Append($"Value based on {rate}.").Append(NewLine).Append(NewLine);
+
+            builder.Append("Language | Statements | Value").Append(NewLine);
+            builder.Append("--- | ---: | ---:").Append(NewLine);
 
             foreach (Language language in Languages)
             {
                 builder.Append(language.Name).Append(" | ");
-                builder.Append(string.Format(NCSSFormat, "{0}", language.Ncss));
-                builder.Append(NewLine);
+                builder.Append(string.Format(ValueFormat, "{0:N0}", language.Statements)).Append(" | ");
+                builder.Append(string.Format(ValueFormat, "{0:C0} {1}", language.Value, Currency)).Append(NewLine);
             }
 
             builder.Append("Total | ");
-            builder.Append(string.Format(NCSSFormat, "{0}", Ncss));
-            builder.Append(NewLine);
+            builder.Append(string.Format(ValueFormat, "{0:N0}", Statements)).Append(" | ");
+            builder.Append(string.Format(ValueFormat, "{0:C0} {1}", Value, Currency)).Append(NewLine);
         }
 
         private void AppendMarkdownDetails(StringBuilder builder)
         {
             builder.Append("## Details").Append(NewLine);
-            builder.Append("Project/Language | NCSS").Append(NewLine);
-            builder.Append("--- | ---:").Append(NewLine);
+            builder.Append("Project/Language | Statements | Value").Append(NewLine);
+            builder.Append("--- | ---: | ---:").Append(NewLine);
 
             foreach (Project project in Projects)
             {
                 builder.Append($"**{project.Name}**").Append(" | ");
-                builder.Append(string.Format(NCSSFormat, "{0}", project.Ncss));
-                builder.Append(NewLine);
+                builder.Append(string.Format(ValueFormat, "{0:N0}", project.Statements)).Append(" | ");
+                builder.Append(string.Format(ValueFormat, "{0:C0} {1}", project.Value, Currency)).Append(NewLine);
 
                 foreach (Language language in project.Languages)
                 {
                     builder.Append(language.Name).Append(" | ");
-                    builder.Append(string.Format(NCSSFormat, "{0}", language.Ncss));
-                    builder.Append(NewLine);
+                    builder.Append(string.Format(ValueFormat, "{0:N0}", language.Statements)).Append(" | ");
+                    builder.Append(string.Format(ValueFormat, "{0:C0} {1}", language.Value, Currency)).Append(NewLine);
                 }
             }
         }
 
-        private static readonly NumberFormatInfo NCSSFormat = new()
+        private static readonly NumberFormatInfo ValueFormat = new()
         {
+            CurrencyGroupSeparator = "'",
+            CurrencySymbol = "",
             NumberGroupSeparator = "'"
         };
     }
