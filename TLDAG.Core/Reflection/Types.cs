@@ -5,6 +5,15 @@ using System.Reflection;
 
 namespace TLDAG.Core.Reflection
 {
+    public static class TypeExtensions
+    {
+        public static Type GetBaseType(this Type type)
+            => Contract.State.NotNull(type.BaseType);
+
+        public static string GetFullName(this Type type)
+            => type.FullName ?? "";
+    }
+
     public class TypeFinder
     {
         private readonly List<Assembly> assemblies = new();
@@ -26,20 +35,29 @@ namespace TLDAG.Core.Reflection
         }
 
         private bool HasBaseType(TypeInfo type)
-            => baseType is null || AreTypesEqual(baseType, type.BaseType);
+            => baseType is null || baseType.Equals(type.BaseType);
 
-        private static bool AreTypesEqual(Type? a, Type? b)
+        public static IEnumerable<TypeInfo> FindDerivedFlat(Type type, IEnumerable<Assembly> assemblies)
         {
-            if (a is null) return b is null;
-            if (b is null) return false;
+            List<TypeInfo> types = new();
+            IEnumerable<TypeInfo> candidates = Create(assemblies).BaseType(type).Find();
 
-            string? aName = a.FullName;
-            string? bName = b.FullName;
+            while (candidates.Any())
+            {
+                types.AddRange(candidates);
+                candidates = candidates.SelectMany(c => Create(assemblies).BaseType(c).Find());
+            }
 
-            if (aName is null) return bName is null;
-            if (bName is null) return false;
-
-            return aName.Equals(bName);
+            return types;
         }
+
+        public static IEnumerable<TypeInfo> FindDerivedFlat(Type type, params Assembly[] assemblies)
+            => FindDerivedFlat(type, assemblies.AsEnumerable());
+
+        public static IEnumerable<IGrouping<Type, TypeInfo>> FindDerived(Type type, IEnumerable<Assembly> assemblies)
+            => FindDerivedFlat(type, assemblies).GroupBy(t => t.GetBaseType());
+
+        public static IEnumerable<IGrouping<Type, TypeInfo>> FindDerived(Type type, params Assembly[] assemblies)
+            => FindDerived(type, assemblies.AsEnumerable());
     }
 }

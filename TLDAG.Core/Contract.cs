@@ -43,6 +43,8 @@ namespace TLDAG.Core
                 if (value is null) throw InvalidState(message);
                 return value;
             }
+
+            public static T NotNull<T>(T? value) => NotNull(value, "");
         }
     }
 }
