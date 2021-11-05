@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace TLDAG.Core
 {
@@ -63,5 +64,8 @@ namespace TLDAG.Core
             while (reader.ReadLine() is string line)
                 yield return line;
         }
+
+        public static XmlDocument ToXmlDocument(this string source)
+            { XmlDocument document = new(); document.LoadXml(source); return document; }
     }
 }

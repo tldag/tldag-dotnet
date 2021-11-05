@@ -52,7 +52,7 @@ namespace TLDAG.Build.Tests.Valuating
             DirectoryInfo directory = GetTestDirectory(true);
             FileInfo xmlOutput = directory.Combine("tldag-dotnet.value.xml");
             FileInfo mdOutput = directory.Combine("tldag-dotnet.value.md");
-            ValuationReport report = ValuationReport.Create(SolutionFile.FullName, "CHF", 12);
+            ValuationReport report = ValuationReport.Create(SolutionFile.FullName, "CHF", 8);
 
             report.SaveToXml(xmlOutput);
             report.SaveToMarkdown(string.Empty, string.Empty, mdOutput);

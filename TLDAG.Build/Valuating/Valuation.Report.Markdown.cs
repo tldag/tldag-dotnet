@@ -26,7 +26,9 @@ namespace TLDAG.Build.Valuating
 
             builder.Append("## Summary").Append(NewLine).Append(NewLine);
 
-            builder.Append($"Value based on {rate}.").Append(NewLine).Append(NewLine);
+            builder.Append($"Value based on {rate}: ")
+                .Append(string.Format(ValueFormat, "**{0:C0} {1}**", Value, Currency))
+                .Append(NewLine).Append(NewLine);
 
             builder.Append("Language | Statements | Value").Append(NewLine);
             builder.Append("--- | ---: | ---:").Append(NewLine);

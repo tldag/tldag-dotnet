@@ -1,9 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
-using TLDAG.Build.Analyze.Syntax;
-using TLDAG.Core.Xml;
 
 namespace TLDAG.Build.Valuating
 {
@@ -19,14 +16,13 @@ namespace TLDAG.Build.Valuating
 
         public static SourceValuation GetValuation(SourceInfo source)
         {
-            switch (source.Type)
+            return source.Type switch
             {
-                case SourceType.Invalid: return new(source, 0);
-                case SourceType.CSharp: return new(source, source.File.ParseCSharp().Valuation);
-                case SourceType.Xml: return new(source, source.File.LoadXmlDocument().AllElements().Count());
-            }
-
-            return new(source, 0);
+                SourceType.Invalid => new(source, 0),
+                SourceType.CSharp => new(source, CSharpValuator.Instance.Valuate(source.File)),
+                SourceType.Xml => new(source, XmlValuator.Instance.Valuate(source.File)),
+                _ => new(source, 0),
+            };
         }
 
         public static IEnumerable<SourceValuation> GetValuations(string path)
