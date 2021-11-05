@@ -49,7 +49,7 @@ namespace TLDAG.Build.Tests.Valuating
         [TestMethod]
         public void TestReport()
         {
-            DirectoryInfo directory = GetTestDirectory(true);
+            DirectoryInfo directory = GetTestDirectory();
             FileInfo xmlOutput = directory.Combine("tldag-dotnet.value.xml");
             FileInfo mdOutput = directory.Combine("tldag-dotnet.value.md");
             ValuationReport report = ValuationReport.Create(SolutionFile.FullName, "CHF", 8);

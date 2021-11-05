@@ -24,7 +24,7 @@ namespace TLDAG.DotNetLogger.Tests
         public void Test()
         {
             FileInfo solutionFile = SolutionDirectory.Combine("tldag-dotnet-samples.sln");
-            DirectoryInfo directory = GetTestDirectory(true);
+            DirectoryInfo directory = GetTestDirectory();
 
             List<DnlLog> logs = new();
 

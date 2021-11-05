@@ -14,7 +14,7 @@ namespace TLDAG.Build.Tests.Drawing
         [TestMethod]
         public void MyTestMethod()
         {
-            DirectoryInfo directory = GetTestDirectory(true);
+            DirectoryInfo directory = GetTestDirectory();
             FileInfo icoFile = directory.Combine("TLDAG.ico");
             Bitmap[] bitmaps = { TLDAG_16, TLDAG_24 };
             

@@ -29,7 +29,7 @@ namespace TLDAG.Test
         protected string Configuration => configuration ??= GetType().Assembly.Configuration();
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        protected DirectoryInfo GetTestDirectory(bool clear)
+        protected DirectoryInfo GetTestDirectory()
         {
             StackFrame stackFrame = new(1, true);
             MethodBase method = Contract.State.NotNull(stackFrame.GetMethod(), "Not called from test method");
@@ -37,11 +37,11 @@ namespace TLDAG.Test
             Assembly assembly = type.Assembly;
 
             string assemblyName = assembly.Name();
-            string typeName = type.FullName ?? "Unknown";
+            string typeName = type.GetFullName();
             string methodName = method.Name;
             DirectoryInfo directory = TestOutputDirectory.CombineDirectory(assemblyName, Configuration, typeName, methodName).Created();
 
-            return clear ? directory.Clear() : directory;
+            return directory.Clear();
         }
 
         private string GetSolutionName()

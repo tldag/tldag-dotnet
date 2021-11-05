@@ -13,7 +13,7 @@ namespace TLDAG.Commands.Tests
         [TestMethod]
         public void Test()
         {
-            DirectoryInfo directory = GetTestDirectory(true);
+            DirectoryInfo directory = GetTestDirectory();
 
             Invoke($"Initialize-NuGet {directory.FullName} -Defaults");
         }

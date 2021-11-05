@@ -14,7 +14,7 @@ namespace TLDAG.Build.Tests.NuGet
         [TestMethod]
         public void TestEmpty()
         {
-            DirectoryInfo root = GetTestDirectory(true);
+            DirectoryInfo root = GetTestDirectory();
             DirectoryInfo packages = root.CombineDirectory("packages");
 
             Settings settings = NuGetSettingsBuilder.Create(root, false)

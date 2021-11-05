@@ -16,31 +16,6 @@ namespace TLDAG.Core.Tests.Reflection
     public class TypeFinderTests : TestsBase
     {
         [TestMethod]
-        public void Test()
-        {
-            Type cSharp = typeof(CSharpSyntaxNode);
-            Assembly assembly = cSharp.Assembly;
-            List<TypeInfo> types = new();
-            IEnumerable<TypeInfo> candidates;
-
-            candidates = TypeFinder.Create(assembly).BaseType(cSharp).Find();
-
-            while (candidates.Any())
-            {
-                types.AddRange(candidates.Where(c => !c.IsAbstract));
-
-                candidates = candidates
-                    .Where(c => c.IsAbstract)
-                    .SelectMany(c => TypeFinder.Create(assembly).BaseType(c).Find());
-            }
-
-            FileInfo file = GetTestDirectory(true).Combine("CSharpSyntaxNode.txt");
-            IEnumerable<string> names = types.Select(t => t.FullName ?? "").OrderBy(s => s);
-
-            file.WriteAllLines(names);
-        }
-
-        [TestMethod]
         public void FindDerived()
         {
             Type cSharp = typeof(CSharpSyntaxNode);
@@ -56,7 +31,7 @@ namespace TLDAG.Core.Tests.Reflection
                 }
             }
 
-            GetTestDirectory(true).Combine("CSharpSyntaxNode.txt").WriteAllLines(lines);
+            GetTestDirectory().Combine("CSharpSyntaxNode.txt").WriteAllLines(lines);
         }
     }
 }
