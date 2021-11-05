@@ -5,33 +5,69 @@ using System.IO;
 using System.Linq;
 using TLDAG.Core.Collections;
 using TLDAG.Core.IO;
+using static System.IO.SearchOption;
 
 namespace TLDAG.Build.Analyze
 {
+    public enum ProjectType
+    {
+        Invalid = 0,
+        CSharp = 1
+    }
+
+    public static class ProjectExtensions
+    {
+        public static ProjectType GetProjectType(this FileInfo file)
+        {
+            if (".csproj".Equals(file.Extension)) return ProjectType.CSharp;
+            return ProjectType.Invalid;
+        }
+
+        public static StringSet SupportedProjectExtensions { get; }
+            = new(".csproj");
+
+        public static StringSet SupportedProjectPatterns { get; }
+            = new(SupportedProjectExtensions.Select(ext => $"*{ext}"));
+
+        private static readonly Dictionary<ProjectType, StringSet> generatedProjectDirectories = new()
+        {
+            { ProjectType.Invalid, StringSet.OrdinalEmpty },
+            { ProjectType.CSharp, new("bin", "obj") }
+        };
+
+        public static IEnumerable<string> GeneratedProjectDirectories(ProjectType projectType)
+            => generatedProjectDirectories[projectType];
+    }
+
     public class ProjectData
     {
         public ProjectInSolution Project { get; }
         public FileInfo File { get => new(Project.AbsolutePath); }
+        public string Name { get => File.NameWithoutExtension(); }
+        public DirectoryInfo Directory { get => File.GetDirectory(); }
+        public ProjectType Type { get => File.GetProjectType(); }
+
+        public IEnumerable<DirectoryInfo> SourceDirectories
+        {
+            get
+            {
+                IEnumerable<string> ignored = ProjectExtensions.GeneratedProjectDirectories(Type);
+
+                IEnumerable<DirectoryInfo> topDirectories = Directory
+                    .EnumerateDirectories("*", TopDirectoryOnly)
+                    .Where(dir => ignored.Contains(dir.Name));
+
+                return topDirectories
+                    .SelectMany(dir => dir.EnumerateDirectories("*", AllDirectories))
+                    .Concat(topDirectories)
+                    .Append(Directory);
+            }
+        }
+
+        public IEnumerable<FileInfo> Sources
+            { get => SourceDirectories.SelectMany(dir => dir.EnumerateFiles("*", TopDirectoryOnly)); }
 
         public ProjectData(ProjectInSolution project) { Project = project; }
-    }
-
-    public class ProjectAnalyzer
-    {
-        public ProjectInSolution Project { get; }
-
-        public ProjectAnalyzer(DirectoryInfo directory, ProjectInSolution project)
-        {
-            Project = project;
-        }
-
-        public ProjectData? Analyze()
-        {
-            return new(Project);
-        }
-
-        public static ProjectData? Analyze(DirectoryInfo directory, ProjectInSolution project)
-            => new ProjectAnalyzer(directory, project).Analyze();
     }
 
     public class SolutionData
@@ -70,8 +106,8 @@ namespace TLDAG.Build.Analyze
             SolutionFile solutionFile = SolutionFile.Parse(File.FullName);
 
             List<ProjectData> projects = solutionFile.ProjectsInOrder
-                .Select(project => ProjectAnalyzer.Analyze(Directory, project))
-                .NotNull().ToList();
+                .Select(project => new ProjectData(project))
+                .ToList();
 
             return new(File, solutionFile, projects);
         }
