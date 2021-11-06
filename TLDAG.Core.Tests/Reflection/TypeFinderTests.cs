@@ -20,18 +20,28 @@ namespace TLDAG.Core.Tests.Reflection
         {
             Type cSharp = typeof(CSharpSyntaxNode);
             Assembly assembly = cSharp.Assembly;
-            IEnumerable<IGrouping<Type, TypeInfo>> derived = TypeFinder.FindDerived(cSharp, assembly);
-            List<string> lines = new();
+            IEnumerable<TypeDerivatives> deriveds = TypeHierarchy.FindDerivatives(cSharp, true, assembly);
+            List<string> lines1 = new();
+            List<string> lines2 = new();
 
-            foreach (IGrouping<Type, TypeInfo> group in derived)
+            foreach (TypeDerivatives derived in deriveds.OrderBy(d => d))
             {
-                foreach (TypeInfo type in group.OrderBy(t => t.GetFullName()))
+                lines2.Add(string.Empty);
+                lines2.Add($"// {derived.BaseType.FullName}");
+
+                foreach (TypeInfo type in derived.Derivatives.OrderBy(t => t.GetFullName()))
                 {
-                    lines.Add($"{group.Key.Name} <- {type.FullName}");
+                    string comment = type.IsSealed ? " // sealed" : string.Empty;
+
+                    lines1.Add($"{derived.BaseType.Name} <- {type.FullName}");
+                    lines2.Add($"value += nodes.OfType<{type.Name}>().Count();{comment}");
                 }
             }
 
-            GetTestDirectory().Combine("CSharpSyntaxNode.txt").WriteAllLines(lines);
+            DirectoryInfo directory = GetTestDirectory();
+
+            directory.Combine("CSharpSyntaxNode1.txt").WriteAllLines(lines1);
+            directory.Combine("CSharpSyntaxNode2.txt").WriteAllLines(lines2);
         }
     }
 }
