@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net472</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,14 +14,11 @@
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
     <PackageReference Include="NuGet.Packaging" Version="$(NuGetPackagingVersion)" />
     <PackageReference Include="NuGet.Protocol" Version="$(NuGetProtocolVersion)" />
+    <PackageReference Include="System.Management.Automation" Version="$(SystemManagementAutomationVersion)" />
     <ProjectReference Include="$(TldagCoreProject)" />
     <ProjectReference Include="$(TldagDrawingProject)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-    <PackageReference Include="System.Management.Automation" Version="$(SystemManagementAutomationVersion)" />
-  </ItemGroup>
-  
   <ItemGroup>
     <InternalsVisibleTo Include="TLDAG.Build.Tests" />
   </ItemGroup>
@@ -37,11 +34,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>DotNetResources.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\ValuationResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ValuationResources.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
   
   <ItemGroup>
@@ -52,10 +44,6 @@
     <EmbeddedResource Update="Resources\DotNetResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DotNetResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\ValuationResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ValuationResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   

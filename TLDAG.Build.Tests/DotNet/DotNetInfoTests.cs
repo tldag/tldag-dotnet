@@ -12,7 +12,7 @@ namespace TLDAG.Build.Tests.DotNet
         public void Test()
         {
             DotNetInfo info = DotNetInfo.Get(Env.WorkingDirectory);
-            SemanticVersion expectedVersion = new(5, 0, 402);
+            SemanticVersion expectedVersion = new(6, 0, 100);
             SemanticVersion actualVersion = info.Version;
 
             Assert.AreEqual(expectedVersion, actualVersion);

@@ -1,6 +1,4 @@
-﻿#if NET5_0_OR_GREATER
-
-using System.IO;
+﻿using System.IO;
 using System.Management.Automation.Language;
 using TLDAG.Core.IO;
 using static TLDAG.Core.Exceptions.Errors;
@@ -30,5 +28,3 @@ namespace TLDAG.Build.PS
         }
     }
 }
-
-#endif

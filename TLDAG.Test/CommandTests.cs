@@ -1,6 +1,4 @@
-﻿#if NET5_0_OR_GREATER
-
-using System;
+﻿using System;
 using TLDAG.Automation;
 
 namespace TLDAG.Test
@@ -22,5 +20,3 @@ namespace TLDAG.Test
             => Shell.Invoke(script).ThrowExceptions(throwOnError);
     }
 }
-
-#endif

@@ -2,9 +2,7 @@
 <Project>
 
   <PropertyGroup>
-    <TldagTasksFW Condition="'$(MSBuildRuntimeType)' == 'Core'">net5.0</TldagTasksFW>
-    <TldagTasksFW Condition="'$(MSBuildRuntimeType)' != 'Core'">net472</TldagTasksFW>
-    <TldagTasksLib>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), '..', 'lib', $(TldagTasksFW), 'Tldag.Tasks.dll' ))</TldagTasksLib>
+    <TldagTasksLib>$([MSBuild]::NormalizePath( $(MSBuildThisFileDirectory), '..', 'lib', 'net6.0', 'Tldag.Tasks.dll' ))</TldagTasksLib>
   </PropertyGroup>
 
   <UsingTask TaskName="TLDAG.Tasks.Hello" AssemblyFile="$(TldagTasksLib)" />

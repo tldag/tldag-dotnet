@@ -12,7 +12,7 @@ namespace TLDAG.Build.Tests.Config
         public void Test()
         {
             GlobalJson globalJson = GlobalJson.Get(Env.WorkingDirectory);
-            SemanticVersion expectedVersion = new(5, 0, 402);
+            SemanticVersion expectedVersion = new(6, 0, 100);
             SemanticVersion actualVersion = globalJson.Sdk.Version;
             GlobalJson.RollForwardValue expectedRollForward = GlobalJson.RollForwardValue.Minor;
             GlobalJson.RollForwardValue actualRollForward = globalJson.Sdk.RollForward;

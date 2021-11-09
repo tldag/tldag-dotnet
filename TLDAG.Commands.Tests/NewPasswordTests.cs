@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics;
 using TLDAG.Test;
 
 namespace TLDAG.Commands.Tests
@@ -15,6 +16,7 @@ namespace TLDAG.Commands.Tests
             string password = Invoke<string>("New-Password");
 
             Assert.AreEqual(24, password.Length);
+            Debug.WriteLine(password);
         }
     }
 }

@@ -41,9 +41,8 @@ namespace TLDAG.Build.Analyze
 
     public class ProjectData
     {
-        public ProjectInSolution Project { get; }
-        public FileInfo File { get => new(Project.AbsolutePath); }
-        public string Name { get => File.NameWithoutExtension(); }
+        public FileInfo File { get; }
+        public virtual string Name { get => File.NameWithoutExtension(); }
         public DirectoryInfo Directory { get => File.GetDirectory(); }
         public ProjectType Type { get => File.GetProjectType(); }
 
@@ -67,7 +66,23 @@ namespace TLDAG.Build.Analyze
         public IEnumerable<FileInfo> Sources
             { get => SourceDirectories.SelectMany(dir => dir.EnumerateFiles("*", TopDirectoryOnly)); }
 
-        public ProjectData(ProjectInSolution project) { Project = project; }
+        public ProjectData(FileInfo file) { File = file; }
+
+        public static ProjectData Create(FileInfo file) => new(file);
+    }
+
+    public class SolutionProjectData : ProjectData
+    {
+        public ProjectInSolution Project { get; }
+
+        public override string Name => Project.ProjectName;
+
+        public SolutionProjectData(ProjectInSolution project) : base(new(project.AbsolutePath))
+        {
+            Project = project;
+        }
+
+        public static SolutionProjectData Create(ProjectInSolution project) => new(project);
     }
 
     public class SolutionData
@@ -105,8 +120,8 @@ namespace TLDAG.Build.Analyze
         {
             SolutionFile solutionFile = SolutionFile.Parse(File.FullName);
 
-            List<ProjectData> projects = solutionFile.ProjectsInOrder
-                .Select(project => new ProjectData(project))
+            List<SolutionProjectData> projects = solutionFile.ProjectsInOrder
+                .Select(SolutionProjectData.Create)
                 .ToList();
 
             return new(File, solutionFile, projects);

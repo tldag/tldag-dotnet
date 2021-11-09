@@ -68,22 +68,22 @@
     <MicrosoftBuildVersion>16.11.0</MicrosoftBuildVersion>
     <MicrosoftBuildFrameworkVersion>16.11.0</MicrosoftBuildFrameworkVersion>
     <MicrosoftBuildUtilitiesCoreVersion>16.11.0</MicrosoftBuildUtilitiesCoreVersion>
-    <MicrosoftCodeAnalysisCSharpVersion>4.0.0-4.final</MicrosoftCodeAnalysisCSharpVersion>
-    <MicrosoftCodeAnalysisCSharpWorkspacesVersion>4.0.0-4.final</MicrosoftCodeAnalysisCSharpWorkspacesVersion>
+    <MicrosoftCodeAnalysisCSharpVersion>4.0.0-6.final</MicrosoftCodeAnalysisCSharpVersion>
+    <MicrosoftCodeAnalysisCSharpWorkspacesVersion>4.0.0-6.final</MicrosoftCodeAnalysisCSharpWorkspacesVersion>
     <MicrosoftExtensionsLoggingVersion>5.0.0</MicrosoftExtensionsLoggingVersion>
-    <MicrosoftNetTestSdkVersion>16.11.0</MicrosoftNetTestSdkVersion>
-    <MicrosoftPowerShellCommandsDiagnosticsVersion>7.1.4</MicrosoftPowerShellCommandsDiagnosticsVersion>
-    <MicrosoftPowerShellCommandsManagementVersion>7.1.4</MicrosoftPowerShellCommandsManagementVersion>
-    <MicrosoftPowerShellCommandsUtilityVersion>7.1.4</MicrosoftPowerShellCommandsUtilityVersion>
-    <MicrosoftPowerShellConsoleHostVersion>7.1.4</MicrosoftPowerShellConsoleHostVersion>
-    <MicrosoftWSManManagementVersion>7.1.4</MicrosoftWSManManagementVersion>
+    <MicrosoftNetTestSdkVersion>17.0.0</MicrosoftNetTestSdkVersion>
+    <MicrosoftPowerShellCommandsDiagnosticsVersion>7.2.0</MicrosoftPowerShellCommandsDiagnosticsVersion>
+    <MicrosoftPowerShellCommandsManagementVersion>7.2.0</MicrosoftPowerShellCommandsManagementVersion>
+    <MicrosoftPowerShellCommandsUtilityVersion>7.2.0</MicrosoftPowerShellCommandsUtilityVersion>
+    <MicrosoftPowerShellConsoleHostVersion>7.2.0</MicrosoftPowerShellConsoleHostVersion>
+    <MicrosoftWSManManagementVersion>7.2.0</MicrosoftWSManManagementVersion>
     <MSTestTestAdapterVersion>2.2.7</MSTestTestAdapterVersion>
     <MSTestTestFrameworkVersion>2.2.7</MSTestTestFrameworkVersion>
     <NewtonsoftJsonVersion>13.0.1</NewtonsoftJsonVersion>
     <NuGetPackagingVersion>5.11.0</NuGetPackagingVersion>
     <NuGetProtocolVersion>5.11.0</NuGetProtocolVersion>
     <SystemDrawingCommonVersion>5.0.2</SystemDrawingCommonVersion>
-    <SystemManagementAutomationVersion>7.1.4</SystemManagementAutomationVersion>
+    <SystemManagementAutomationVersion>7.2.0</SystemManagementAutomationVersion>
     <SystemResourcesExtensionsVersion>5.0.0</SystemResourcesExtensionsVersion>
   </PropertyGroup>
   

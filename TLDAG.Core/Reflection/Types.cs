@@ -16,11 +16,13 @@ namespace TLDAG.Core.Reflection
 
     public class TypeFinder
     {
-        private readonly List<Assembly> assemblies = new();
+        private readonly List<Assembly> assemblies;
         private Type? baseType = null;
 
         public TypeFinder(params Assembly[] assemblies) : this(assemblies.AsEnumerable()) { }
-        public TypeFinder(IEnumerable<Assembly> assemblies) { this.assemblies.AddRange(assemblies); }
+
+        public TypeFinder(IEnumerable<Assembly> assemblies)
+            { this.assemblies = new(assemblies.Any() ? assemblies : AppDomain.CurrentDomain.GetAssemblies()); }
 
         public static TypeFinder Create(params Assembly[] assemblies) => new(assemblies);
         public static TypeFinder Create(IEnumerable<Assembly> assemblies) => new(assemblies);
