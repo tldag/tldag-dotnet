@@ -8,6 +8,8 @@ Get-ChildItem "TestResults" -ErrorAction Ignore | Remove-Item -Recurse
 dotnet clean tldag-dotnet.sln -c Release -v m -noLogo
 dotnet clean tldag-dotnet.sln -c Debug -v m -noLogo
 
+Get-ChildItem -Filter "*.csproj" -Recurse | Select-Object "Directory" | ForEach-Object { Get-ChildItem $_.Directory -Filter "obj" | Remove-Item -Recurse }
+
 dotnet build tldag-dotnet.sln -c Release -noLogo
 dotnet test tldag-dotnet.sln -c Release -r:False -noLogo
 dotnet build tldag-dotnet-samples.sln -c Release -noLogo

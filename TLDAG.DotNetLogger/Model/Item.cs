@@ -23,10 +23,10 @@ namespace TLDAG.DotNetLogger.Model
         public DnlItem() : this(string.Empty, string.Empty) { }
 
         public override int GetHashCode() => Key.GetHashCode();
-        public override bool Equals(object obj) => EqualsTo(obj as DnlItem);
-        public bool Equals(DnlItem other) => EqualsTo(other);
+        public override bool Equals(object? obj) => EqualsTo(obj as DnlItem);
+        public bool Equals(DnlItem? other) => EqualsTo(other);
         private bool EqualsTo(DnlItem? other) => other is not null && Key.Equals(other.Key);
-        public int CompareTo(DnlItem other) => Key.CompareTo(other.Key);
+        public int CompareTo(DnlItem? other) => Key.CompareTo(other?.Key);
 
         public static bool operator ==(DnlItem a, DnlItem b) => a.EqualsTo(b);
         public static bool operator !=(DnlItem a, DnlItem b) => !a.EqualsTo(b);

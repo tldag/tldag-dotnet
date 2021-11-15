@@ -5,11 +5,11 @@ using static TLDAG.Core.Primitives;
 
 namespace TLDAG.Core.Cryptography
 {
-    public static class TripleDES
+    public static class Cryptor
     {
         public static byte[] Encrypt(byte[] plain, string password)
         {
-            using TripleDESCryptoServiceProvider des = GetTripleDES(password, CryptoStreamMode.Write);
+            using TripleDES des = GetTripleDES(password);
             using MemoryStream input = new(plain);
             using MemoryStream output = new();
 
@@ -24,7 +24,7 @@ namespace TLDAG.Core.Cryptography
 
         public static byte[] Decrypt(byte[] encrypted, string password)
         {
-            using TripleDESCryptoServiceProvider des = GetTripleDES(password, CryptoStreamMode.Read);
+            using TripleDES des = GetTripleDES(password);
             using MemoryStream input = new(encrypted);
             int count = ReadCount(input);
             using MemoryStream output = new();
@@ -35,21 +35,20 @@ namespace TLDAG.Core.Cryptography
             return Resize(output.ToArray(), count);
         }
 
-        private static CryptoStream GetCryptoStream(
-            TripleDESCryptoServiceProvider des, Stream stream, CryptoStreamMode mode)
+        private static CryptoStream GetCryptoStream(TripleDES des, Stream stream, CryptoStreamMode mode)
         {
             return new(stream, GetTransform(des, mode), mode);
         }
 
-        private static ICryptoTransform GetTransform(TripleDESCryptoServiceProvider des, CryptoStreamMode mode)
+        private static ICryptoTransform GetTransform(TripleDES des, CryptoStreamMode mode)
         {
             if (mode == CryptoStreamMode.Read) return des.CreateDecryptor(des.Key, des.IV);
             else return des.CreateEncryptor(des.Key, des.IV);
         }
 
-        private static TripleDESCryptoServiceProvider GetTripleDES(string password, CryptoStreamMode mode)
+        private static TripleDES GetTripleDES(string password)
         {
-            TripleDESCryptoServiceProvider des = new();
+            TripleDES des = TripleDES.Create();
 
             des.IV = new byte[des.BlockSize / 8];
             des.Key = Passwords.ToKey(password, des.KeySize);

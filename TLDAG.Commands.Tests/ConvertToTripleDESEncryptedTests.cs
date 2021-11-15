@@ -12,8 +12,8 @@ namespace TLDAG.Commands.Tests
     {
         protected override Type CommandType => typeof(ConvertToTripleDESEncrypted);
 
-        private FileInfo PlainFile => new("ConvertToTripleDESEncryptedTests.txt");
-        private FileInfo EncryptedFile => new("ConvertToTripleDESEncryptedTests.txt.enc");
+        private static FileInfo PlainFile => new("ConvertToTripleDESEncryptedTests.txt");
+        private static FileInfo EncryptedFile => new("ConvertToTripleDESEncryptedTests.txt.enc");
 
         [TestMethod]
         public void TestEncrypt()
@@ -30,7 +30,7 @@ namespace TLDAG.Commands.Tests
             Assert.IsTrue(result.Exists);
             Assert.AreEqual(EncryptedFile.FullName, result.FullName);
 
-            byte[] expected = TripleDES.Encrypt(plainBytes, password);
+            byte[] expected = Cryptor.Encrypt(plainBytes, password);
             byte[] actual = File.ReadAllBytes(EncryptedFile.FullName);
 
             Assert.AreEqual(0, Compare(expected, actual));

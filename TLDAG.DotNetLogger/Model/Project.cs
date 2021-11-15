@@ -30,7 +30,7 @@ namespace TLDAG.DotNetLogger.Model
         public DnlProject(string file) { File = file; }
         public DnlProject() : this(string.Empty) { }
 
-        public int CompareTo(DnlProject other) => StringComparer.Ordinal.Compare(Name, other.Name);
+        public int CompareTo(DnlProject? other) => StringComparer.Ordinal.Compare(Name, other?.Name);
     }
 
     [Serializable]

@@ -16,8 +16,8 @@ namespace TLDAG.DotNetLogger.Context
             public PassTarget(BuildAdapter args) : this(args.PassId, args.TargetId) { }
 
             public override int GetHashCode() => PassId.GetHashCode() << 9 + TargetId.GetHashCode();
-            public override bool Equals(object obj) => EqualsTo(obj as PassTarget);
-            public bool Equals(PassTarget other) => EqualsTo(other);
+            public override bool Equals(object? obj) => EqualsTo(obj as PassTarget);
+            public bool Equals(PassTarget? other) => EqualsTo(other);
 
             protected bool EqualsTo(PassTarget? other)
             {
@@ -25,12 +25,12 @@ namespace TLDAG.DotNetLogger.Context
                 return PassId == other.PassId && TargetId == other.TargetId;
             }
 
-            public int CompareTo(PassTarget other)
+            public int CompareTo(PassTarget? other)
             {
-                int result = PassId.CompareTo(other.PassId);
+                int result = PassId.CompareTo(other?.PassId);
 
                 if (result == 0)
-                    result = TargetId.CompareTo(other.TargetId);
+                    result = TargetId.CompareTo(other?.TargetId);
 
                 return result;
             }
@@ -45,8 +45,8 @@ namespace TLDAG.DotNetLogger.Context
             public TargetTask(BuildAdapter args) : this(args.PassId, args.TargetId, args.TaskId) { }
 
             public override int GetHashCode() => base.GetHashCode() << 9 + TaskId.GetHashCode();
-            public override bool Equals(object obj) => EqualsTo(obj as TargetTask);
-            public bool Equals(TargetTask other) => EqualsTo(other);
+            public override bool Equals(object? obj) => EqualsTo(obj as TargetTask);
+            public bool Equals(TargetTask? other) => EqualsTo(other);
 
             protected bool EqualsTo(TargetTask? other)
             {
@@ -54,12 +54,12 @@ namespace TLDAG.DotNetLogger.Context
                 return base.EqualsTo(other) && TaskId == other.TaskId;
             }
 
-            public int CompareTo(TargetTask other)
+            public int CompareTo(TargetTask? other)
             {
                 int result = base.CompareTo(other);
 
                 if (result == 0)
-                    result = TaskId.CompareTo(other.TaskId);
+                    result = TaskId.CompareTo(other?.TaskId);
 
                 return result;
             }

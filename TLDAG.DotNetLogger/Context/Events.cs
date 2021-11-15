@@ -116,7 +116,7 @@ namespace TLDAG.DotNetLogger.Context
             return result;
         }
 
-        public bool RemovePass(int passId, out ProjectStartedAdapter started, out ProjectFinishedAdapter finished)
+        public bool RemovePass(int passId, out ProjectStartedAdapter? started, out ProjectFinishedAdapter? finished)
         {
             bool hasStarted = passesStarted.TryGetValue(passId, out started);
             bool hasFinished = passesFinished.TryGetValue(passId, out finished);
@@ -127,7 +127,7 @@ namespace TLDAG.DotNetLogger.Context
             return hasStarted && hasFinished;
         }
 
-        public bool RemoveTarget(PassTarget key, out TargetStartedAdapter started, out TargetFinishedAdapter finished)
+        public bool RemoveTarget(PassTarget key, out TargetStartedAdapter? started, out TargetFinishedAdapter? finished)
         {
             bool hasStarted = targetsStarted.TryGetValue(key, out started);
             bool hasFinished = targetsFinished.TryGetValue(key, out finished);
@@ -138,7 +138,7 @@ namespace TLDAG.DotNetLogger.Context
             return hasStarted && hasFinished;
         }
 
-        public bool RemoveTask(TargetTask key, out TaskStartedAdapter started, out TaskFinishedAdapter finished)
+        public bool RemoveTask(TargetTask key, out TaskStartedAdapter? started, out TaskFinishedAdapter? finished)
         {
             bool hasStarted = tasksStarted.TryGetValue(key, out started);
             bool hasFinished = tasksFinished.TryGetValue(key, out finished);

@@ -28,7 +28,7 @@ namespace TLDAG.DotNetLogger.Model
         public DnlPass(int id) { Id = id; }
         public DnlPass() : this(-1) { }
 
-        public int CompareTo(DnlPass other) => Id.CompareTo(other.Id);
+        public int CompareTo(DnlPass? other) => Id.CompareTo(other?.Id);
     }
 
     [Serializable]

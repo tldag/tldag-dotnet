@@ -12,8 +12,8 @@ namespace TLDAG.Core.Tests.Cryptography
         {
             string password = "123";
             byte[] plain = { 1, 2, 3, 4 };
-            byte[] encrypted = TripleDES.Encrypt(plain, password);
-            byte[] decrypted = TripleDES.Decrypt(encrypted, password);
+            byte[] encrypted = Cryptor.Encrypt(plain, password);
+            byte[] decrypted = Cryptor.Decrypt(encrypted, password);
 
             Assert.AreEqual(0, Compare(plain, decrypted));
         }

@@ -29,7 +29,7 @@ namespace TLDAG.Commands
             FileInfo outputFile = inputFile.GetDirectory().Combine(outputName);
 
             byte[] encrypted = inputFile.ReadAllBytes();
-            byte[] plainBytes = TripleDES.Decrypt(encrypted, Password);
+            byte[] plainBytes = Cryptor.Decrypt(encrypted, Password);
 
             outputFile.WriteAllBytes(plainBytes);
             WriteObject(new FileInfo(outputFile.FullName));

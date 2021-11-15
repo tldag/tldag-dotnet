@@ -24,7 +24,7 @@ namespace TLDAG.Commands
         protected override void Process()
         {
             byte[] plainBytes = File.ReadAllBytes(Path);
-            byte[] encrypted = TripleDES.Encrypt(plainBytes, Password);
+            byte[] encrypted = Cryptor.Encrypt(plainBytes, Password);
             string outputPath = Path + Extension;
 
             File.WriteAllBytes(outputPath, encrypted);

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Pipes;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
@@ -31,7 +32,7 @@ namespace TLDAG.DotNetLogger.IO
         {
             using StringReader reader = new(xml);
 
-            return (DnlLog)xmlSerializer.Deserialize(reader);
+            return xmlSerializer.Deserialize(reader) as DnlLog ?? throw new NotSupportedException();
         }
 
         private static readonly BinaryFormatter binaryFormatter = new();
@@ -40,7 +41,9 @@ namespace TLDAG.DotNetLogger.IO
         {
             using MemoryStream stream = new();
 
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
             binaryFormatter.Serialize(stream, log);
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
 
             return stream.ToArray();
         }
@@ -49,7 +52,9 @@ namespace TLDAG.DotNetLogger.IO
         {
             using MemoryStream stream = new(bytes);
 
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
             return (DnlLog)binaryFormatter.Deserialize(stream);
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
         }
 
         public static void Send(DnlLog log, string pipeHandle)

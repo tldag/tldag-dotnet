@@ -25,7 +25,11 @@ namespace TLDAG.DotNetLogger
             SortedSet<string> result = new(StringComparer.OrdinalIgnoreCase);
 
             foreach (object key in Environment.GetEnvironmentVariables().Keys)
-                result.Add(key.ToString());
+            {
+                if (key is string keyString)
+                    result.Add(keyString);
+            }
+                
 
             return result;
         }

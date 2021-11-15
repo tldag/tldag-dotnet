@@ -13,7 +13,11 @@ namespace TLDAG.DotNetLogger.Context
             Clear();
 
             foreach (object key in Environment.GetEnvironmentVariables().Keys)
-                restrictedProperties.Add(key.ToString());
+            {
+                if (key is string keyString)
+                    restrictedProperties.Add(keyString);
+            }
+
             foreach (string key in config.AllowedProperties)
                 restrictedProperties.Remove(key);
 
@@ -31,7 +35,7 @@ namespace TLDAG.DotNetLogger.Context
             restrictedMetadata.Clear();
         }
 
-        private static string[] restrictedMetadataKeys =
+        private static readonly string[] restrictedMetadataKeys =
         {
             "AccessedTime",
             "CreatedTime",

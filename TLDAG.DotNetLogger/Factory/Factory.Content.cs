@@ -7,16 +7,19 @@ namespace TLDAG.DotNetLogger.Factory
 {
     public partial class DnlFactory
     {
-        public DnlItems? CreateItems(ItemsAdapter source)
+        public DnlItems? CreateItems(ItemsAdapter? source)
         {
             SortedSet<DnlItem> items = new();
 
-            foreach (ItemAdapter i in source)
+            if (source is not null)
             {
-                DnlItem item = CreateItem(i);
+                foreach (ItemAdapter i in source)
+                {
+                    DnlItem item = CreateItem(i);
 
-                items.Remove(item);
-                items.Add(item);
+                    items.Remove(item);
+                    items.Add(item);
+                }
             }
 
             return items.Any() ? new(items.ToList()) : null;

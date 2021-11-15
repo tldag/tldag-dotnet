@@ -34,7 +34,7 @@ namespace TLDAG.DotNetLogger.Context
 
         public IEnumerable<int> GetPasses(string projectFile)
         {
-            if (projectPasses.TryGetValue(projectFile, out SortedSet<int> passes))
+            if (projectPasses.TryGetValue(projectFile, out SortedSet<int>? passes))
                 return passes;
 
             return Array.Empty<int>();
@@ -42,7 +42,7 @@ namespace TLDAG.DotNetLogger.Context
 
         public IEnumerable<PassTarget> GetTargets(int passId)
         {
-            if (passTargets.TryGetValue(passId, out List<PassTarget> targets))
+            if (passTargets.TryGetValue(passId, out List<PassTarget>? targets))
                 return targets;
 
             return Array.Empty<PassTarget>();
@@ -50,7 +50,7 @@ namespace TLDAG.DotNetLogger.Context
 
         public IEnumerable<TargetTask> GetTasks(PassTarget targetKey)
         {
-            if (targetTasks.TryGetValue(targetKey, out List<TargetTask> tasks))
+            if (targetTasks.TryGetValue(targetKey, out List<TargetTask>? tasks))
                 return tasks;
 
             return Array.Empty<TargetTask>();
