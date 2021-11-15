@@ -12,7 +12,7 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -42,11 +42,6 @@
     <TldagCommandsProject>$([MSBuild]::NormalizePath( $(TldagCommandsDirectory), 'TLDAG.Commands.csproj' ))</TldagCommandsProject>
   </PropertyGroup>
   
-  <PropertyGroup>
-    <TldagDotNetLoggerDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'TLDAG.DotNetLogger' ))</TldagDotNetLoggerDirectory>
-    <TldagDotNetLoggerProject>$([MSBuild]::NormalizePath( $(TldagDotNetLoggerDirectory), 'TLDAG.DotNetLogger.csproj' ))</TldagDotNetLoggerProject>
-  </PropertyGroup>
-
   <PropertyGroup>
     <TldagDrawingDirectory>$([MSBuild]::NormalizeDirectory( $(MSBuildThisFileDirectory), 'TLDAG.Drawing' ))</TldagDrawingDirectory>
     <TldagDrawingProject>$([MSBuild]::NormalizePath( $(TldagDrawingDirectory), 'TLDAG.Drawing.csproj' ))</TldagDrawingProject>
